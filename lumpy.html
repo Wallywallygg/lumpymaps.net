@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumpy</title>
+    <style>
+        /* Fill the full screen and set background to solid black */
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Center content container */
+        .content {
+            text-align: center;
+        }
+
+        /* Image sizing */
+        .content img {
+            max-width: 80vw;
+            max-height: 60vh;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto 20px auto;
+        }
+
+        /* Text styling */
+        .content p {
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="content">
+        <img src="lumpy.jpg" alt="Lumpy the cat">
+        <p>Dont forget her</p>
+    </div>
+
+    <!-- HTML5 Audio Element -->
+    <audio id="bg-audio" src="dota.mp3" autoplay loop></audio>
+
+    <script>
+        // Fallback for modern browser autoplay restrictions
+        const audio = document.getElementById('bg-audio');
+        
+        // Attempt to play on load
+        audio.play().catch(() => {
+            // If blocked by browser, play as soon as user clicks anywhere on page
+            document.addEventListener('click', () => {
+                audio.play();
+            }, { once: true });
+        });
+    </script>
+
+</body>
+</html>
