@@ -3,40 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lumpymaps | Homepage</title>
+    <title>Lumpymaps</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* 1. Load the custom font */
+        @font-face {
+            font-family: 'Overwave';
+            src: url('overwave.otf') format('opentype');
+        }
+
+        body {
+            background-image: url('IMG20230806093151.jpg');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            background-attachment: fixed;
+            color: #ffffff; 
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 2. Left-align the header at the top */
+        header {
+            text-align: left;
+            padding: 20px;
+        }
+
+        /* 3. Apply the custom font and largest sizing to title */
+        header h1 {
+            font-family: 'Overwave', sans-serif;
+            font-size: 3.5em; 
+            margin: 0 0 10px 0;
+        }
+
+        /* Title link styling */
+        header h1 a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        /* Navigation styling using custom font and 2em size */
+        header nav, 
+        header nav a {
+            font-family: 'Overwave', sans-serif;
+            font-size: 2em;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        header nav a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
+
     <header>
-        <h1><a href="lumpymaps.net">LUMPYMAPS.NET</a></h1>
+        <!-- Title hyperlinked to lumpymaps.net -->
+        <h1><a href="https://lumpymaps.net">LUMPYMAPS.NET</a></h1>
         <nav>
             <a href="index.html">Homepage</a> |
             <a href="blog.html">Blog</a> |
             <a href="portfolio.html">GIS Portfolio</a> |
-            <a href="lumpy.html">Lumpy</a>
+            <a href="lumpy.html">In Memoriam</a>
         </nav>
     </header>
 
-    <main>
-        <section id="about">
-            <h2>About</h2>
-            <p>Welcome to my site. I work in GIS and build stuff.</p>
-        </section>
-
-        <section id="portfolio">
-            <h2>Projects</h2>
-            <ul>
-                <li><a href="#">Project 2</a> - Honda Fan Upgrade.</li>
-                <li><a href="#">Project 1</a> - Washington State Cell Tower Service Mapping Project.</li>
-            </ul>
-        </section>
-
-        <img src="IMG20230806093151.jpg" style="max-width: 100%; height: auto;">
-        
-        <section id="contact">
-            <h2>Contact</h2>
-            <p>Email me at: <a href="mailto:walterm@chef.net">walterm@chef.net</a></p>
-        </section>
-    </main>
 </body>
 </html>
