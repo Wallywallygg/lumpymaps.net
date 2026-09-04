@@ -10,15 +10,40 @@
             color: #ffffff;
             font-family: Arial, sans-serif;
             margin: 0;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             cursor: pointer;
         }
 
+        /* Header styling for black background */
+        header {
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            background-color: #000000;
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.5rem;
+        }
+
+        header nav a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        header nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* Center content in remaining vertical space */
         .content {
             text-align: center;
+            margin: auto 0;
+            padding: 20px 0;
         }
 
         .content img {
@@ -43,15 +68,15 @@
     </style>
 </head>
 <body>
-<header>
-    <h1>Test website do not look at</h1>
-    <nav>
-        <a href="index.html">Homepage</a> |
-        <a href="blog.html">Blog</a> |
-        <a href="portfolio.html">GIS Portfolio</a> |
-        <a href="lumpy.html">In Memoriam</a>
-    </nav>
-</header>
+    <header>
+        <nav>
+            <a href="index.html">Homepage</a> |
+            <a href="blog.html">Blog</a> |
+            <a href="portfolio.html">GIS Portfolio</a> |
+            <a href="lumpy.html">In Memoriam</a>
+        </nav>
+    </header>
+
     <div class="content">
         <img src="lumpy.jpg" alt="Lumpy the cat">
         <p>Don't forget her</p>
@@ -64,16 +89,14 @@
         const audio = document.getElementById('bg-audio');
         const hint = document.getElementById('hint');
         
-        // Listen for the first touch or click anywhere on the screen
         function playAudio() {
             audio.play().then(() => {
-                hint.style.display = 'none'; // Hide the hint once playing
+                hint.style.display = 'none';
             }).catch(err => console.log(err));
         }
 
         document.body.addEventListener('click', playAudio, { once: true });
         document.body.addEventListener('touchstart', playAudio, { once: true });
     </script>
-
 </body>
 </html>
