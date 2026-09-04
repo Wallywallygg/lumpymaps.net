@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lumpy</title>
     <style>
-        /* Fill the full screen and set background to solid black */
         body {
             background-color: #000000;
             color: #ffffff;
@@ -15,14 +14,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            cursor: pointer;
         }
 
-        /* Center content container */
         .content {
             text-align: center;
         }
 
-        /* Image sizing */
         .content img {
             max-width: 80vw;
             max-height: 60vh;
@@ -31,11 +29,16 @@
             margin: 0 auto 20px auto;
         }
 
-        /* Text styling */
         .content p {
             font-size: 1.5rem;
             letter-spacing: 1px;
-            margin: 0;
+            margin: 0 0 10px 0;
+        }
+
+        .tap-hint {
+            font-size: 0.9rem;
+            color: #888888;
+            font-style: italic;
         }
     </style>
 </head>
@@ -44,22 +47,24 @@
     <div class="content">
         <img src="lumpy.jpg" alt="Lumpy the cat">
         <p>Dont forget her</p>
+        <div id="hint" class="tap-hint">(Tap anywhere for sound)</div>
     </div>
 
-    <!-- HTML5 Audio Element -->
-    <audio id="bg-audio" src="dota.mp3" autoplay loop></audio>
+    <audio id="bg-audio" src="dota.mp3" loop></audio>
 
     <script>
-        // Fallback for modern browser autoplay restrictions
         const audio = document.getElementById('bg-audio');
+        const hint = document.getElementById('hint');
         
-        // Attempt to play on load
-        audio.play().catch(() => {
-            // If blocked by browser, play as soon as user clicks anywhere on page
-            document.addEventListener('click', () => {
-                audio.play();
-            }, { once: true });
-        });
+        // Listen for the first touch or click anywhere on the screen
+        function playAudio() {
+            audio.play().then(() => {
+                hint.style.display = 'none'; // Hide the hint once playing
+            }).catch(err => console.log(err));
+        }
+
+        document.body.addEventListener('click', playAudio, { once: true });
+        document.body.addEventListener('touchstart', playAudio, { once: true });
     </script>
 
 </body>
