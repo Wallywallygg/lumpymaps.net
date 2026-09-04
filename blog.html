@@ -6,15 +6,6 @@
     <title>Blog - Lumpymaps</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Custom font setup */
-        @font-face {
-            font-family: 'Overwave';
-            src: url('./overwave.otf') format('opentype'),
-                 url('./overwave.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-
         body {
             background-color: #ffffff;
             color: #000000;
@@ -24,22 +15,18 @@
         }
 
         header {
-            text-align: left;
             margin-bottom: 40px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
         }
 
-        /* Title styling */
-        header h1 {
-            font-family: 'Overwave', Impact, sans-serif;
-            font-size: clamp(3.5rem, 12vw, 7.5rem);
-            line-height: 0.9;
-            margin: 0 0 15px 0;
-            letter-spacing: -2px;
-        }
-
-        header h1 a {
-            color: #000000;
+        /* Clean subpage site brand */
+        .site-brand {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #000;
             text-decoration: none;
+            margin-right: 10px;
         }
 
         /* Navigation menu */
@@ -70,7 +57,7 @@
 
         .blog-list li strong {
             display: inline-block;
-            min-width: 120px;
+            min-width: 140px;
         }
 
         .blog-list a {
@@ -85,8 +72,8 @@
 </head>
 <body>
     <header>
-        <h1><a href="https://lumpymaps.net">LUMPYMAPS.NET</a></h1>
-        <nav>
+        <a href="index.html" class="site-brand">LUMPYMAPS.NET</a> | 
+        <nav style="display: inline;">
             <a href="index.html">Homepage</a> |
             <a href="blog.html">Blog</a> |
             <a href="portfolio.html">GIS Portfolio</a> |
@@ -97,7 +84,7 @@
     <main>
         <h2>Blog</h2>
         <ul class="blog-list">
-            <li><strong>09/03/2026 x2</strong> — <a href="posts/post2.html">All Units of Measure are FAKE!</a></li>                      
+            <li><strong>09/03/2026 x2</strong> — <a href="posts/post2.html">All Units of Measure are FAKE!</a></li>
             <li><strong>09/03/2026</strong> — <a href="posts/post1.html">Website??? Guh???</a></li>
         </ul>
     </main>
