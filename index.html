@@ -6,48 +6,48 @@
     <title>Lumpymaps</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* 1. Load the custom font */
+        /* 1. Fix custom font loading for GitHub Pages */
         @font-face {
             font-family: 'Overwave';
-            src: url('overwave.otf') format('opentype');
+            src: url('./overwave.otf') format('opentype'),
+                 url('overwave.otf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
         }
 
+        /* 2. Reverted background back to plain light background */
         body {
-            background-image: url('IMG20230806093151.jpg');
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-size: cover;
-            background-attachment: fixed;
-            color: #ffffff; 
+            background-color: #ffffff;
+            color: #000000;
             margin: 0;
             padding: 0;
+            font-family: Arial, sans-serif;
         }
 
-        /* 2. Left-align the header at the top */
+        /* 3. Left-align header at top */
         header {
             text-align: left;
             padding: 20px;
         }
 
-        /* 3. Apply the custom font and largest sizing to title */
+        /* Title styling with Overwave font */
         header h1 {
-            font-family: 'Overwave', sans-serif;
+            font-family: 'Overwave', Impact, sans-serif;
             font-size: 3.5em; 
             margin: 0 0 10px 0;
         }
 
-        /* Title link styling */
         header h1 a {
-            color: #ffffff;
+            color: #000000;
             text-decoration: none;
         }
 
-        /* Navigation styling using custom font and 2em size */
+        /* Navigation styling with Overwave font and updated "Lumpy" text */
         header nav, 
         header nav a {
-            font-family: 'Overwave', sans-serif;
+            font-family: 'Overwave', Impact, sans-serif;
             font-size: 2em;
-            color: #ffffff;
+            color: #000000;
             text-decoration: none;
         }
 
@@ -59,7 +59,6 @@
 <body>
 
     <header>
-        <!-- Title hyperlinked to lumpymaps.net -->
         <h1><a href="https://lumpymaps.net">LUMPYMAPS.NET</a></h1>
         <nav>
             <a href="index.html">Homepage</a> |
