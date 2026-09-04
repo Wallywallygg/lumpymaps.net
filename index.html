@@ -6,7 +6,7 @@
     <title>Lumpymaps</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* 1. Fix custom font loading for GitHub Pages */
+        /* 1. Custom font setup */
         @font-face {
             font-family: 'Overwave';
             src: url('./overwave.otf') format('opentype'),
@@ -15,26 +15,26 @@
             font-style: normal;
         }
 
-        /* 2. Reverted background back to plain light background */
         body {
             background-color: #ffffff;
             color: #000000;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             font-family: Arial, sans-serif;
         }
 
-        /* 3. Left-align header at top */
         header {
             text-align: left;
-            padding: 20px;
+            margin-bottom: 40px;
         }
 
-        /* Title styling with Overwave font */
+        /* Giant title scaling to match Punkto */
         header h1 {
             font-family: 'Overwave', Impact, sans-serif;
-            font-size: 3.5em; 
-            margin: 0 0 10px 0;
+            font-size: clamp(3.5rem, 12vw, 7.5rem);
+            line-height: 0.9;
+            margin: 0 0 15px 0;
+            letter-spacing: -2px;
         }
 
         header h1 a {
@@ -42,17 +42,28 @@
             text-decoration: none;
         }
 
-        /* Navigation styling with Overwave font and updated "Lumpy" text */
+        /* Navigation menu below header */
         header nav, 
         header nav a {
-            font-family: 'Overwave', Impact, sans-serif;
-            font-size: 2em;
+            font-family: Arial, sans-serif;
+            font-size: 1.1rem;
             color: #000000;
             text-decoration: none;
         }
 
         header nav a:hover {
             text-decoration: underline;
+        }
+
+        /* Main content layout */
+        main section {
+            margin-bottom: 30px;
+        }
+
+        main img {
+            max-width: 100%;
+            height: auto;
+            margin: 20px 0;
         }
     </style>
 </head>
@@ -67,6 +78,28 @@
             <a href="lumpy.html">Lumpy</a>
         </nav>
     </header>
+
+    <main>
+        <section id="about">
+            <h2>About</h2>
+            <p>Welcome to my site. I work in GIS and build stuff.</p>
+        </section>
+
+        <section id="portfolio">
+            <h2>Projects</h2>
+            <ul>
+                <li><a href="#">Project One</a> - A short description of what it does.</li>
+                <li><a href="#">Project Two</a> - A short description of what it does.</li>
+            </ul>
+        </section>
+
+        <img src="bald.png" alt="Bald image">
+
+        <section id="contact">
+            <h2>Contact</h2>
+            <p>Email me at: <a href="mailto:walterm@chef.net">walterm@chef.net</a></p>
+        </section>
+    </main>
 
 </body>
 </html>
