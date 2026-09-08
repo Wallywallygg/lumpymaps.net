@@ -14,6 +14,7 @@
             display: flex;
             flex-direction: column; /* Stacks header at top, content below */
             cursor: pointer;
+            user-select: none; /* Prevents selecting text/images while clicking fast */
         }
 
         /* Header positioned at top left with white links */
@@ -22,6 +23,8 @@
             padding: 20px;
             box-sizing: border-box;
             text-align: left; /* Left justification */
+            position: relative;
+            z-index: 10;
         }
 
         header nav, 
@@ -46,6 +49,7 @@
             border-radius: 8px;
             display: block;
             margin: 0 auto 20px auto;
+            will-change: transform; /* Helps render high-speed rotations smoothly */
         }
 
         .content p {
@@ -64,7 +68,7 @@
 <body>
 
     <header>
-        <nav>
+        <nav style="font-size: 2em;">
             <a href="index.html">Homepage</a> |
             <a href="blog.html">Blog</a> |
             <a href="sources/GISPortfolio.pdf">GIS Portfolio</a> |
@@ -74,9 +78,9 @@
     </header>
 
     <div class="content">
-        <img src="images/lumpy.jpg" alt="Lumpy the cat">
+        <img id="lumpy-img" src="images/lumpy.jpg" alt="Lumpy the cat">
         <p>Dont forget her</p>
-        <div id="hint" class="tap-hint">(Tap anywhere for sound)</div>
+        <div id="hint" class="tap-hint">(Tap anywhere for sound and spin)</div>
     </div>
 
     <audio id="bg-audio" src="sources/breakfastclub.mp3" loop></audio>
@@ -84,16 +88,47 @@
     <script>
         const audio = document.getElementById('bg-audio');
         const hint = document.getElementById('hint');
-                
+        const lumpyImg = document.getElementById('lumpy-img');
+
+        let currentRotation = 0;
+        let speed = 0;
+        const speedBoost = 12; // Degrees added to speed per click
+        const friction = 0.96;  // Deceleration factor (0.95-0.99 for smooth spin down)
+
+        // 1. Audio logic
         function playAudio() {
             audio.play().then(() => {
                 hint.style.display = 'none';
             }).catch(err => console.log(err));
         }
 
-        document.body.addEventListener('click', playAudio, { once: true });
-        document.body.addEventListener('touchstart', playAudio, { once: true });
-    </script>
+        // 2. Physics animation loop
+        function animate() {
+            if (Math.abs(speed) > 0.01) {
+                currentRotation += speed;
+                speed *= friction; // Gradual slowdown
+                lumpyImg.style.transform = `rotate(${currentRotation}deg)`;
+            } else {
+                speed = 0;
+            }
+            requestAnimationFrame(animate);
+        }
+        animate(); // Start listening for frame updates
 
+        // 3. Click/Tap handler
+        function handleClick(e) {
+            // Prevent clicks on navigation links from triggering spin physics or blocking redirection
+            if (e.target.tagName === 'A') return;
+
+            // Trigger audio on first click
+            playAudio();
+
+            // Add rotation speed
+            speed += speedBoost;
+        }
+
+        document.body.addEventListener('click', handleClick);
+        document.body.addEventListener('touchstart', handleClick);
+    </script>
 </body>
 </html>
