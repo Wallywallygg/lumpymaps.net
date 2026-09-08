@@ -15,6 +15,7 @@
             flex-direction: column;
             cursor: pointer;
             user-select: none;
+            -webkit-user-select: none;
         }
 
         header {
@@ -94,32 +95,30 @@
         const speedBoost = 12;
         const friction = 0.96;
 
-        // Web Audio API Setup for Pitch-Shifted Meows
-        let audioCtx;
+        // Web Audio API Setup
+        let audioCtx = null;
         let meowBuffer = null;
 
-        // Fetch and decode meow.wav
-        function loadMeowSound() {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            fetch('sources/meow.wav')
-                .then(response => response.arrayBuffer())
-                .then(data => audioCtx.decodeAudioData(data))
-                .then(buffer => {
-                    meowBuffer = buffer;
-                })
-                .catch(err => console.log('Error loading meow.wav:', err));
-        }
-
-        loadMeowSound();
-
-        // Play meow sound with random pitch shift
-        function playPitchShiftedMeow() {
-            if (!meowBuffer || !audioCtx) return;
-
-            // Resume AudioContext if suspended by browser autoplay policy
+        function initAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
             if (audioCtx.state === 'suspended') {
                 audioCtx.resume();
             }
+            if (!meowBuffer) {
+                fetch('sources/meow.wav')
+                    .then(response => response.arrayBuffer())
+                    .then(data => audioCtx.decodeAudioData(data))
+                    .then(buffer => {
+                        meowBuffer = buffer;
+                    })
+                    .catch(err => console.log('Error loading meow.wav:', err));
+            }
+        }
+
+        function playPitchShiftedMeow() {
+            if (!meowBuffer || !audioCtx) return;
 
             const source = audioCtx.createBufferSource();
             source.buffer = meowBuffer;
@@ -132,7 +131,6 @@
             source.start(0);
         }
 
-        // Background audio trigger
         function playAudio() {
             audio.play().then(() => {
                 hint.style.display = 'none';
@@ -152,18 +150,21 @@
         }
         animate();
 
-        // Click/Tap handler
+        // Unified Click Handler
         function handleClick(e) {
+            // Prevent navigation link clicks from triggering sound/spin
             if (e.target.tagName === 'A') return;
 
+            // Initialize audio on first user click (fixes desktop autoplay policies)
+            initAudioContext();
             playAudio();
             playPitchShiftedMeow();
 
             speed += speedBoost;
         }
 
-        document.body.addEventListener('click', handleClick);
-        document.body.addEventListener('touchstart', handleClick);
+        // Using pointerdown handles touch and click consistently without double-firing
+        document.body.addEventListener('pointerdown', handleClick);
     </script>
 </body>
 </html>
