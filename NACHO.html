@@ -52,7 +52,13 @@
         .content p {
             font-size: 1.5rem;
             letter-spacing: 1px;
+            margin: 0 0 4px 0;
+        }
+        .sub-caption {
+            font-size: 1rem;
+            color: #888888;
             margin: 0 0 10px 0;
+            font-style: italic;
         }
         .tap-hint {
             font-size: 0.9rem;
@@ -98,27 +104,31 @@
             <a href="sources/GISPortfolio.pdf">GIS Portfolio</a> |
             <a href="projects.html">Projects</a> |
             <a href="lumpy.html">Lumpy</a> |
-            <a href="NACHO.html">Nacho</a>
+            <a href="NACHO.html" id="nacho-nav-link">Nacho</a>
         </nav>
     </header>
 
     <div class="content">
         <img id="nacho-img" src="images/nacho.jpg" alt="Nacho the dog">
-        <p>Good boy Nacho</p>
+        <p>¿Qué está haciendo el perro?</p>
+        <div class="sub-caption">(what the dog doin?)</div>
         <div id="hint" class="tap-hint">(Tap anywhere to drop Nachos)</div>
         <button id="clear-btn" class="clear-btn">Clear Screen</button>
     </div>
 
-    <!-- Clear Sound -->
+    <!-- Audio Elements -->
     <audio id="sound-clear" src="sources/tacobell2.mp3" preload="auto"></audio>
+    <audio id="sound-dog-doin" src="sources/whatthedogdoin.wav" preload="auto"></audio>
 
     <script>
         const soundClear = document.getElementById('sound-clear');
+        const soundDogDoin = document.getElementById('sound-dog-doin');
         const hint = document.getElementById('hint');
         const clearBtn = document.getElementById('clear-btn');
+        const nachoNavLink = document.getElementById('nacho-nav-link');
         
         let fallingNachos = [];
-        const MAX_NACHOS = 100; // Cap lowered to 100
+        const MAX_NACHOS = 100;
 
         // Play spammable audio without cutting off previous plays
         function playSpammableDropSound() {
@@ -195,8 +205,15 @@
 
         // Event listener for the clear button
         clearBtn.addEventListener('pointerdown', (e) => {
-            e.stopPropagation(); // Prevents spawning a nacho when clicking the button
+            e.stopPropagation();
             clearScreen();
+        });
+
+        // Event listener for Nacho link in header
+        nachoNavLink.addEventListener('click', (e) => {
+            e.preventDefault(); // Stays on page and plays audio
+            soundDogDoin.currentTime = 0;
+            soundDogDoin.play().catch(err => console.log('Audio play error:', err));
         });
 
         document.body.addEventListener('pointerdown', handleClick);
