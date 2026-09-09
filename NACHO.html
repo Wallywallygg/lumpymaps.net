@@ -53,12 +53,21 @@
             font-size: 1.5rem;
             letter-spacing: 1px;
             margin: 0 0 4px 0;
+            pointer-events: auto; /* Re-enable pointer events for click audio */
+            display: inline-block;
+        }
+        .content p:hover {
+            color: #cccccc;
         }
         .sub-caption {
             font-size: 1rem;
             color: #888888;
             margin: 0 0 10px 0;
             font-style: italic;
+            pointer-events: auto; /* Re-enable pointer events for click audio */
+        }
+        .sub-caption:hover {
+            color: #ffffff;
         }
         .tap-hint {
             font-size: 0.9rem;
@@ -76,7 +85,7 @@
             border-radius: 4px;
             cursor: pointer;
             pointer-events: auto; /* Re-enable pointer events for button click */
-            z-index: 1001;
+            z-index: 10000; /* High z-index ensures it stays above falling Nachos (z-index 10) */
             position: relative;
             font-family: Arial, sans-serif;
         }
@@ -91,7 +100,7 @@
             height: auto;
             border-radius: 6px;
             pointer-events: none;
-            z-index: 10; /* Higher than main Nacho (.content) */
+            z-index: 10;
             will-change: transform;
         }
     </style>
@@ -110,8 +119,8 @@
 
     <div class="content">
         <img id="nacho-img" src="images/nacho.jpg" alt="Nacho the dog">
-        <p>¿Qué está haciendo el perro?</p>
-        <div class="sub-caption">(what the dog doin?)</div>
+        <p id="main-caption">¿Qué está haciendo el perro?</p> <br>
+        <div id="sub-caption" class="sub-caption">"what the dog doin?"</div>
         <div id="hint" class="tap-hint">(Tap anywhere to drop Nachos)</div>
         <button id="clear-btn" class="clear-btn">Clear Screen</button>
     </div>
@@ -126,9 +135,16 @@
         const hint = document.getElementById('hint');
         const clearBtn = document.getElementById('clear-btn');
         const nachoNavLink = document.getElementById('nacho-nav-link');
+        const mainCaption = document.getElementById('main-caption');
+        const subCaption = document.getElementById('sub-caption');
         
         let fallingNachos = [];
         const MAX_NACHOS = 100;
+
+        function playDogSound() {
+            soundDogDoin.currentTime = 0;
+            soundDogDoin.play().catch(err => console.log('Audio play error:', err));
+        }
 
         // Play spammable audio without cutting off previous plays
         function playSpammableDropSound() {
@@ -190,8 +206,11 @@
         updatePhysics();
 
         function handleClick(e) {
-            // Ignore clicks on navigation links or the clear button itself
-            if (e.target.tagName === 'A' || e.target.id === 'clear-btn') return;
+            // Ignore clicks on navigation links, clear button, or text elements that trigger sound
+            if (e.target.tagName === 'A' || 
+                e.target.id === 'clear-btn' || 
+                e.target.id === 'main-caption' || 
+                e.target.id === 'sub-caption') return;
 
             if (hint) hint.style.display = 'none';
 
@@ -209,11 +228,21 @@
             clearScreen();
         });
 
-        // Event listener for Nacho link in header
+        // Audio trigger for Nacho link in header
         nachoNavLink.addEventListener('click', (e) => {
-            e.preventDefault(); // Stays on page and plays audio
-            soundDogDoin.currentTime = 0;
-            soundDogDoin.play().catch(err => console.log('Audio play error:', err));
+            e.preventDefault();
+            playDogSound();
+        });
+
+        // Audio triggers for caption and sub-caption text
+        mainCaption.addEventListener('pointerdown', (e) => {
+            e.stopPropagation();
+            playDogSound();
+        });
+
+        subCaption.addEventListener('pointerdown', (e) => {
+            e.stopPropagation();
+            playDogSound();
         });
 
         document.body.addEventListener('pointerdown', handleClick);
