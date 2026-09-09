@@ -103,6 +103,11 @@
             z-index: 10;
             will-change: transform;
         }
+        /* Special 1 in 167 Rare Nacho Variant */
+        .falling-nacho.shiny-nacho {
+            width: 128px; /* 20% smaller (160px * 0.8) */
+            filter: hue-rotate(90deg) saturate(2); /* Green tint filter */
+        }
     </style>
 </head>
 <body>
@@ -120,7 +125,7 @@
     <div class="content">
         <img id="nacho-img" src="images/nacho.jpg" alt="Nacho the dog">
         <p id="main-caption">¿Qué está haciendo el perro?</p> <br>
-        <div id="sub-caption" class="sub-caption">"what the dog doin?"</div>
+        <div id="sub-caption" class="sub-caption">(what the dog doin?)</div>
         <div id="hint" class="tap-hint">(Tap anywhere to drop Nachos)</div>
         <button id="clear-btn" class="clear-btn">Clear Screen</button>
     </div>
@@ -155,10 +160,16 @@
         function spawnNacho() {
             const img = document.createElement('img');
             img.src = 'images/nacho2.jpg';
-            img.className = 'falling-nacho';
+            
+            // 1 in 167 chance for the rare shiny Nacho
+            const isShiny = Math.floor(Math.random() * 167) === 0;
+            
+            img.className = 'falling-nacho' + (isShiny ? ' shiny-nacho' : '');
+            
+            const currentWidth = isShiny ? 128 : 160;
             
             // Random horizontal start position
-            const startX = Math.random() * (window.innerWidth - 160);
+            const startX = Math.random() * (window.innerWidth - currentWidth);
             const startY = -180;
             // Land randomly across the lower/middle section of the screen
             const targetY = window.innerHeight - 180 - (Math.random() * (window.innerHeight * 0.7));
@@ -174,7 +185,8 @@
                 y: startY,
                 targetY: targetY,
                 speed: 12 + Math.random() * 10,
-                rotation: (Math.random() - 0.5) * 60
+                rotation: (Math.random() - 0.5) * 60,
+                isShiny: isShiny // Tracks if flipped horizontally (scaleX(-1))
             };
 
             fallingNachos.push(nachoObj);
@@ -198,7 +210,10 @@
                 if (nacho.y < nacho.targetY) {
                     nacho.y += nacho.speed;
                     if (nacho.y > nacho.targetY) nacho.y = nacho.targetY;
-                    nacho.element.style.transform = `translateY(${nacho.y - (-180)}px) rotate(${nacho.rotation}deg)`;
+                    
+                    // Apply translation, rotation, and horizontal flip if shiny
+                    const flip = nacho.isShiny ? ' scaleX(-1)' : '';
+                    nacho.element.style.transform = `translateY(${nacho.y - (-180)}px) rotate(${nacho.rotation}deg)${flip}`;
                 }
             });
             requestAnimationFrame(updatePhysics);
