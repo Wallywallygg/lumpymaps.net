@@ -186,7 +186,7 @@
 
         function spawnNacho() {
             const img = document.createElement('img');
-            img.src = 'images/nacho2.jpg';
+            img.src = 'images/nacho2.JPG';
             img.className = 'falling-nacho';
             
             // Random horizontal start position
