@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geospatial Line-of-Sight Modeling - Lumpymaps</title>
+</head>
+<body>
+
+    <nav style="font-size: 2em;">
+        <a href="../index.html">Homepage</a> |
+        <a href="../blog.html">Blog</a> |
+        <a href="../portfolio.html">GIS Portfolio</a> |
+        <a href="../lumpy.html">Lumpy</a>
+    </nav>
+
+    <hr>
+
+    <main>
+        <h2>Geospatial Line-of-Sight Modeling for Cellular Coverage in Washington State</h2>
+        
+        <p><em>09/08/2026</em></p>
+
+        <p>This is adapted from my Geography 404 final project from June of 2025. It's arguably the GIS project I am most proud of. The problem: Everybody likes internet (or at least most of us do). The issue is that deadzones still persist across many rural and mountainous areas in Washington State.</p>
+
+        <p>Data sources: Cell tower locations were pulled from the 2022 FCC dataset and the 2025 CRTC (Canada) dataset.</p>
+
+        <p>Methodology: Clipped two 20,000+ cell tower location shapefiles to be constrained to Washington. I applied a 30-mile buffer zone around the state border because signals don't stop right at state boundaries.</p>
+
+        <p>Each point on the map represents a single cell tower. It came out to around 865 total towers within this clipped boundary. (Why does Vancouver have so many???)</p>
+
+        <img src="../images/WATowers1.png" alt="Clipped Towers Map">
+
+        <p>Unmastered viewshed analysis. A viewshed calculates visible line-of-sight areas from specific observation points based on elevation data. In this case, it models the theoretical reach of signal coverage from each tower across the terrain.</p>
+
+        <img src="../images/WATowers2.png" alt="Viewshed Analysis Map">
+
+        <p>Level 1 coverage, 10-mile buffer area around each tower. The areas in green may have limited service, if any at all.</p>
+
+        <img src="../images/WATowersgreen.png" alt="Level 1 Coverage Green Map">
+
+        <p>Level 2 coverage, 20-mile buffer area around each tower. Yellow areas probably don't have service.</p>
+
+        <img src="../images/WATowersyellow.png" alt="Level 2 Coverage Yellow Map">
+
+        <p>Level 3 coverage, 25-mile buffer area around each tower. Red areas definitely do not have any cell service. Total uncovered area is ~314.4 sq mi.</p>
+
+        <img src="../images/WATowersred.png" alt="Level 3 Coverage Red Map">
+
+        <p>What these maps interpret: places with absolutely no service whatsoever, representing the farthest possible locations in the state from a cell tower. This shows us two things: 1) areas so remote that you are unlikely to get any emergency help, and 2) perfect spots for people looking to live truly off-grid and disconnected.</p>
+
+        <p>Here are some of those key locations:</p>
+
+        <p>Site 1 — Kinda near Mt. Adams (~8.95 square miles)</p>
+        <img src="../images/WASite1.png" alt="Site 1 near Mt Adams">
+
+        <p>Site 2 — East of Mt. Olympus (~7.78 square miles)</p>
+        <img src="../images/WASite2.png" alt="Site 2 East of Mt Olympus">
+
+        <p>Site 3 — Almost the entirety of the Glacier Peak Wilderness (~282.12 square miles)</p>
+        <img src="../images/WASite3.png" alt="Site 3 Glacier Peak Wilderness">
+
+        <p>Site 4 — Middle of nowheresville Okanogan County / Tonasket? (~15.55 square miles)</p>
+        <img src="../images/WASite4.png" alt="Site 4 Okanogan County">
+
+        <h3>Limitations of Methodology:</h3>
+        <ul>
+            <li>Assumes coverage purely based on line of sight and elevation, without taking into account vegetation density, buildings, or micro-topography.</li>
+            <li>Signal strength radii were generalized to fixed 10, 20, and 25-mile buffers because the FCC dataset didn't specify technology types (5G, 4G LTE, and 3G all have drastically different effective ranges).</li>
+            <li>Lumped all cellular providers together rather than isolating carrier-specific networks.</li>
+            <li>Does not account for modern directional antennas or beamforming techniques.</li>
+            <li>Processing time was heavy: took close to an hour to run and filter 800+ rasters. (I wanted to run this for the entire US, but the processing overhead was far too high. Potential future project?)</li>
+        </ul>
+
+        <h3>Conclusion:</h3>
+        <ul>
+            <li>Despite Washington being recognized as a major tech hub, people often forget that over half the state is rural terrain. Telecom providers simply lack the financial incentive to place expensive infrastructure in sparse areas.</li>
+            <li>Emerging technologies like Starlink and direct-to-cell satellite coverage are increasingly bridging these gaps for people living in the middle of nowhere.</li>
+            <li>Potential backpacking sites to explore this summer???</li>
+        </ul>
+    </main>
+
+</body>
+</html>
