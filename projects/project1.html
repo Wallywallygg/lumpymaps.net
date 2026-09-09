@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geospatial Line-of-Sight Modeling - Lumpymaps</title>
+    <style>
+        img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 15px 0;
+        }
+    </style>
 </head>
 <body>
 
@@ -61,22 +70,23 @@
         <img src="../images/WASite3.png" alt="Site 3 Glacier Peak Wilderness">
 
         <p>Site 4 — Middle of nowheresville Okanogan County / Tonasket? (~15.55 square miles)</p>
+
         <img src="../images/WASite4.png" alt="Site 4 Okanogan County">
 
         <h3>Limitations of Methodology:</h3>
         <ul>
-            <li>Assumes coverage purely based on line of sight and elevation, without taking into account vegetation density, buildings, or micro-topography.</li>
+            <li>My Analysis assumes coverage purely based on line of sight and elevation, without taking into account vegetation density, buildings, or micro-topography.</li>
             <li>Signal strength radii were generalized to fixed 10, 20, and 25-mile buffers because the FCC dataset didn't specify technology types (5G, 4G LTE, and 3G all have drastically different effective ranges).</li>
-            <li>Lumped all cellular providers together rather than isolating carrier-specific networks.</li>
-            <li>Does not account for modern directional antennas or beamforming techniques.</li>
-            <li>Processing time was heavy: took close to an hour to run and filter 800+ rasters. (I wanted to run this for the entire US, but the processing overhead was far too high. Potential future project?)</li>
+            <li>Lumped all cellular providers together rather than isolating provider-specific networks.</li>
+            <li>A viewshed does not account for modern directional antennas or beamforming techniques.</li>
+            <li>Processing time was way too heavy for my machine, it took close to an hour to run and render 800+ rasters. (I wanted to run this for the entire US, but the processing time was far too high. Potential future project?)</li>
         </ul>
 
         <h3>Conclusion:</h3>
         <ul>
-            <li>Despite Washington being recognized as a major tech hub, people often forget that over half the state is rural terrain. Telecom providers simply lack the financial incentive to place expensive infrastructure in sparse areas.</li>
-            <li>Emerging technologies like Starlink and direct-to-cell satellite coverage are increasingly bridging these gaps for people living in the middle of nowhere.</li>
-            <li>Potential backpacking sites to explore this summer???</li>
+            <li>Despite Washington being recognized as a major tech state, people often forget that over half the state is rural. Telecom providers simply lack the incentive to place expensive telecom infrastructure in rural areas.</li>
+            <li>Emerging technologies like Starlink and such are literally designedfor people living in the middle of nowhere.</li>
+            <li>These might show potential backpacking sites to explore this summer???</li>
         </ul>
     </main>
 
