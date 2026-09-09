@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nacho</title>
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            overflow: hidden; /* Keeps falling nachos from creating scrollbars */
+            position: relative;
+        }
+
+        header {
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: left;
+            position: relative;
+            z-index: 10;
+        }
+
+        header nav, 
+        header nav a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        header nav a:hover {
+            text-decoration: underline;
+        }
+
+        .content {
+            text-align: center;
+            margin: auto;
+            position: relative;
+            z-index: 5; /* Keeps main Nacho above falling background nachos */
+        }
+
+        .content img {
+            max-width: 80vw;
+            max-height: 60vh;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto 20px auto;
+            pointer-events: none; /* Prevents image from blocking tap triggers */
+        }
+
+        .content p {
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            margin: 0 0 10px 0;
+        }
+
+        .tap-hint {
+            font-size: 0.9rem;
+            color: #888888;
+            font-style: italic;
+        }
+
+        /* Styles for falling Nacho images */
+        .falling-nacho {
+            position: absolute;
+            top: -120px;
+            width: 80px;
+            height: auto;
+            border-radius: 6px;
+            pointer-events: none;
+            z-index: 2;
+            animation: fall 2.5s linear forwards;
+        }
+
+        @Here is the code for **`NACHO.html`**. It maintains your site navigation and style, keeps the central `nacho.jpg` fixed in place, drops falling Nachos across the screen on every tap accompanied by `tacobell1.mp3`, and automatically triggers `tacobell2.mp3` to clear the screen once it gets packed.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nacho</title>
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            overflow: hidden; /* Prevents scrollbars as images fall */
+            position: relative;
+        }
+        header {
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: left;
+            position: relative;
+            z-index: 100;
+        }
+        header nav, 
+        header nav a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        header nav a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            text-align: center;
+            margin: auto;
+            position: relative;
+            z-index: 50; /* Keeps center Nacho above falling images */
+            pointer-events: none; /* Let clicks pass through content to trigger spawn */
+        }
+        .content img {
+            max-width: 80vw;
+            max-height: 60vh;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto 20px auto;
+        }
+        .content p {
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            margin: 0 0 10px 0;
+        }
+        .tap-hint {
+            font-size: 0.9rem;
+            color: #888888;
+            font-style: italic;
+        }
+        /* Style for dynamically spawned falling images */
+        .falling-nacho {
+            position: fixed;
+            width: 100px; /* Adjust size of falling images as needed */
+            height: auto;
+            border-radius: 6px;
+            pointer-events: none;
+            z-index: 10;
+            will-change: transform;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav style="font-size: 2em;">
+            <a href="index.html">Homepage</a> |
+            <a href="blog.html">Blog</a> |
+            <a href="sources/GISPortfolio.pdf">GIS Portfolio</a> |
+            <a href="projects.html">Projects</a> |
+            <a href="lumpy.html">Lumpy</a>
+        </nav>
+    </header>
+
+    <div class="content">
+        <img id="nacho-img" src="images/nacho.jpg" alt="Nacho the dog">
+        <p>Good boy Nacho</p>
+        <div id="hint" class="tap-hint">(Tap anywhere to drop Nachos)</div>
+    </div>
+
+    <!-- Audio Files -->
+    <audio id="sound-drop" src="sources/tacobell1.mp3" preload="auto"></audio>
+    <audio id="sound-clear" src="sources/tacobell2.mp3" preload="auto"></audio>
+
+    <script>
+        const soundDrop = document.getElementById('sound-drop');
+        const soundClear = document.getElementById('sound-clear');
+        const hint = document.getElementById('hint');
+        
+        let fallingNachos = [];
+        const MAX_NACHOS = 35; // Number of images before screen clears
+
+        function spawnNacho() {
+            const img = document.createElement('img');
+            img.src = 'images/nacho2.jpg';
+            img.className = 'falling-nacho';
+            
+            // Random horizontal start position
+            const startX = Math.random() * (window.innerWidth - 100);
+            const startY = -120;
+            // Land at a random position near the bottom half
+            const targetY = window.innerHeight - 120 - (Math.random() * (window.innerHeight * 0.4));
+            
+            img.style.left = `${startX}px`;
+            img.style.top = `${startY}px`;
+            
+            document.body.appendChild(img);
+
+            const nachoObj = {
+                element: img,
+                x: startX,
+                y: startY,
+                targetY: targetY,
+                speed: 8 + Math.random() * 6,
+                rotation: (Math.random() - 0.5) * 40
+            };
+
+            fallingNachos.push(nachoObj);
+        }
+
+        function playSound(audioElement) {
+            audioElement.currentTime = 0;
+            audioElement.play().catch(err => console.log('Audio play error:', err));
+        }
+
+        function clearScreen() {
+            playSound(soundClear);
+            
+            // Remove image elements from DOM
+            fallingNachos.forEach(nacho => {
+                if (nacho.element && nacho.element.parentNode) {
+                    nacho.element.parentNode.removeChild(nacho.element);
+                }
+            });
+            fallingNachos = [];
+        }
+
+        // Animation loop for physics
+        function updatePhysics() {
+            fallingNachos.forEach(nacho => {
+                if (nacho.y < nacho.targetY) {
+                    nacho.y += nacho.speed;
+                    if (nacho.y > nacho.targetY) nacho.y = nacho.targetY;
+                    nacho.element.style.transform = `translateY(${nacho.y - (-120)}px) rotate(${nacho.rotation}deg)`;
+                }
+            });
+            requestAnimationFrame(updatePhysics);
+        }
+        updatePhysics();
+
+        function handleClick(e) {
+            // Allow navigation links to work normally
+            if (e.target.tagName === 'A') return;
+
+            if (hint) hint.style.display = 'none';
+
+            if (fallingNachos.length >= MAX_NACHOS) {
+                clearScreen();
+            } else {
+                playSound(soundDrop);
+                spawnNacho();
+            }
+        }
+
+        document.body.addEventListener('pointerdown', handleClick);
+    </script>
+</body>
+</html>
