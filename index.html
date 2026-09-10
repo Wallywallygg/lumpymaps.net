@@ -8,7 +8,7 @@
     <style>
         /* Custom font setup for Helvetica Neue */
         @font-face {
-            font-family: 'HelveticaNeue';
+            font-family: 'HelveticaNeueCustom';
             src: url('sources/HelveticaNeue.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
@@ -26,26 +26,26 @@
         }
         /* Giant title scaling for homepage */
         header h1 {
-            font-family: 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: 'HelveticaNeueCustom', Helvetica, Arial, sans-serif;
             font-size: clamp(3.5rem, 12vw, 7.5rem);
             line-height: 0.9;
             margin: 0 0 15px 0;
             letter-spacing: -2px;
         }
-        /* Continuous underline wrapper for secret title link */
-        .title-link {
-            text-decoration: none;
+        header h1 a {
             color: #000000;
-            display: inline-block;
+            text-decoration: none;
         }
-        .title-link:hover {
+        header h1 a:hover {
             text-decoration: underline;
-            text-decoration-color: #000000;
         }
-        /* House of Lumpy signature blue text inside title */
+        /* House of Lumpy signature blue link */
         .house-of-lumpy {
             color: #0000FF !important;
-            text-decoration: none !important;
+            text-decoration: none;
+        }
+        .house-of-lumpy:hover {
+            text-decoration: underline;
         }
         /* Navigation menu below header */
         header nav, 
@@ -65,7 +65,7 @@
 </head>
 <body>
     <header>
-        <h1>[<a href="index.html" class="title-link"><a href="lumpy.html" class="house-of-lumpy">LUMPY</a>MAPS.NET</a>]</h1>
+        <h1>[<a href="lumpy.html" class="house-of-lumpy">LUMPY</a><a href="index.html">MAPS.NET</a>]</h1>
         <nav>
             <a href="index.html">Homepage</a> |
             <a href="blog.html">Blog</a> |
