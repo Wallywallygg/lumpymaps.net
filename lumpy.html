@@ -1,4 +1,112 @@
-<!-- Update button text to reflect music muting -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumpy</title>
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            position: relative;
+            overflow-x: hidden;
+        }
+        header {
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: left;
+            position: relative;
+            z-index: 10;
+        }
+        header nav, 
+        header nav a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        header nav a:hover {
+            text-decoration: underline;
+        }
+        .nacho-trigger {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .nacho-trigger:hover {
+            text-decoration: underline;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+        #lumpy-img {
+            max-width: 80vw;
+            max-height: 60vh;
+            object-fit: contain;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            margin-bottom: 20px;
+        }
+        .subtext {
+            font-size: 1.2rem;
+            margin: 5px 0;
+        }
+        .house-of-lumpy {
+            color: #0000FF !important;
+            text-decoration: none;
+        }
+        .house-of-lumpy:hover {
+            text-decoration: underline;
+        }
+        .mute-btn {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            color: #555555;
+            font-size: 0.75rem;
+            cursor: pointer;
+            z-index: 20;
+            opacity: 0.6;
+            transition: opacity 0.2s ease;
+        }
+        .mute-btn:hover {
+            opacity: 1;
+            color: #888888;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav style="font-size: 1.1rem;">
+            <a href="index.html">Homepage</a> |
+            <a href="blog.html">Blog</a> |
+            <a href="sources/GISPortfolio.pdf">GIS Portfolio</a> |
+            <a href="projects.html">Projects</a> |
+            <a href="NACHO.html" id="nacho-link" class="nacho-trigger">Nacho</a>
+        </nav>
+    </header>
+
+    <main>
+        <img id="lumpy-img" src="images/lumpy.jpg" alt="Lumpy">
+        <p class="subtext">Post this cat!</p>
+        <p class="subtext">click anywhere to <a href="lumpy.html" class="house-of-lumpy">lump</a> around!</p>
+    </main>
+
+    <!-- Discrete Music Mute Toggle -->
     <button id="mute-toggle" class="mute-btn">mute music</button>
 
     <!-- Audio Elements -->
@@ -18,7 +126,7 @@
         const muteBtn = document.getElementById('mute-toggle');
         const nachoLink = document.getElementById('nacho-link');
 
-        // Unlock audio context on first user interaction
+        // Unlock audio context on first click
         function unlockAudio() {
             if (!audioUnlocked) {
                 if (!isMusicMuted) {
@@ -28,11 +136,11 @@
             }
         }
 
-        // Spin image and play meow sound on page click
+        // Spin image and play meow SFX on page click
         document.body.addEventListener('click', (e) => {
             unlockAudio();
 
-            // Ignore click if user clicked directly on header nav links or mute button
+            // Ignore click if user clicked directly on nav links or mute button
             if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
 
             currentRotation += 360;
@@ -43,12 +151,12 @@
             meowSound.play().catch(() => {});
         });
 
-        // Toggle background music while leaving SFX alone
+        // Toggle background music ONLY (leaves SFX untouched)
         muteBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             isMusicMuted = !isMusicMuted;
             muteBtn.textContent = isMusicMuted ? 'unmute music' : 'mute music';
-            
+
             if (isMusicMuted) {
                 bgMusic.pause();
             } else if (audioUnlocked) {
@@ -60,13 +168,14 @@
         nachoLink.addEventListener('click', (e) => {
             unlockAudio();
             e.preventDefault();
-            
+
             dogSound.currentTime = 0;
             dogSound.play().catch(() => {});
-            
-            // Navigate to NACHO.html after sound starts
+
             setTimeout(() => {
                 window.location.href = nachoLink.href;
             }, 500);
         });
     </script>
+</body>
+</html>
