@@ -36,7 +36,6 @@
         header nav a:hover {
             text-decoration: underline;
         }
-        /* Secret Nacho trigger styling */
         .nacho-trigger {
             color: #ffffff;
             text-decoration: none;
@@ -51,14 +50,12 @@
             align-items: center;
             padding: 20px;
         }
-        /* Spin transition for Lumpy image */
         #lumpy-img {
             max-width: 80vw;
             max-height: 70vh;
             object-fit: contain;
             transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
-        /* Unobtrusive Mute Toggle Button at the bottom */
         .mute-btn {
             position: fixed;
             bottom: 15px;
@@ -93,29 +90,48 @@
         <img id="lumpy-img" src="images/lumpy.jpg" alt="Lumpy">
     </main>
 
-    <!-- Unobtrusive mute toggle -->
     <button id="mute-toggle" class="mute-btn">mute sfx</button>
 
-    <!-- Audio Elements -->
-    <audio id="bg-music" src="audio/lumpy_theme.mp3" loop autoplay></audio>
-    <audio id="dog-sound" src="audio/whatthedogdoin.wav" preload="auto"></audio>
+    <!-- Audio Elements pointing to sources/ folder -->
+    <audio id="bg-music" src="sources/breakfastclub.mp3" loop preload="auto"></audio>
+    <audio id="meow-sound" src="sources/meow.wav" preload="auto"></audio>
+    <audio id="dog-sound" src="sources/whatthedogdoin.wav" preload="auto"></audio>
 
     <script>
         let currentRotation = 0;
         let isMuted = false;
+        let audioUnlocked = false;
 
+        const bgMusic = document.getElementById('bg-music');
+        const meowSound = document.getElementById('meow-sound');
+        const dogSound = document.getElementById('dog-sound');
         const lumpyImg = document.getElementById('lumpy-img');
         const muteBtn = document.getElementById('mute-toggle');
-        const dogSound = document.getElementById('dog-sound');
         const nachoLink = document.getElementById('nacho-link');
 
-        // Spin image 360 degrees on every click
+        // Unlock audio context on first user interaction
+        function unlockAudio() {
+            if (!audioUnlocked) {
+                bgMusic.play().catch(() => {});
+                audioUnlocked = true;
+            }
+        }
+
+        // Spin image and play meow sound on page click
         document.body.addEventListener('click', (e) => {
+            unlockAudio();
+
             // Ignore click if user clicked directly on header nav links or mute button
             if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
 
             currentRotation += 360;
             lumpyImg.style.transform = `rotate(${currentRotation}deg)`;
+
+            // Play meow sound if SFX are not muted
+            if (!isMuted) {
+                meowSound.currentTime = 0;
+                meowSound.play().catch(() => {});
+            }
         });
 
         // Toggle sound effects without affecting background music
@@ -123,11 +139,13 @@
             e.stopPropagation();
             isMuted = !isMuted;
             muteBtn.textContent = isMuted ? 'unmute sfx' : 'mute sfx';
+            meowSound.muted = isMuted;
             dogSound.muted = isMuted;
         });
 
-        // Play what the dog doin when Nacho link is clicked
+        // Play dog sound effect when Nacho link is clicked
         nachoLink.addEventListener('click', (e) => {
+            unlockAudio();
             if (!isMuted) {
                 e.preventDefault();
                 dogSound.currentTime = 0;
@@ -136,7 +154,7 @@
                 // Navigate to NACHO.html after sound starts
                 setTimeout(() => {
                     window.location.href = nachoLink.href;
-                }, 400);
+                }, 500);
             }
         });
     </script>
