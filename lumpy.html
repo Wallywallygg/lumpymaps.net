@@ -13,12 +13,10 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
             cursor: pointer;
             user-select: none;
             -webkit-user-select: none;
             position: relative;
-            overflow-x: hidden;
         }
         header {
             width: 100%;
@@ -36,28 +34,17 @@
         header nav a:hover {
             text-decoration: underline;
         }
-        .nacho-trigger {
-            color: #ffffff;
-            text-decoration: none;
-        }
-        .nacho-trigger:hover {
-            text-decoration: underline;
-        }
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+        .content {
             text-align: center;
+            margin: auto;
         }
-        #lumpy-img {
+        .content img {
             max-width: 80vw;
             max-height: 60vh;
-            object-fit: contain;
-            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-            margin-bottom: 20px;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto 20px auto;
+            will-change: transform;
         }
         .title-subtext {
             font-size: 1.6rem;
@@ -102,86 +89,118 @@
             <a href="blog.html">Blog</a> |
             <a href="sources/GISPortfolio.pdf">GIS Portfolio</a> |
             <a href="projects.html">Projects</a> |
-            <a href="NACHO.html" id="nacho-link" class="nacho-trigger">Nacho</a>
+            <a href="NACHO.html" id="nacho-link">Nacho</a>
         </nav>
     </header>
 
-    <main>
-        <img id="lumpy-img" src="images/lumpy.jpg" alt="Lumpy">
+    <div class="content">
+        <img id="lumpy-img" src="images/lumpy.jpg" alt="Lumpy the cat">
         <p class="title-subtext">Post this cat!</p>
-        <p class="muted-subtext">(click anywhere to <a href="lumpy.html" class="house-of-lumpy">lump</a> around!)</p>
-    </main>
+        <p id="hint" class="muted-subtext">(click anywhere to <a href="lumpy.html" class="house-of-lumpy">lump</a> around!)</p>
+    </div>
 
     <!-- Discrete Music Mute Toggle -->
     <button id="mute-toggle" class="mute-btn">mute music</button>
 
-    <!-- Audio Elements -->
-    <audio id="bg-music" src="sources/breakfastclub.mp3" loop preload="auto"></audio>
-    <audio id="meow-sound" src="sources/meow.wav" preload="auto"></audio>
-    <audio id="dog-sound" src="sources/whatthedogdoin.wav" preload="auto"></audio>
+    <!-- Background Music -->
+    <audio id="bg-audio" src="sources/breakfastclub.mp3" loop></audio>
 
     <script>
-        let currentRotation = 0;
-        let isMusicMuted = false;
-        let audioUnlocked = false;
-
-        const bgMusic = document.getElementById('bg-music');
-        const meowSound = document.getElementById('meow-sound');
-        const dogSound = document.getElementById('dog-sound');
+        const audio = document.getElementById('bg-audio');
+        const hint = document.getElementById('hint');
         const lumpyImg = document.getElementById('lumpy-img');
         const muteBtn = document.getElementById('mute-toggle');
-        const nachoLink = document.getElementById('nacho-link');
 
-        // Safari iOS requires explicit call within user tap event
-        function unlockAudio() {
-            if (!audioUnlocked) {
-                if (!isMusicMuted) {
-                    bgMusic.play().catch(() => {});
-                }
-                audioUnlocked = true;
+        let currentRotation = 0;
+        let speed = 0;
+        const speedBoost = 12;
+        const friction = 0.96;
+        let isMusicMuted = false;
+
+        // Web Audio API Setup for Meow SFX
+        let audioCtx = null;
+        let meowBuffer = null;
+
+        function initAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            if (!meowBuffer) {
+                fetch('sources/meow.wav')
+                    .then(response => response.arrayBuffer())
+                    .then(data => audioCtx.decodeAudioData(data))
+                    .then(buffer => {
+                        meowBuffer = buffer;
+                    })
+                    .catch(err => console.log('Error loading meow.wav:', err));
             }
         }
 
-        // Spin image and play meow sound on page click
-        document.body.addEventListener('click', (e) => {
-            unlockAudio();
+        function playPitchShiftedMeow() {
+            if (!meowBuffer || !audioCtx) return;
+            const source = audioCtx.createBufferSource();
+            source.buffer = meowBuffer;
+            // Random pitch multiplier between 0.6x (low) and 1.6x (high)
+            const randomPitch = 0.6 + Math.random() * 1.0;
+            source.playbackRate.value = randomPitch;
+            source.connect(audioCtx.destination);
+            source.start(0);
+        }
 
-            // Ignore click if user tapped navigation links or mute button
-            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+        function playAudio() {
+            if (!isMusicMuted) {
+                audio.play().catch(err => console.log(err));
+            }
+        }
 
-            currentRotation += 360;
-            lumpyImg.style.transform = `rotate(${currentRotation}deg)`;
-
-            // iOS Safari fix: Clone node allows rapid multi-taps without audio cutouts
-            const soundClone = meowSound.cloneNode(true);
-            soundClone.play().catch(() => {});
+        // Mute button click handler (prevents event bubbling so it doesn't spin Lumpy)
+        muteBtn.addEventListener('pointerdown', (e) => {
+            e.stopPropagation();
         });
 
-        // Toggle background music ONLY (leaves SFX untouched)
         muteBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             isMusicMuted = !isMusicMuted;
             muteBtn.textContent = isMusicMuted ? 'unmute music' : 'mute music';
 
             if (isMusicMuted) {
-                bgMusic.pause();
-            } else if (audioUnlocked) {
-                bgMusic.play().catch(() => {});
+                audio.pause();
+            } else {
+                audio.play().catch(err => console.log(err));
             }
         });
 
-        // Play dog sound effect when Nacho link is clicked
-        nachoLink.addEventListener('click', (e) => {
-            unlockAudio();
-            e.preventDefault();
+        // Physics animation loop
+        function animate() {
+            if (Math.abs(speed) > 0.01) {
+                currentRotation += speed;
+                speed *= friction;
+                lumpyImg.style.transform = `rotate(${currentRotation}deg)`;
+            } else {
+                speed = 0;
+            }
+            requestAnimationFrame(animate);
+        }
 
-            const soundClone = dogSound.cloneNode(true);
-            soundClone.play().catch(() => {});
+        animate();
 
-            setTimeout(() => {
-                window.location.href = nachoLink.href;
-            }, 500);
-        });
+        // Unified Click Handler
+        function handleClick(e) {
+            // Prevent navigation link and button clicks from triggering sound/spin
+            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+
+            // Initialize audio on first user click
+            initAudioContext();
+            playAudio();
+            playPitchShiftedMeow();
+            speed += speedBoost;
+        }
+
+        // Using pointerdown handles touch and click consistently without double-firing
+        document.body.addEventListener('pointerdown', handleClick);
     </script>
 </body>
 </html>
