@@ -29,7 +29,7 @@
             font-family: 'OverwaveCustom', Arial, sans-serif;
             font-size: clamp(3.5rem, 12vw, 7.5rem);
             line-height: 0.9;
-            margin: 0 0 15px 0;
+            margin: 0 0 20px 0;
             letter-spacing: -2px;
         }
         header h1 a {
@@ -47,13 +47,23 @@
         .house-of-lumpy:hover {
             text-decoration: underline;
         }
-        /* Navigation menu below header */
-        header nav, 
-        header nav a {
+        /* Divider line between title and nav */
+        .header-divider {
+            border: 0;
+            border-top: 2px solid #000000;
+            margin: 0 0 20px 0;
+        }
+        /* Navigation menu below header with stronger emphasis */
+        header nav {
             font-family: Arial, sans-serif;
-            font-size: 1.1rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #000000;
+        }
+        header nav a {
             color: #000000;
             text-decoration: none;
+            padding: 0 2px;
         }
         header nav a:hover {
             text-decoration: underline;
@@ -66,6 +76,7 @@
 <body>
     <header>
         <h1><a href="lumpy.html" class="house-of-lumpy">LUMPY</a><a href="index.html">MAPS.NET</a></h1>
+        <hr class="header-divider">
         <nav>
             <a href="index.html">Homepage</a> |
             <a href="blog.html">Blog</a> |
