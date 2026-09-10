@@ -59,8 +59,16 @@
             transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
             margin-bottom: 20px;
         }
-        .subtext {
-            font-size: 1.2rem;
+        /* Prominent main caption */
+        .title-subtext {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        /* De-emphasized secondary instruction */
+        .muted-subtext {
+            font-size: 0.9rem;
+            color: #888888;
             margin: 5px 0;
         }
         .house-of-lumpy {
@@ -102,8 +110,8 @@
 
     <main>
         <img id="lumpy-img" src="images/lumpy.jpg" alt="Lumpy">
-        <p class="subtext">Post this cat!</p>
-        <p class="subtext">click anywhere to <a href="lumpy.html" class="house-of-lumpy">lump</a> around!</p>
+        <p class="title-subtext">Post this cat!</p>
+        <p class="muted-subtext">(click anywhere to <a href="lumpy.html" class="house-of-lumpy">lump</a> around!)</p>
     </main>
 
     <!-- Discrete Music Mute Toggle -->
