@@ -13,11 +13,13 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            align-items: center;
             cursor: pointer;
             user-select: none;
             -webkit-user-select: none;
+            position: relative;
+            overflow-x: hidden;
         }
-
         header {
             width: 100%;
             padding: 20px;
@@ -26,145 +28,117 @@
             position: relative;
             z-index: 10;
         }
-
         header nav, 
         header nav a {
             color: #ffffff;
             text-decoration: none;
         }
-
         header nav a:hover {
             text-decoration: underline;
         }
-
-        .content {
-            text-align: center;
-            margin: auto;
+        /* Secret Nacho trigger styling */
+        .nacho-trigger {
+            color: #ffffff;
+            text-decoration: none;
         }
-
-        .content img {
+        .nacho-trigger:hover {
+            text-decoration: underline;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        /* Spin transition for Lumpy image */
+        #lumpy-img {
             max-width: 80vw;
-            max-height: 60vh;
-            border-radius: 8px;
-            display: block;
-            margin: 0 auto 20px auto;
-            will-change: transform;
+            max-height: 70vh;
+            object-fit: contain;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
-
-        .content p {
-            font-size: 1.5rem;
-            letter-spacing: 1px;
-            margin: 0 0 10px 0;
+        /* Unobtrusive Mute Toggle Button at the bottom */
+        .mute-btn {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            color: #333333;
+            font-size: 0.75rem;
+            cursor: pointer;
+            z-index: 20;
+            opacity: 0.5;
+            transition: opacity 0.2s ease;
         }
-
-        .tap-hint {
-            font-size: 0.9rem;
-            color: #888888;
-            font-style: italic;
+        .mute-btn:hover {
+            opacity: 1;
+            color: #666666;
         }
     </style>
 </head>
 <body>
-
     <header>
-        <nav style="font-size: 2em;">
+        <nav style="font-size: 1.1rem;">
             <a href="index.html">Homepage</a> |
             <a href="blog.html">Blog</a> |
             <a href="sources/GISPortfolio.pdf">GIS Portfolio</a> |
             <a href="projects.html">Projects</a> |
-            <a href="NACHO.html">Nacho</a>
+            <a href="NACHO.html" id="nacho-link" class="nacho-trigger">Nacho</a>
         </nav>
     </header>
 
-    <div class="content">
-        <img id="lumpy-img" src="images/lumpy.jpg" alt="Lumpy the cat">
-        <p>Dont forget her</p>
-        <div id="hint" class="tap-hint">(Tap anywhere for sound and spin)</div>
-    </div>
+    <main>
+        <img id="lumpy-img" src="images/lumpy.jpg" alt="Lumpy">
+    </main>
 
-    <!-- Background Music -->
-    <audio id="bg-audio" src="sources/breakfastclub.mp3" loop></audio>
+    <!-- Unobtrusive mute toggle -->
+    <button id="mute-toggle" class="mute-btn">mute sfx</button>
+
+    <!-- Audio Elements -->
+    <audio id="bg-music" src="audio/lumpy_theme.mp3" loop autoplay></audio>
+    <audio id="dog-sound" src="audio/whatthedogdoin.wav" preload="auto"></audio>
 
     <script>
-        const audio = document.getElementById('bg-audio');
-        const hint = document.getElementById('hint');
-        const lumpyImg = document.getElementById('lumpy-img');
-
         let currentRotation = 0;
-        let speed = 0;
-        const speedBoost = 12;
-        const friction = 0.96;
+        let isMuted = false;
 
-        // Web Audio API Setup
-        let audioCtx = null;
-        let meowBuffer = null;
+        const lumpyImg = document.getElementById('lumpy-img');
+        const muteBtn = document.getElementById('mute-toggle');
+        const dogSound = document.getElementById('dog-sound');
+        const nachoLink = document.getElementById('nacho-link');
 
-        function initAudioContext() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        // Spin image 360 degrees on every click
+        document.body.addEventListener('click', (e) => {
+            // Ignore click if user clicked directly on header nav links or mute button
+            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+
+            currentRotation += 360;
+            lumpyImg.style.transform = `rotate(${currentRotation}deg)`;
+        });
+
+        // Toggle sound effects without affecting background music
+        muteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            isMuted = !isMuted;
+            muteBtn.textContent = isMuted ? 'unmute sfx' : 'mute sfx';
+            dogSound.muted = isMuted;
+        });
+
+        // Play what the dog doin when Nacho link is clicked
+        nachoLink.addEventListener('click', (e) => {
+            if (!isMuted) {
+                e.preventDefault();
+                dogSound.currentTime = 0;
+                dogSound.play().catch(() => {});
+                
+                // Navigate to NACHO.html after sound starts
+                setTimeout(() => {
+                    window.location.href = nachoLink.href;
+                }, 400);
             }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-            if (!meowBuffer) {
-                fetch('sources/meow.wav')
-                    .then(response => response.arrayBuffer())
-                    .then(data => audioCtx.decodeAudioData(data))
-                    .then(buffer => {
-                        meowBuffer = buffer;
-                    })
-                    .catch(err => console.log('Error loading meow.wav:', err));
-            }
-        }
-
-        function playPitchShiftedMeow() {
-            if (!meowBuffer || !audioCtx) return;
-
-            const source = audioCtx.createBufferSource();
-            source.buffer = meowBuffer;
-
-            // Random pitch multiplier between 0.6x (low) and 1.6x (high)
-            const randomPitch = 0.6 + Math.random() * 1.0;
-            source.playbackRate.value = randomPitch;
-
-            source.connect(audioCtx.destination);
-            source.start(0);
-        }
-
-        function playAudio() {
-            audio.play().then(() => {
-                hint.style.display = 'none';
-            }).catch(err => console.log(err));
-        }
-
-        // Physics animation loop
-        function animate() {
-            if (Math.abs(speed) > 0.01) {
-                currentRotation += speed;
-                speed *= friction;
-                lumpyImg.style.transform = `rotate(${currentRotation}deg)`;
-            } else {
-                speed = 0;
-            }
-            requestAnimationFrame(animate);
-        }
-        animate();
-
-        // Unified Click Handler
-        function handleClick(e) {
-            // Prevent navigation link clicks from triggering sound/spin
-            if (e.target.tagName === 'A') return;
-
-            // Initialize audio on first user click (fixes desktop autoplay policies)
-            initAudioContext();
-            playAudio();
-            playPitchShiftedMeow();
-
-            speed += speedBoost;
-        }
-
-        // Using pointerdown handles touch and click consistently without double-firing
-        document.body.addEventListener('pointerdown', handleClick);
+        });
     </script>
 </body>
 </html>
