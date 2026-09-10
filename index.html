@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lumpymaps - Homepage</title>
+    <title>Lumpymaps</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Custom font setup */
+        /* Custom font setup for Helvetica Neue */
         @font-face {
-            font-family: 'Overwave';
-            src: url('sources/overwave.otf') format('opentype'),
-                 url('sources/overwave.ttf') format('truetype');
+            font-family: 'HelveticaNeue';
+            src: url('sources/HelveticaNeue.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
@@ -27,44 +26,59 @@
         }
         /* Giant title scaling for homepage */
         header h1 {
-            font-family: 'Overwave', Impact, sans-serif;
+            font-family: 'HelveticaNeue', Arial, sans-serif;
             font-size: clamp(3.5rem, 12vw, 7.5rem);
             line-height: 0.9;
             margin: 0 0 15px 0;
+            letter-spacing: -2px;
         }
         header h1 a {
             color: #000000;
             text-decoration: none;
         }
         header h1 a:hover {
-            text-decoration: none;
-        }
-        /* House of Lumpy blue link style */
-        .house-of-lumpy {
-            color: #0000FF !important;
-            text-decoration: none;
-        }
-        .house-of-lumpy:hover {
             text-decoration: underline;
         }
-        nav a {
+        /* House of Lumpy signature blue link - explicitly no underline on hover */
+        .house-of-lumpy {
+            color: #0000FF !important;
+            text-decoration: none !important;
+        }
+        .house-of-lumpy:hover {
+            text-decoration: none !important;
+        }
+        /* Navigation menu below header */
+        header nav, 
+        header nav a {
+            font-family: Arial, sans-serif;
+            font-size: 1.1rem;
             color: #000000;
             text-decoration: none;
         }
-        nav a:hover {
+        header nav a:hover {
             text-decoration: underline;
+        }
+        main section {
+            margin-bottom: 30px;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1><a href="lumpy.html" class="house-of-lumpy">lumpy</a><a href="index.html">maps.net</a></h1>
-        <nav style="font-size: 2em;">
+        <h1>[<a href="lumpy.html" class="house-of-lumpy">LUMPY</a><a href="index.html">MAPS.NET</a>]</h1>
+        <nav>
             <a href="index.html">Homepage</a> |
             <a href="blog.html">Blog</a> |
             <a href="sources/GISPortfolio.pdf">GIS Portfolio</a> |
             <a href="projects.html">Projects</a>
         </nav>
     </header>
+    <main>
+        <section id="about">
+            <h2>About</h2>
+            <p>Whats boppin, My name is Walter. I work in GIS which is short for "Geograpic Information Sciences" or "Geographic Information Systems" depending on who you ask. I also work on cars and fabricate stuff. Recovering welder, future CWU grad™. </p>
+            <p>Contact me on Telegram at <a href="https://t.me/unkler">@unkler</a> or on steam <a href="https://steamcommunity.com/id/Unklethebob/">wallywallyGG</a> or even e-mail me @ WalterM@chef.net</p>
+        </section>
+    </main>
 </body>
 </html>
