@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muffin</title>
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            position: relative;
+        }
+        header {
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: left;
+            position: relative;
+            z-index: 10;
+        }
+        header nav, 
+        header nav a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        header nav a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            text-align: center;
+            margin: auto;
+        }
+        .content img {
+            max-width: 80vw;
+            max-height: 60vh;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto 20px auto;
+            will-change: transform;
+            transform-origin: center center;
+        }
+        .title-subtext {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        .muted-subtext {
+            font-size: 0.9rem;
+            color: #888888;
+            margin: 5px 0;
+        }
+        .house-of-lumpy {
+            color: #0000FF !important;
+            text-decoration: none;
+        }
+        .house-of-lumpy:hover {
+            text-decoration: underline;
+        }
+        .mute-btn {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            color: #555555;
+            font-size: 0.75rem;
+            cursor: pointer;
+            z-index: 20;
+            opacity: 0.6;
+            transition: opacity 0.2s ease;
+        }
+        .mute-btn:hover {
+            opacity: 1;
+            color: #888888;
+        }
+
+        /* Spring Stretch & Wiggle Keyframes */
+        .anim-stretch-horizontal {
+            animation: springHoriz 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .anim-stretch-vertical {
+            animation: springVert 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes springHoriz {
+            0%   { transform: scale(1, 1) rotate(0deg); }
+            20%  { transform: scale(1.4, 0.65) rotate(-6deg); }
+            40%  { transform: scale(0.8, 1.25) rotate(5deg); }
+            60%  { transform: scale(1.15, 0.9) rotate(-3deg); }
+            80%  { transform: scale(0.95, 1.05) rotate(1deg); }
+            100% { transform: scale(1, 1) rotate(0deg); }
+        }
+
+        @keyframes springVert {
+            0%   { transform: scale(1, 1) rotate(0deg); }
+            20%  { transform: scale(0.65, 1.4) rotate(6deg); }
+            40%  { transform: scale(1.25, 0.8) rotate(-5deg); }
+            60%  { transform: scale(0.9, 1.15) rotate(3deg); }
+            80%  { transform: scale(1.05, 0.95) rotate(-1deg); }
+            100% { transform: scale(1, 1) rotate(0deg); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav style="font-size: 1.1rem;">
+            <a href="index.html">Homepage</a> |
+            <a href="blog.html">Blog</a> |
+            <a href="sources/GISPortfolio.pdf">GIS Portfolio</a> |
+            <a href="projects.html">Projects</a> |
+            <a href="lumpy.html">Lumpy</a> |
+            <a href="NACHO.html" id="nacho-link">Nacho</a>
+        </nav>
+    </header>
+
+    <div class="content">
+        <img id="muffin-img" src="images/muffin.jpg" alt="Muffin">
+        <p class="title-subtext">Post this muffin!</p>
+        <p id="hint" class="muted-subtext">(click anywhere to squish around!)</p>
+    </div>
+
+    <!-- Discrete Music Mute Toggle -->
+    <button id="mute-toggle" class="mute-btn">mute music</button>
+
+    <!-- Background Music -->
+    <audio id="bg-audio" src="sources/breakfastclub.mp3" loop></audio>
+
+    <script>
+        const audio = document.getElementById('bg-audio');
+        const hint = document.getElementById('hint');
+        const muffinImg = document.getElementById('muffin-img');
+        const muteBtn = document.getElementById('mute-toggle');
+
+        let isMusicMuted = false;
+
+        // Web Audio API Setup for Splat SFX
+        let audioCtx = null;
+        const splatBuffers = [];
+        let lastSplatIndex = -1;
+
+        function initAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            if (splatBuffers.length === 0) {
+                for (let i = 1; i <= 5; i++) {
+                    fetch(`sources/splat${i}.wav`)
+                        .then(response => response.arrayBuffer())
+                        .then(data => audioCtx.decodeAudioData(data))
+                        .then(buffer => {
+                            splatBuffers[i - 1] = buffer;
+                        })
+                        .catch(err => console.log(`Error loading splat${i}.wav:`, err));
+                }
+            }
+        }
+
+        function playRandomSplat() {
+            // Filter loaded buffers that are available and ensure no consecutive duplicates
+            const availableIndices = [];
+            for (let i = 0; i < 5; i++) {
+                if (splatBuffers[i] && i !== lastSplatIndex) {
+                    availableIndices.push(i);
+                }
+            }
+
+            if (availableIndices.length === 0) return;
+
+            const selectedIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+            lastSplatIndex = selectedIndex;
+
+            const source = audioCtx.createBufferSource();
+            source.buffer = splatBuffers[selectedIndex];
+            source.connect(audioCtx.destination);
+            source.start(0);
+        }
+
+        function playAudio() {
+            if (!isMusicMuted) {
+                audio.play().catch(err => console.log(err));
+            }
+        }
+
+        function triggerStretchAnimation() {
+            // Remove active animation classes to reset state
+            muffinImg.classList.remove('anim-stretch-horizontal', 'anim-stretch-vertical');
+            
+            // Force reflow to allow keyframes to restart properly
+            void muffinImg.offsetWidth;
+
+            // Pick randomly between horizontal and vertical stretch animations
+            const animClass = Math.random() < 0.5 ? 'anim-stretch-horizontal' : 'anim-stretch-vertical';
+            muffinImg.classList.add(animClass);
+        }
+
+        // Mute button click handler
+        muteBtn.addEventListener('pointerdown', (e) => {
+            e.stopPropagation();
+        });
+
+        muteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            isMusicMuted = !isMusicMuted;
+            muteBtn.textContent = isMusicMuted ? 'unmute music' : 'mute music';
+
+            if (isMusicMuted) {
+                audio.pause();
+            } else {
+                audio.play().catch(err => console.log(err));
+            }
+        });
+
+        // Unified Click/Tap Handler
+        function handleClick(e) {
+            // Prevent nav link and button clicks from triggering animation
+            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+
+            initAudioContext();
+            playAudio();
+            playRandomSplat();
+            triggerStretchAnimation();
+        }
+
+        document.body.addEventListener('pointerdown', handleClick);
+    </script>
+</body>
+</html>
