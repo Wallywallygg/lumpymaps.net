@@ -28,47 +28,47 @@
         <a href="index.html">Homepage</a> |
         <a href="blog.html">Blog</a> |
         <a href="sources/GISPortfolio.pdf">GIS Portfolio</a> |
-        <a href="projects.html">Projects</a> |
+        <a href="projects.html">Projects</a>
     </nav>
     <hr>
     <main>
         <h2>Does Harbor Freight Target Tradespeople? A Spatial Data Deep Dive</h2>
 
-        <p>This is a modified version of my Geography 409 Quantitative methods in GIS final project I did at least a year ago[cite: 1]. The purpose of this project was to do a statistical analysis of something geographical[cite: 1]. Most people in the class used census data to determine locations of things like airports, train stations, water treatment facilities, schools, amazon warehouses, hiking areas, fire stations so on and so forth[cite: 1]. I was determining how statistically significant Harbor Freight location decisions are in the USA[cite: 1]. Those of you who have ever stepped foot inside a harbor freight know the vibe: cheap tools, strange employees, and that weird burning rubber smell every store seems to have[cite: 1]. Naturally, you’d assume corporate location planners sit down with a giant map and ask: "Where are all the plumbers, mechanics, construction workers, and machinists living? Let's put a store right next to them!"[cite: 1]</p>
+        <p>This is a modified version of my Geography 409 Quantitative methods in GIS final project I did at least a year ago. The purpose of this project was to do a statistical analysis of something geographical. Most people in the class used census data to determine locations of things like airports, train stations, water treatment facilities, schools, amazon warehouses, hiking areas, fire stations so on and so forth. I was determining how statistically significant Harbor Freight location decisions are in the USA. Those of you who have ever stepped foot inside a harbor freight know the vibe: cheap tools, strange employees, and that weird burning rubber smell every store seems to have. Naturally, you’d assume corporate location planners sit down with a giant map and ask: "Where are all the plumbers, mechanics, construction workers, and machinists living? Let's put a store right next to them!"</p>
 
-        <p>I decided to test this exact hypothesis using U.S. Census data, spatial mapping tools, and logistic regression[cite: 1]. Here is how I set up the project, what data went into it, and what the stats actually said[cite: 1].</p>
+        <p>I decided to test this exact hypothesis using U.S. Census data, spatial mapping tools, and logistic regression. Here is how I set up the project, what data went into it, and what the stats actually said.</p>
 
         <h3>The Setup:</h3>
-        <p>To test if store locations target blue-collar/trades populations, I had to assemble a huge dataset covering every neighborhood in the entire country[cite: 1].</p>
+        <p>To test if store locations target blue-collar/trades populations, I had to assemble a huge dataset covering every neighborhood in the entire country.</p>
 
         <p><strong>The Harbor Freight Locations (Points)</strong><br>
-        Instead of manually copying addresses off their website, I extracted all verified store locations using OpenStreetMap (OSM) via Overpass Turbo[cite: 1]. This gave me precise latitude and longitude points for stores across the continental U.S.[cite: 1]</p>
+        Instead of manually copying addresses off their website, I extracted all verified store locations using OpenStreetMap (OSM) via Overpass Turbo. This gave me precise latitude and longitude points for stores across the continental U.S.</p>
 
         <p><strong>The Census Data (Polygons &amp; Demographics)</strong><br>
-        I pulled raw demographic numbers for all ~83,400 U.S. Census Tracts (local neighborhoods averaging ~4,000 residents) from the American Community Survey (ACS) 5-Year Estimates (Table C24010 - Sex by Occupation) via the U.S. Census Bureau API[cite: 1].</p>
+        I pulled raw demographic numbers for all ~83,400 U.S. Census Tracts (local neighborhoods averaging ~4,000 residents) from the American Community Survey (ACS) 5-Year Estimates (Table C24010 - Sex by Occupation) via the U.S. Census Bureau API.</p>
 
-        <p>To measure the local "trades" workforce, I aggregated workers across major Standard Occupational Classification (SOC) categories[cite: 1]:</p>
+        <p>To measure the local "trades" workforce, I aggregated workers across major Standard Occupational Classification (SOC) categories:</p>
         <ul>
-            <li>Construction &amp; Extraction (electricians, plumbers, framers, etc.)[cite: 1]</li>
-            <li>Installation, Maintenance, &amp; Repair (HVAC techs, mechanics, etc.)[cite: 1]</li>
-            <li>Production &amp; Transportation (welders, machinists, warehouse operators, truckers, etc.)[cite: 1]</li>
+            <li>Construction &amp; Extraction (electricians, plumbers, framers, etc.)</li>
+            <li>Installation, Maintenance, &amp; Repair (HVAC techs, mechanics, etc.)</li>
+            <li>Production &amp; Transportation (welders, machinists, warehouse operators, truckers, etc.)</li>
         </ul>
 
-        <p>Then, I calculated the Trades Ratio for every single neighborhood[cite: 1]:</p>
-        <p><em>Trades Ratio = Total Blue-Collar &amp; Trades Workers / Total Employed Civilian Population</em>[cite: 1]</p>
+        <p>Then, I calculated the Trades Ratio for every single neighborhood:</p>
+        <p><em>Trades Ratio = Total Blue-Collar &amp; Trades Workers / Total Employed Civilian Population</em></p>
 
         <h3>Spatial Modeling Pipeline:</h3>
-        <p>With the data pulled, I built a Python spatial analysis script using geopandas, shapely, and statsmodels[cite: 1]:</p>
+        <p>With the data pulled, I built a Python spatial analysis script using geopandas, shapely, and statsmodels:</p>
         <ul>
-            <li><strong>Spatial Join:</strong> I mapped every Census Tract boundary and ran an intersection join against the Harbor Freight point coordinates[cite: 1].</li>
-            <li><strong>Flagging Stores:</strong> Each neighborhood got flagged with has_store = 1 if a store was present inside that tract, or has_store = 0 if not[cite: 1].</li>
-            <li><strong>Log-Transforming Population:</strong> Because raw neighborhood population skews heavily, I calculated log_pop = log(Total Population) to control for overall population density[cite: 1].</li>
+            <li><strong>Spatial Join:</strong> I mapped every Census Tract boundary and ran an intersection join against the Harbor Freight point coordinates.</li>
+            <li><strong>Flagging Stores:</strong> Each neighborhood got flagged with has_store = 1 if a store was present inside that tract, or has_store = 0 if not.</li>
+            <li><strong>Log-Transforming Population:</strong> Because raw neighborhood population skews heavily, I calculated log_pop = log(Total Population) to control for overall population density.</li>
         </ul>
 
         <h3>The Statistical Models &amp; Results:</h3>
-        <p>Running a basic linear regression yields false positives because stores will naturally cluster near overall population density[cite: 1]. I ran a regression model to see if a neighborhood's Trades Ratio predicts store placement after controlling for total population size[cite: 1].</p>
+        <p>Running a basic linear regression yields false positives because stores will naturally cluster near overall population density. I ran a regression model to see if a neighborhood's Trades Ratio predicts store placement after controlling for total population size.</p>
 
-        <p><strong>Model 1 results: Population density + Trades ratio:</strong>[cite: 1]</p>
+        <p><strong>Model 1 results: Population density + Trades ratio:</strong></p>
         <pre>
 ==============================================================================
 Dep. Variable: has_store                  No. Observations: 83466
@@ -84,7 +84,7 @@ log_pop        0.5692      0.063      8.970      0.000       0.445       0.694
 Odds Ratios: trades_ratio = 1.61 | log_pop = 1.77
         </pre>
 
-        <p><strong>Model 2 results: Population only:</strong>[cite: 1]</p>
+        <p><strong>Model 2 results: Population only:</strong></p>
         <pre>
 ==============================================================================
 Dep. Variable: has_store                  No. Observations: 83466
@@ -101,13 +101,13 @@ Odds Ratio: log_pop = 1.75
 
         <h3>What Does This Actually Mean?</h3>
         <ul>
-            <li><strong>The Core Hypothesis Failed (p=0.237):</strong> In statistics, a p-value must be below 0.05 to show a meaningful effect[cite: 1]. The p-value for trades_ratio was 0.237[cite: 1]. This means there is no statistically significant proof that Harbor Freight intentionally picks neighborhoods with higher percentages of tradespeople[cite: 1].</li>
-            <li><strong>Dropping trades_ratio changed almost nothing:</strong> Removing the trades percentage from the model caused the Pseudo R2 to drop by a tiny 0.000117 (from 0.007490 to 0.007373)[cite: 1]. Knowing a neighborhood's blue-collar ratio gives you virtually zero extra prediction power[cite: 1].</li>
-            <li><strong>Population Density is the real driver (p&lt;0.001):</strong> Population size (log_pop) was 100% statistically significant (p=0.000) in both runs[cite: 1]. An odds ratio of ~1.75 means that as total population density goes up, the likelihood of a store being built increases by about 75%[cite: 1].</li>
+            <li><strong>The Core Hypothesis Failed (p=0.237):</strong> In statistics, a p-value must be below 0.05 to show a meaningful effect. The p-value for trades_ratio was 0.237. This means there is no statistically significant proof that Harbor Freight intentionally picks neighborhoods with higher percentages of tradespeople.</li>
+            <li><strong>Dropping trades_ratio changed almost nothing:</strong> Removing the trades percentage from the model caused the Pseudo R2 to drop by a tiny 0.000117 (from 0.007490 to 0.007373). Knowing a neighborhood's blue-collar ratio gives you virtually zero extra prediction power.</li>
+            <li><strong>Population Density is the real driver (p&lt;0.001):</strong> Population size (log_pop) was 100% statistically significant (p=0.000) in both runs. An odds ratio of ~1.75 means that as total population density goes up, the likelihood of a store being built increases by about 75%.</li>
         </ul>
 
         <h3>Conclusion:</h3>
-        <p>Harbor Freight isn't using specialized demographic maps to hunt down blue collar-heavy neighborhoods[cite: 1]. Instead, they operate like most mainstream retail chains: they drop stores where there are enough overall people to drive retail foot traffic[cite: 1].</p>
+        <p>Harbor Freight isn't using specialized demographic maps to hunt down blue collar-heavy neighborhoods. Instead, they operate like most mainstream retail chains and they drop stores where there are enough overall people to drive retail traffic.</p>
     </main>
 </body>
 </html>
