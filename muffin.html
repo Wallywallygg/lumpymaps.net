@@ -19,7 +19,7 @@
             -moz-user-select: none;
             -ms-user-select: none;
             position: relative;
-            overflow: hidden; /* Prevents scrollbars during extreme stretchmaxxing */
+            overflow: hidden;
         }
         header {
             width: 100%;
@@ -66,7 +66,7 @@
             text-decoration: underline;
         }
 
-        /* Spring Stretch & Wiggle Keyframes with Enhanced Intensity Scaling */
+        /* Spring Stretch & Wiggle Keyframes */
         .anim-stretch-horizontal {
             -webkit-animation: springHoriz 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             animation: springHoriz 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -137,14 +137,26 @@
 
         let audioCtx = null;
         const splatBuffers = [];
+        const htmlAudioElements = [];
         let lastSplatIndex = -1;
+        let isAudioUnlocked = false;
 
         // Click intensity/velocity tracking
         let clickIntensity = 1.0;
         let lastClickTime = 0;
-        const maxIntensity = 7.0; // Boosted maximum stretch intensity multiplier
+        const maxIntensity = 7.0;
 
-        function initAudioContext() {
+        // Pre-create HTML5 Audio elements immediately in the DOM
+        for (let i = 1; i <= 5; i++) {
+            const audio = new Audio(`sources/splat${i}.wav`);
+            audio.preload = 'auto';
+            htmlAudioElements.push(audio);
+        }
+
+        function unlockAudio() {
+            if (isAudioUnlocked) return;
+
+            // 1. Create/resume Web Audio Context
             if (!audioCtx) {
                 const AudioContextClass = window.AudioContext || window.webkitAudioContext;
                 if (AudioContextClass) {
@@ -155,6 +167,7 @@
                 audioCtx.resume();
             }
 
+            // 2. Play silent buffer through Web Audio Context to unblock iOS Safari
             if (audioCtx) {
                 try {
                     const buffer = audioCtx.createBuffer(1, 1, 22050);
@@ -165,6 +178,18 @@
                 } catch (e) {}
             }
 
+            // 3. Touch/Play/Pause each HTML5 audio element to unlock element pool on iOS
+            htmlAudioElements.forEach(audio => {
+                const promise = audio.play();
+                if (promise !== undefined) {
+                    promise.then(() => {
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }).catch(() => {});
+                }
+            });
+
+            // 4. Fetch Web Audio buffers asynchronously
             if (audioCtx && splatBuffers.length === 0) {
                 for (let i = 1; i <= 5; i++) {
                     fetch(`sources/splat${i}.wav`)
@@ -176,6 +201,8 @@
                         .catch(() => {});
                 }
             }
+
+            isAudioUnlocked = true;
         }
 
         function playRandomSplat() {
@@ -189,6 +216,7 @@
             const selectedIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
             lastSplatIndex = selectedIndex;
 
+            // Primary: Web Audio API
             if (audioCtx && splatBuffers[selectedIndex]) {
                 try {
                     const source = audioCtx.createBufferSource();
@@ -199,9 +227,11 @@
                 } catch (err) {}
             }
 
+            // iOS Fallback: Play unlocked HTML5 element pool
             try {
-                const audioEl = new Audio(`sources/splat${selectedIndex + 1}.wav`);
-                audioEl.play().catch(() => {});
+                const audio = htmlAudioElements[selectedIndex];
+                audio.currentTime = 0;
+                audio.play().catch(() => {});
             } catch (err) {}
         }
 
@@ -211,7 +241,7 @@
             lastClickTime = now;
 
             if (timeDelta < 400) {
-                const boost = (400 - timeDelta) / 120; // Aggressive scaling build-up
+                const boost = (400 - timeDelta) / 120;
                 clickIntensity = Math.min(maxIntensity, clickIntensity + boost);
             } else {
                 clickIntensity = 1.0;
@@ -233,22 +263,20 @@
         function handleAction(e) {
             if (e.target && e.target.tagName === 'A') return;
 
+            unlockAudio();
+
             if (isProcessingAction) return;
             isProcessingAction = true;
             setTimeout(() => { isProcessingAction = false; }, 30);
 
-            initAudioContext();
             updateClickIntensity();
             playRandomSplat();
             triggerStretchAnimation();
         }
 
-        if (window.PointerEvent) {
-            document.body.addEventListener('pointerdown', handleAction, { passive: true });
-        } else {
-            document.body.addEventListener('touchstart', handleAction, { passive: true });
-            document.body.addEventListener('mousedown', handleAction, { passive: true });
-        }
+        // Attach touch events explicitly for iOS WebKit touch handling
+        document.body.addEventListener('touchstart', handleAction, { passive: false });
+        document.body.addEventListener('mousedown', handleAction, { passive: true });
     </script>
 </body>
 </html>
