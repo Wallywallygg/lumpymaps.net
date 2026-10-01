@@ -16,6 +16,8 @@
             cursor: pointer;
             user-select: none;
             -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
             position: relative;
         }
         header {
@@ -46,15 +48,11 @@
             margin: 0 auto 20px auto;
             will-change: transform;
             transform-origin: center center;
+            -webkit-transform-origin: center center;
         }
         .title-subtext {
             font-size: 1.6rem;
             font-weight: bold;
-            margin: 5px 0;
-        }
-        .muted-subtext {
-            font-size: 0.9rem;
-            color: #888888;
             margin: 5px 0;
         }
         .house-of-lumpy {
@@ -64,31 +62,25 @@
         .house-of-lumpy:hover {
             text-decoration: underline;
         }
-        .mute-btn {
-            position: fixed;
-            bottom: 15px;
-            right: 15px;
-            background: transparent;
-            border: none;
-            color: #555555;
-            font-size: 0.75rem;
-            cursor: pointer;
-            z-index: 20;
-            opacity: 0.6;
-            transition: opacity 0.2s ease;
-        }
-        .mute-btn:hover {
-            opacity: 1;
-            color: #888888;
-        }
 
-        /* Spring Stretch & Wiggle Keyframes */
+        /* Spring Stretch & Wiggle Keyframes with Webkit Vendor Prefixes */
         .anim-stretch-horizontal {
+            -webkit-animation: springHoriz 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             animation: springHoriz 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .anim-stretch-vertical {
+            -webkit-animation: springVert 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             animation: springVert 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @-webkit-keyframes springHoriz {
+            0%   { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
+            20%  { -webkit-transform: scale(1.4, 0.65) rotate(-6deg); transform: scale(1.4, 0.65) rotate(-6deg); }
+            40%  { -webkit-transform: scale(0.8, 1.25) rotate(5deg); transform: scale(0.8, 1.25) rotate(5deg); }
+            60%  { -webkit-transform: scale(1.15, 0.9) rotate(-3deg); transform: scale(1.15, 0.9) rotate(-3deg); }
+            80%  { -webkit-transform: scale(0.95, 1.05) rotate(1deg); transform: scale(0.95, 1.05) rotate(1deg); }
+            100% { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
         }
 
         @keyframes springHoriz {
@@ -98,6 +90,15 @@
             60%  { transform: scale(1.15, 0.9) rotate(-3deg); }
             80%  { transform: scale(0.95, 1.05) rotate(1deg); }
             100% { transform: scale(1, 1) rotate(0deg); }
+        }
+
+        @-webkit-keyframes springVert {
+            0%   { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
+            20%  { -webkit-transform: scale(0.65, 1.4) rotate(6deg); transform: scale(0.65, 1.4) rotate(6deg); }
+            40%  { -webkit-transform: scale(1.25, 0.8) rotate(-5deg); transform: scale(1.25, 0.8) rotate(-5deg); }
+            60%  { -webkit-transform: scale(0.9, 1.15) rotate(3deg); transform: scale(0.9, 1.15) rotate(3deg); }
+            80%  { -webkit-transform: scale(1.05, 0.95) rotate(-1deg); transform: scale(1.05, 0.95) rotate(-1deg); }
+            100% { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
         }
 
         @keyframes springVert {
@@ -124,37 +125,37 @@
 
     <div class="content">
         <img id="muffin-img" src="images/muffin.jpg" alt="Muffin">
-        <p class="title-subtext">Post this muffin!</p>
-        <p id="hint" class="muted-subtext">(click anywhere to squish around!)</p>
+        <p class="title-subtext">Muffin so faaaaatttttt</p>
     </div>
 
-    <!-- Discrete Music Mute Toggle -->
-    <button id="mute-toggle" class="mute-btn">mute music</button>
-
-    <!-- Background Music -->
-    <audio id="bg-audio" src="sources/breakfastclub.mp3" loop></audio>
-
     <script>
-        const audio = document.getElementById('bg-audio');
-        const hint = document.getElementById('hint');
         const muffinImg = document.getElementById('muffin-img');
-        const muteBtn = document.getElementById('mute-toggle');
 
-        let isMusicMuted = false;
-
-        // Web Audio API Setup for Splat SFX
+        // Multi-tier audio playback engine (Web Audio API + HTML5 Audio fallback)
         let audioCtx = null;
         const splatBuffers = [];
+        const htmlAudioPool = [];
         let lastSplatIndex = -1;
+
+        // Preload HTML5 Audio objects for maximum fallback compatibility across Firefox/Windows
+        for (let i = 1; i <= 5; i++) {
+            const el = new Audio(`sources/splat${i}.wav`);
+            el.preload = 'auto';
+            htmlAudioPool.push(el);
+        }
 
         function initAudioContext() {
             if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass) {
+                    audioCtx = new AudioContextClass();
+                }
             }
-            if (audioCtx.state === 'suspended') {
+            if (audioCtx && audioCtx.state === 'suspended') {
                 audioCtx.resume();
             }
-            if (splatBuffers.length === 0) {
+
+            if (audioCtx && splatBuffers.length === 0) {
                 for (let i = 1; i <= 5; i++) {
                     fetch(`sources/splat${i}.wav`)
                         .then(response => response.arrayBuffer())
@@ -162,78 +163,73 @@
                         .then(buffer => {
                             splatBuffers[i - 1] = buffer;
                         })
-                        .catch(err => console.log(`Error loading splat${i}.wav:`, err));
+                        .catch(() => {});
                 }
             }
         }
 
         function playRandomSplat() {
-            // Filter loaded buffers that are available and ensure no consecutive duplicates
+            // Select random index ensuring no back-to-back duplicates
             const availableIndices = [];
             for (let i = 0; i < 5; i++) {
-                if (splatBuffers[i] && i !== lastSplatIndex) {
+                if (i !== lastSplatIndex) {
                     availableIndices.push(i);
                 }
             }
 
-            if (availableIndices.length === 0) return;
-
             const selectedIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
             lastSplatIndex = selectedIndex;
 
-            const source = audioCtx.createBufferSource();
-            source.buffer = splatBuffers[selectedIndex];
-            source.connect(audioCtx.destination);
-            source.start(0);
-        }
-
-        function playAudio() {
-            if (!isMusicMuted) {
-                audio.play().catch(err => console.log(err));
+            // Method A: Web Audio API
+            if (audioCtx && splatBuffers[selectedIndex]) {
+                try {
+                    const source = audioCtx.createBufferSource();
+                    source.buffer = splatBuffers[selectedIndex];
+                    source.connect(audioCtx.destination);
+                    source.start(0);
+                    return;
+                } catch (err) {}
             }
+
+            // Method B: HTML5 Audio Fallback (Guarantees Firefox Windows support)
+            try {
+                const audioEl = htmlAudioPool[selectedIndex].cloneNode(true);
+                audioEl.currentTime = 0;
+                audioEl.play().catch(() => {});
+            } catch (err) {}
         }
 
         function triggerStretchAnimation() {
-            // Remove active animation classes to reset state
             muffinImg.classList.remove('anim-stretch-horizontal', 'anim-stretch-vertical');
-            
-            // Force reflow to allow keyframes to restart properly
-            void muffinImg.offsetWidth;
+            void muffinImg.offsetWidth; // Force CSS reflow restart
 
-            // Pick randomly between horizontal and vertical stretch animations
             const animClass = Math.random() < 0.5 ? 'anim-stretch-horizontal' : 'anim-stretch-vertical';
             muffinImg.classList.add(animClass);
         }
 
-        // Mute button click handler
-        muteBtn.addEventListener('pointerdown', (e) => {
-            e.stopPropagation();
-        });
+        let isProcessingAction = false;
 
-        muteBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            isMusicMuted = !isMusicMuted;
-            muteBtn.textContent = isMusicMuted ? 'unmute music' : 'mute music';
+        function handleAction(e) {
+            // Don't trigger when clicking links
+            if (e.target && e.target.tagName === 'A') return;
 
-            if (isMusicMuted) {
-                audio.pause();
-            } else {
-                audio.play().catch(err => console.log(err));
-            }
-        });
-
-        // Unified Click/Tap Handler
-        function handleClick(e) {
-            // Prevent nav link and button clicks from triggering animation
-            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+            // Debounce touch/click events so pointerdown + click don't double trigger
+            if (isProcessingAction) return;
+            isProcessingAction = true;
+            setTimeout(() => { isProcessingAction = false; }, 50);
 
             initAudioContext();
-            playAudio();
             playRandomSplat();
             triggerStretchAnimation();
         }
 
-        document.body.addEventListener('pointerdown', handleClick);
+        // Support Pointer, Touch, and Mouse events cross-browser
+        if (window.PointerEvent) {
+            document.body.addEventListener('pointerdown', handleAction, { passive: true });
+        } else {
+            document.body.addEventListener('touchstart', handleAction, { passive: true });
+            document.body.addEventListener('mousedown', handleAction, { passive: true });
+        }
     </script>
 </body>
 </html>
