@@ -132,23 +132,14 @@
     <script>
         const muffinImg = document.getElementById('muffin-img');
 
-        // Multi-tier audio playback engine (Web Audio API + HTML5 Audio fallback)
         let audioCtx = null;
         const splatBuffers = [];
-        const htmlAudioPool = [];
         let lastSplatIndex = -1;
 
         // Click intensity/velocity tracking
         let clickIntensity = 1.0;
         let lastClickTime = 0;
-        const maxIntensity = 3.5; // Upper limit multiplier for huge stretches
-        const intensityDecay = 0.85;
-
-        for (let i = 1; i <= 5; i++) {
-            const el = new Audio(`sources/splat${i}.wav`);
-            el.preload = 'auto';
-            htmlAudioPool.push(el);
-        }
+        const maxIntensity = 3.5;
 
         function initAudioContext() {
             if (!audioCtx) {
@@ -159,6 +150,17 @@
             }
             if (audioCtx && audioCtx.state === 'suspended') {
                 audioCtx.resume();
+            }
+
+            // Unlock iOS Safari Web Audio API by playing an empty buffer source inside tap gesture
+            if (audioCtx) {
+                try {
+                    const buffer = audioCtx.createBuffer(1, 1, 22050);
+                    const source = audioCtx.createBufferSource();
+                    source.buffer = buffer;
+                    source.connect(audioCtx.destination);
+                    source.start(0);
+                } catch (e) {}
             }
 
             if (audioCtx && splatBuffers.length === 0) {
@@ -185,6 +187,7 @@
             const selectedIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
             lastSplatIndex = selectedIndex;
 
+            // Primary: Web Audio API (Fully unblocked on iOS Safari)
             if (audioCtx && splatBuffers[selectedIndex]) {
                 try {
                     const source = audioCtx.createBufferSource();
@@ -195,9 +198,9 @@
                 } catch (err) {}
             }
 
+            // Direct Fallback for iOS/Safari before Web Audio buffers decode
             try {
-                const audioEl = htmlAudioPool[selectedIndex].cloneNode(true);
-                audioEl.currentTime = 0;
+                const audioEl = new Audio(`sources/splat${selectedIndex + 1}.wav`);
                 audioEl.play().catch(() => {});
             } catch (err) {}
         }
@@ -207,7 +210,6 @@
             const timeDelta = now - lastClickTime;
             lastClickTime = now;
 
-            // Rapid clicking (under 400ms apart) boosts intensity factor
             if (timeDelta < 400) {
                 const boost = (400 - timeDelta) / 200;
                 clickIntensity = Math.min(maxIntensity, clickIntensity + boost);
@@ -215,7 +217,6 @@
                 clickIntensity = 1.0;
             }
 
-            // Set dynamic CSS variable on image element
             muffinImg.style.setProperty('--intensity', clickIntensity.toFixed(2));
         }
 
@@ -242,6 +243,7 @@
             triggerStretchAnimation();
         }
 
+        // Use touchstart for lowest-latency iOS activation alongside pointerdown/mousedown
         if (window.PointerEvent) {
             document.body.addEventListener('pointerdown', handleAction, { passive: true });
         } else {
