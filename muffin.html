@@ -2,15 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Muffin</title>
     <style>
-        body {
+        * {
+            box-sizing: border-box;
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             background-color: #000000;
             color: #ffffff;
             font-family: Arial, sans-serif;
-            margin: 0;
-            min-height: 100vh;
             display: flex;
             flex-direction: column;
             cursor: pointer;
@@ -18,13 +24,11 @@
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
-            position: relative;
-            overflow: hidden;
+            touch-action: manipulation;
         }
         header {
             width: 100%;
             padding: 20px;
-            box-sizing: border-box;
             text-align: left;
             position: relative;
             z-index: 10;
@@ -42,10 +46,11 @@
             margin: auto;
             position: relative;
             z-index: 1;
+            width: 100%;
         }
         .content img {
-            max-width: 80vw;
-            max-height: 60vh;
+            max-width: 75vw;
+            max-height: 55vh;
             border-radius: 8px;
             display: block;
             margin: 0 auto 20px auto;
@@ -66,50 +71,50 @@
             text-decoration: underline;
         }
 
-        /* Spring Stretch & Wiggle Keyframes */
+        /* Controlled Spring Stretch & Wiggle Keyframes */
         .anim-stretch-horizontal {
-            -webkit-animation: springHoriz 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            animation: springHoriz 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            -webkit-animation: springHoriz 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: springHoriz 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .anim-stretch-vertical {
-            -webkit-animation: springVert 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            animation: springVert 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            -webkit-animation: springVert 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: springVert 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         @-webkit-keyframes springHoriz {
             0%   { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
-            20%  { -webkit-transform: scale(calc(1 + 0.8 * var(--intensity)), calc(1 - 0.45 * var(--intensity))) rotate(-12deg); transform: scale(calc(1 + 0.8 * var(--intensity)), calc(1 - 0.45 * var(--intensity))) rotate(-12deg); }
-            40%  { -webkit-transform: scale(calc(1 - 0.4 * var(--intensity)), calc(1 + 0.5 * var(--intensity))) rotate(10deg); transform: scale(calc(1 - 0.4 * var(--intensity)), calc(1 + 0.5 * var(--intensity))) rotate(10deg); }
-            60%  { -webkit-transform: scale(calc(1 + 0.3 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-6deg); transform: scale(calc(1 + 0.3 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-6deg); }
-            80%  { -webkit-transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.1 * var(--intensity))) rotate(2deg); transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.1 * var(--intensity))) rotate(2deg); }
+            20%  { -webkit-transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(-6deg); transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(-6deg); }
+            40%  { -webkit-transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); }
+            60%  { -webkit-transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); }
+            80%  { -webkit-transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); }
             100% { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
         }
 
         @keyframes springHoriz {
             0%   { transform: scale(1, 1) rotate(0deg); }
-            20%  { transform: scale(calc(1 + 0.8 * var(--intensity)), calc(1 - 0.45 * var(--intensity))) rotate(-12deg); }
-            40%  { transform: scale(calc(1 - 0.4 * var(--intensity)), calc(1 + 0.5 * var(--intensity))) rotate(10deg); }
-            60%  { transform: scale(calc(1 + 0.3 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-6deg); }
-            80%  { transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.1 * var(--intensity))) rotate(2deg); }
+            20%  { transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(-6deg); }
+            40%  { transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); }
+            60%  { transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); }
+            80%  { transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); }
             100% { transform: scale(1, 1) rotate(0deg); }
         }
 
         @-webkit-keyframes springVert {
             0%   { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
-            20%  { -webkit-transform: scale(calc(1 - 0.45 * var(--intensity)), calc(1 + 0.8 * var(--intensity))) rotate(12deg); transform: scale(calc(1 - 0.45 * var(--intensity)), calc(1 + 0.8 * var(--intensity))) rotate(12deg); }
-            40%  { -webkit-transform: scale(calc(1 + 0.5 * var(--intensity)), calc(1 - 0.4 * var(--intensity))) rotate(-10deg); transform: scale(calc(1 + 0.5 * var(--intensity)), calc(1 - 0.4 * var(--intensity))) rotate(-10deg); }
-            60%  { -webkit-transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.3 * var(--intensity))) rotate(6deg); transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.3 * var(--intensity))) rotate(6deg); }
-            80%  { -webkit-transform: scale(calc(1 + 0.1 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-2deg); transform: scale(calc(1 + 0.1 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-2deg); }
+            20%  { -webkit-transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(6deg); transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(6deg); }
+            40%  { -webkit-transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); }
+            60%  { -webkit-transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(3deg); transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(3deg); }
+            80%  { -webkit-transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); }
             100% { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
         }
 
         @keyframes springVert {
             0%   { transform: scale(1, 1) rotate(0deg); }
-            20%  { transform: scale(calc(1 - 0.45 * var(--intensity)), calc(1 + 0.8 * var(--intensity))) rotate(12deg); }
-            40%  { transform: scale(calc(1 + 0.5 * var(--intensity)), calc(1 - 0.4 * var(--intensity))) rotate(-10deg); }
-            60%  { transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.3 * var(--intensity))) rotate(6deg); }
-            80%  { transform: scale(calc(1 + 0.1 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-2deg); }
+            20%  { transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(6deg); }
+            40%  { transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); }
+            60%  { transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(3deg); }
+            80%  { transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); }
             100% { transform: scale(1, 1) rotate(0deg); }
         }
     </style>
@@ -141,12 +146,11 @@
         let lastSplatIndex = -1;
         let isAudioUnlocked = false;
 
-        // Click intensity/velocity tracking
+        // Click intensity tracking with sane limits
         let clickIntensity = 1.0;
         let lastClickTime = 0;
-        const maxIntensity = 7.0;
+        const maxIntensity = 2.8; // Controlled funny stretch limit
 
-        // Pre-create HTML5 Audio elements immediately in the DOM
         for (let i = 1; i <= 5; i++) {
             const audio = new Audio(`sources/splat${i}.wav`);
             audio.preload = 'auto';
@@ -156,7 +160,6 @@
         function unlockAudio() {
             if (isAudioUnlocked) return;
 
-            // 1. Create/resume Web Audio Context
             if (!audioCtx) {
                 const AudioContextClass = window.AudioContext || window.webkitAudioContext;
                 if (AudioContextClass) {
@@ -167,7 +170,6 @@
                 audioCtx.resume();
             }
 
-            // 2. Play silent buffer through Web Audio Context to unblock iOS Safari
             if (audioCtx) {
                 try {
                     const buffer = audioCtx.createBuffer(1, 1, 22050);
@@ -178,7 +180,6 @@
                 } catch (e) {}
             }
 
-            // 3. Touch/Play/Pause each HTML5 audio element to unlock element pool on iOS
             htmlAudioElements.forEach(audio => {
                 const promise = audio.play();
                 if (promise !== undefined) {
@@ -189,7 +190,6 @@
                 }
             });
 
-            // 4. Fetch Web Audio buffers asynchronously
             if (audioCtx && splatBuffers.length === 0) {
                 for (let i = 1; i <= 5; i++) {
                     fetch(`sources/splat${i}.wav`)
@@ -216,7 +216,6 @@
             const selectedIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
             lastSplatIndex = selectedIndex;
 
-            // Primary: Web Audio API
             if (audioCtx && splatBuffers[selectedIndex]) {
                 try {
                     const source = audioCtx.createBufferSource();
@@ -227,7 +226,6 @@
                 } catch (err) {}
             }
 
-            // iOS Fallback: Play unlocked HTML5 element pool
             try {
                 const audio = htmlAudioElements[selectedIndex];
                 audio.currentTime = 0;
@@ -240,8 +238,8 @@
             const timeDelta = now - lastClickTime;
             lastClickTime = now;
 
-            if (timeDelta < 400) {
-                const boost = (400 - timeDelta) / 120;
+            if (timeDelta < 350) {
+                const boost = (350 - timeDelta) / 250;
                 clickIntensity = Math.min(maxIntensity, clickIntensity + boost);
             } else {
                 clickIntensity = 1.0;
@@ -267,15 +265,14 @@
 
             if (isProcessingAction) return;
             isProcessingAction = true;
-            setTimeout(() => { isProcessingAction = false; }, 30);
+            setTimeout(() => { isProcessingAction = false; }, 25);
 
             updateClickIntensity();
             playRandomSplat();
             triggerStretchAnimation();
         }
 
-        // Attach touch events explicitly for iOS WebKit touch handling
-        document.body.addEventListener('touchstart', handleAction, { passive: false });
+        document.body.addEventListener('touchstart', handleAction, { passive: true });
         document.body.addEventListener('mousedown', handleAction, { passive: true });
     </script>
 </body>
