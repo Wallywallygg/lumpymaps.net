@@ -148,8 +148,8 @@
 
         // Click intensity tracking with sane limits
         let clickIntensity = 1.0;
-        let lastClickTime = 0;
-        const maxIntensity = 2.8; // Controlled funny stretch limit
+        let lastClickTime = null; // Set to null to handle first tap correctly
+        const maxIntensity = 2.8;
 
         for (let i = 1; i <= 5; i++) {
             const audio = new Audio(`sources/splat${i}.wav`);
@@ -235,16 +235,21 @@
 
         function updateClickIntensity() {
             const now = Date.now();
-            const timeDelta = now - lastClickTime;
-            lastClickTime = now;
 
-            if (timeDelta < 350) {
-                const boost = (350 - timeDelta) / 250;
-                clickIntensity = Math.min(maxIntensity, clickIntensity + boost);
-            } else {
+            if (lastClickTime === null) {
+                // First tap baseline
                 clickIntensity = 1.0;
+            } else {
+                const timeDelta = now - lastClickTime;
+                if (timeDelta < 350) {
+                    const boost = (350 - timeDelta) / 250;
+                    clickIntensity = Math.min(maxIntensity, clickIntensity + boost);
+                } else {
+                    clickIntensity = 1.0;
+                }
             }
 
+            lastClickTime = now;
             muffinImg.style.setProperty('--intensity', clickIntensity.toFixed(2));
         }
 
