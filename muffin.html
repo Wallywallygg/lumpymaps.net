@@ -19,6 +19,7 @@
             -moz-user-select: none;
             -ms-user-select: none;
             position: relative;
+            overflow: hidden; /* Prevents scrollbars during extreme stretchmaxxing */
         }
         header {
             width: 100%;
@@ -39,6 +40,8 @@
         .content {
             text-align: center;
             margin: auto;
+            position: relative;
+            z-index: 1;
         }
         .content img {
             max-width: 80vw;
@@ -63,7 +66,7 @@
             text-decoration: underline;
         }
 
-        /* Spring Stretch & Wiggle Keyframes */
+        /* Spring Stretch & Wiggle Keyframes with Enhanced Intensity Scaling */
         .anim-stretch-horizontal {
             -webkit-animation: springHoriz 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             animation: springHoriz 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -76,37 +79,37 @@
 
         @-webkit-keyframes springHoriz {
             0%   { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
-            20%  { -webkit-transform: scale(calc(1 + 0.4 * var(--intensity)), calc(1 - 0.35 * var(--intensity))) rotate(-6deg); transform: scale(calc(1 + 0.4 * var(--intensity)), calc(1 - 0.35 * var(--intensity))) rotate(-6deg); }
-            40%  { -webkit-transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); }
-            60%  { -webkit-transform: scale(calc(1 + 0.15 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); transform: scale(calc(1 + 0.15 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); }
-            80%  { -webkit-transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); }
+            20%  { -webkit-transform: scale(calc(1 + 0.8 * var(--intensity)), calc(1 - 0.45 * var(--intensity))) rotate(-12deg); transform: scale(calc(1 + 0.8 * var(--intensity)), calc(1 - 0.45 * var(--intensity))) rotate(-12deg); }
+            40%  { -webkit-transform: scale(calc(1 - 0.4 * var(--intensity)), calc(1 + 0.5 * var(--intensity))) rotate(10deg); transform: scale(calc(1 - 0.4 * var(--intensity)), calc(1 + 0.5 * var(--intensity))) rotate(10deg); }
+            60%  { -webkit-transform: scale(calc(1 + 0.3 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-6deg); transform: scale(calc(1 + 0.3 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-6deg); }
+            80%  { -webkit-transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.1 * var(--intensity))) rotate(2deg); transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.1 * var(--intensity))) rotate(2deg); }
             100% { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
         }
 
         @keyframes springHoriz {
             0%   { transform: scale(1, 1) rotate(0deg); }
-            20%  { transform: scale(calc(1 + 0.4 * var(--intensity)), calc(1 - 0.35 * var(--intensity))) rotate(-6deg); }
-            40%  { transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); }
-            60%  { transform: scale(calc(1 + 0.15 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); }
-            80%  { transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); }
+            20%  { transform: scale(calc(1 + 0.8 * var(--intensity)), calc(1 - 0.45 * var(--intensity))) rotate(-12deg); }
+            40%  { transform: scale(calc(1 - 0.4 * var(--intensity)), calc(1 + 0.5 * var(--intensity))) rotate(10deg); }
+            60%  { transform: scale(calc(1 + 0.3 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-6deg); }
+            80%  { transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.1 * var(--intensity))) rotate(2deg); }
             100% { transform: scale(1, 1) rotate(0deg); }
         }
 
         @-webkit-keyframes springVert {
             0%   { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
-            20%  { -webkit-transform: scale(calc(1 - 0.35 * var(--intensity)), calc(1 + 0.4 * var(--intensity))) rotate(6deg); transform: scale(calc(1 - 0.35 * var(--intensity)), calc(1 + 0.4 * var(--intensity))) rotate(6deg); }
-            40%  { -webkit-transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); }
-            60%  { -webkit-transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.15 * var(--intensity))) rotate(3deg); transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.15 * var(--intensity))) rotate(3deg); }
-            80%  { -webkit-transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); }
+            20%  { -webkit-transform: scale(calc(1 - 0.45 * var(--intensity)), calc(1 + 0.8 * var(--intensity))) rotate(12deg); transform: scale(calc(1 - 0.45 * var(--intensity)), calc(1 + 0.8 * var(--intensity))) rotate(12deg); }
+            40%  { -webkit-transform: scale(calc(1 + 0.5 * var(--intensity)), calc(1 - 0.4 * var(--intensity))) rotate(-10deg); transform: scale(calc(1 + 0.5 * var(--intensity)), calc(1 - 0.4 * var(--intensity))) rotate(-10deg); }
+            60%  { -webkit-transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.3 * var(--intensity))) rotate(6deg); transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.3 * var(--intensity))) rotate(6deg); }
+            80%  { -webkit-transform: scale(calc(1 + 0.1 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-2deg); transform: scale(calc(1 + 0.1 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-2deg); }
             100% { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
         }
 
         @keyframes springVert {
             0%   { transform: scale(1, 1) rotate(0deg); }
-            20%  { transform: scale(calc(1 - 0.35 * var(--intensity)), calc(1 + 0.4 * var(--intensity))) rotate(6deg); }
-            40%  { transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); }
-            60%  { transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.15 * var(--intensity))) rotate(3deg); }
-            80%  { transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); }
+            20%  { transform: scale(calc(1 - 0.45 * var(--intensity)), calc(1 + 0.8 * var(--intensity))) rotate(12deg); }
+            40%  { transform: scale(calc(1 + 0.5 * var(--intensity)), calc(1 - 0.4 * var(--intensity))) rotate(-10deg); }
+            60%  { transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.3 * var(--intensity))) rotate(6deg); }
+            80%  { transform: scale(calc(1 + 0.1 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-2deg); }
             100% { transform: scale(1, 1) rotate(0deg); }
         }
     </style>
@@ -139,7 +142,7 @@
         // Click intensity/velocity tracking
         let clickIntensity = 1.0;
         let lastClickTime = 0;
-        const maxIntensity = 3.5;
+        const maxIntensity = 7.0; // Boosted maximum stretch intensity multiplier
 
         function initAudioContext() {
             if (!audioCtx) {
@@ -152,7 +155,6 @@
                 audioCtx.resume();
             }
 
-            // Unlock iOS Safari Web Audio API by playing an empty buffer source inside tap gesture
             if (audioCtx) {
                 try {
                     const buffer = audioCtx.createBuffer(1, 1, 22050);
@@ -187,7 +189,6 @@
             const selectedIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
             lastSplatIndex = selectedIndex;
 
-            // Primary: Web Audio API (Fully unblocked on iOS Safari)
             if (audioCtx && splatBuffers[selectedIndex]) {
                 try {
                     const source = audioCtx.createBufferSource();
@@ -198,7 +199,6 @@
                 } catch (err) {}
             }
 
-            // Direct Fallback for iOS/Safari before Web Audio buffers decode
             try {
                 const audioEl = new Audio(`sources/splat${selectedIndex + 1}.wav`);
                 audioEl.play().catch(() => {});
@@ -211,7 +211,7 @@
             lastClickTime = now;
 
             if (timeDelta < 400) {
-                const boost = (400 - timeDelta) / 200;
+                const boost = (400 - timeDelta) / 120; // Aggressive scaling build-up
                 clickIntensity = Math.min(maxIntensity, clickIntensity + boost);
             } else {
                 clickIntensity = 1.0;
@@ -243,7 +243,6 @@
             triggerStretchAnimation();
         }
 
-        // Use touchstart for lowest-latency iOS activation alongside pointerdown/mousedown
         if (window.PointerEvent) {
             document.body.addEventListener('pointerdown', handleAction, { passive: true });
         } else {
