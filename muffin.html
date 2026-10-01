@@ -63,7 +63,7 @@
             text-decoration: underline;
         }
 
-        /* Spring Stretch & Wiggle Keyframes with Webkit Vendor Prefixes */
+        /* Spring Stretch & Wiggle Keyframes */
         .anim-stretch-horizontal {
             -webkit-animation: springHoriz 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             animation: springHoriz 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -119,6 +119,7 @@
             <a href="sources/GISPortfolio.pdf">GIS Portfolio</a> |
             <a href="projects.html">Projects</a> |
             <a href="lumpy.html">Lumpy</a> |
+            <a href="muffin.html">Muffin</a> |
             <a href="NACHO.html" id="nacho-link">Nacho</a>
         </nav>
     </header>
@@ -191,7 +192,7 @@
                 } catch (err) {}
             }
 
-            // Method B: HTML5 Audio Fallback (Guarantees Firefox Windows support)
+            // Method B: HTML5 Audio Fallback
             try {
                 const audioEl = htmlAudioPool[selectedIndex].cloneNode(true);
                 audioEl.currentTime = 0;
