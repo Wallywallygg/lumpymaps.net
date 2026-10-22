@@ -1,267 +1,235 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nacho - LUMPYMAPS</title>
-    <style>
-        body {
-            background-color: #000000;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
-            overflow: hidden; /* Prevents scrollbars as images fall */
-            position: relative;
-        }
-        header {
-            width: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-            text-align: left;
-            position: relative;
-            z-index: 1000; /* Keeps nav menu above falling images */
-        }
-        header nav, 
-        header nav a {
-            color: #ffffff;
-            text-decoration: none;
-        }
-        header nav a:hover {
-            text-decoration: underline;
-        }
-        .content {
-            text-align: center;
-            margin: auto;
-            position: relative;
-            z-index: 1; /* Main Nacho stays low so falling Nachos cover him */
-            pointer-events: none;
-        }
-        .content img {
-            max-width: 80vw;
-            max-height: 60vh;
-            border-radius: 8px;
-            display: block;
-            margin: 0 auto 20px auto;
-        }
-        .content p {
-            font-size: 1.5rem;
-            letter-spacing: 1px;
-            margin: 0 0 4px 0;
-            pointer-events: auto; /* Re-enable pointer events for click audio */
-            display: inline-block;
-        }
-        .content p:hover {
-            color: #cccccc;
-        }
-        .sub-caption {
-            font-size: 1rem;
-            color: #888888;
-            margin: 0 0 10px 0;
-            font-style: italic;
-            pointer-events: auto; /* Re-enable pointer events for click audio */
-        }
-        .sub-caption:hover {
-            color: #ffffff;
-        }
-        .tap-hint {
-            font-size: 0.9rem;
-            color: #888888;
-            font-style: italic;
-            margin-bottom: 12px;
-        }
-        /* Clear Button Styles */
-        .clear-btn {
-            background-color: transparent;
-            color: #ffffff;
-            border: 1px solid #ffffff;
-            padding: 8px 16px;
-            font-size: 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            pointer-events: auto; /* Re-enable pointer events for button click */
-            z-index: 10000; /* High z-index ensures it stays above falling Nachos (z-index 10) */
-            position: relative;
-            font-family: Arial, sans-serif;
-        }
-        .clear-btn:hover {
-            background-color: #ffffff;
-            color: #000000;
-        }
-        /* Style for dynamically spawned falling images */
-        .falling-nacho {
-            position: fixed;
-            width: 160px;
-            height: auto;
-            border-radius: 6px;
-            pointer-events: none;
-            z-index: 10;
-            will-change: transform;
-        }
-        /* Special 1 in 167 Rare Nacho Variant */
-        .falling-nacho.shiny-nacho {
-            width: 128px; /* 20% smaller (160px * 0.8) */
-            filter: hue-rotate(90deg) saturate(2); /* Green tint filter */
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <nav style="font-size: 2em;">
-            <a href="index.html">Homepage</a> |
-            <a href="blog.html">Blog</a> |
-            <a href="sources/GISPortfolio.pdf">GIS Portfolio</a> |
-            <a href="projects.html">Projects</a> |
-            <a href="lumpy.html">Lumpy</a> |
-            <a href="muffin.html">Muffin</a> |
-            <a href="NACHO.html" id="nacho-nav-link">Nacho</a>
-        </nav>
-    </header>
+---
+layout: lumpycat
+title: Nacho
+---
 
-    <div class="content">
-        <img id="nacho-img" src="images/nacho.jpg" alt="Nacho the dog">
-        <p id="main-caption">¿Qué está haciendo el perro?</p> <br>
-        <div id="sub-caption" class="sub-caption">(what the dog doin?)</div>
-        <div id="hint" class="tap-hint">(Tap anywhere to drop Nachos)</div>
-        <button id="clear-btn" class="clear-btn">Clear Screen</button>
-    </div>
+<style>
+    body {
+        overflow: hidden; /* Prevents scrollbars as images fall */
+        position: relative;
+    }
+    header nav, 
+    header nav a {
+        color: #ffffff;
+        text-decoration: none;
+    }
+    header nav a:hover {
+        text-decoration: underline;
+    }
+    .content {
+        text-align: center;
+        margin: auto;
+        position: relative;
+        z-index: 1; /* Main Nacho stays low so falling Nachos cover him */
+        pointer-events: none;
+    }
+    .content img {
+        max-width: 80vw;
+        max-height: 60vh;
+        border-radius: 8px;
+        display: block;
+        margin: 0 auto 20px auto;
+    }
+    .content p {
+        font-size: 1.5rem;
+        letter-spacing: 1px;
+        margin: 0 0 4px 0;
+        pointer-events: auto; /* Re-enable pointer events for click audio */
+        display: inline-block;
+    }
+    .content p:hover {
+        color: #cccccc;
+    }
+    .sub-caption {
+        font-size: 1rem;
+        color: #888888;
+        margin: 0 0 10px 0;
+        font-style: italic;
+        pointer-events: auto; /* Re-enable pointer events for click audio */
+    }
+    .sub-caption:hover {
+        color: #ffffff;
+    }
+    .tap-hint {
+        font-size: 0.9rem;
+        color: #888888;
+        font-style: italic;
+        margin-bottom: 12px;
+    }
+    /* Clear Button Styles */
+    .clear-btn {
+        background-color: transparent;
+        color: #ffffff;
+        border: 1px solid #ffffff;
+        padding: 8px 16px;
+        font-size: 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        pointer-events: auto; /* Re-enable pointer events for button click */
+        z-index: 10000; /* High z-index ensures it stays above falling Nachos (z-index 10) */
+        position: relative;
+        font-family: Arial, sans-serif;
+    }
+    .clear-btn:hover {
+        background-color: #ffffff;
+        color: #000000;
+    }
+    /* Style for dynamically spawned falling images */
+    .falling-nacho {
+        position: fixed;
+        width: 160px;
+        height: auto;
+        border-radius: 6px;
+        pointer-events: none;
+        z-index: 10;
+        will-change: transform;
+    }
+    /* Special 1 in 167 Rare Nacho Variant */
+    .falling-nacho.shiny-nacho {
+        width: 128px; /* 20% smaller (160px * 0.8) */
+        filter: hue-rotate(90deg) saturate(2); /* Green tint filter */
+    }
+</style>
 
-    <!-- Audio Elements -->
-    <audio id="sound-clear" src="sources/tacobell2.mp3" preload="auto"></audio>
-    <audio id="sound-dog-doin" src="sources/whatthedogdoin.wav" preload="auto"></audio>
+<div class="content">
+    <img id="nacho-img" src="{{ '/images/nacho.jpg' | relative_url }}" alt="Nacho the dog">
+    <p id="main-caption">¿Qué está haciendo el perro?</p> <br>
+    <div id="sub-caption" class="sub-caption">(what the dog doin?)</div>
+    <div id="hint" class="tap-hint">(Tap anywhere to drop Nachos)</div>
+    <button id="clear-btn" class="clear-btn">Clear Screen</button>
+</div>
 
-    <script>
-        const soundClear = document.getElementById('sound-clear');
-        const soundDogDoin = document.getElementById('sound-dog-doin');
-        const hint = document.getElementById('hint');
-        const clearBtn = document.getElementById('clear-btn');
-        const nachoNavLink = document.getElementById('nacho-nav-link');
-        const mainCaption = document.getElementById('main-caption');
-        const subCaption = document.getElementById('sub-caption');
+<!-- Audio Elements -->
+<audio id="sound-clear" src="{{ '/sources/tacobell2.mp3' | relative_url }}" preload="auto"></audio>
+<audio id="sound-dog-doin" src="{{ '/sources/whatthedogdoin.wav' | relative_url }}" preload="auto"></audio>
+
+<script>
+    const soundClear = document.getElementById('sound-clear');
+    const soundDogDoin = document.getElementById('sound-dog-doin');
+    const hint = document.getElementById('hint');
+    const clearBtn = document.getElementById('clear-btn');
+    const nachoNavLink = document.getElementById('nacho-nav-link');
+    const mainCaption = document.getElementById('main-caption');
+    const subCaption = document.getElementById('sub-caption');
+    
+    let fallingNachos = [];
+    const MAX_NACHOS = 100;
+
+    function playDogSound() {
+        soundDogDoin.currentTime = 0;
+        soundDogDoin.play().catch(err => console.log('Audio play error:', err));
+    }
+
+    // Play spammable audio without cutting off previous plays
+    function playSpammableDropSound() {
+        const sound = new Audio('{{ "/sources/tacobell1.mp3" | relative_url }}');
+        sound.play().catch(err => console.log('Audio play error:', err));
+    }
+
+    function spawnNacho() {
+        const img = document.createElement('img');
+        img.src = '{{ "/images/nacho2.jpg" | relative_url }}';
         
-        let fallingNachos = [];
-        const MAX_NACHOS = 100;
+        // 1 in 167 chance for the rare shiny Nacho
+        const isShiny = Math.floor(Math.random() * 167) === 0;
+        
+        img.className = 'falling-nacho' + (isShiny ? ' shiny-nacho' : '');
+        
+        const currentWidth = isShiny ? 128 : 160;
+        
+        // Random horizontal start position
+        const startX = Math.random() * (window.innerWidth - currentWidth);
+        const startY = -180;
+        // Land randomly across the lower/middle section of the screen
+        const targetY = window.innerHeight - 180 - (Math.random() * (window.innerHeight * 0.7));
+        
+        img.style.left = `${startX}px`;
+        img.style.top = `${startY}px`;
+        
+        document.body.appendChild(img);
 
-        function playDogSound() {
-            soundDogDoin.currentTime = 0;
-            soundDogDoin.play().catch(err => console.log('Audio play error:', err));
-        }
+        const nachoObj = {
+            element: img,
+            x: startX,
+            y: startY,
+            targetY: targetY,
+            speed: 12 + Math.random() * 10,
+            rotation: (Math.random() - 0.5) * 60,
+            isShiny: isShiny // Tracks if flipped horizontally (scaleX(-1))
+        };
 
-        // Play spammable audio without cutting off previous plays
-        function playSpammableDropSound() {
-            const sound = new Audio('sources/tacobell1.mp3');
-            sound.play().catch(err => console.log('Audio play error:', err));
-        }
+        fallingNachos.push(nachoObj);
+    }
 
-        function spawnNacho() {
-            const img = document.createElement('img');
-            img.src = 'images/nacho2.jpg';
-            
-            // 1 in 167 chance for the rare shiny Nacho
-            const isShiny = Math.floor(Math.random() * 167) === 0;
-            
-            img.className = 'falling-nacho' + (isShiny ? ' shiny-nacho' : '');
-            
-            const currentWidth = isShiny ? 128 : 160;
-            
-            // Random horizontal start position
-            const startX = Math.random() * (window.innerWidth - currentWidth);
-            const startY = -180;
-            // Land randomly across the lower/middle section of the screen
-            const targetY = window.innerHeight - 180 - (Math.random() * (window.innerHeight * 0.7));
-            
-            img.style.left = `${startX}px`;
-            img.style.top = `${startY}px`;
-            
-            document.body.appendChild(img);
-
-            const nachoObj = {
-                element: img,
-                x: startX,
-                y: startY,
-                targetY: targetY,
-                speed: 12 + Math.random() * 10,
-                rotation: (Math.random() - 0.5) * 60,
-                isShiny: isShiny // Tracks if flipped horizontally (scaleX(-1))
-            };
-
-            fallingNachos.push(nachoObj);
-        }
-
-        function clearScreen() {
-            soundClear.currentTime = 0;
-            soundClear.play().catch(err => console.log('Audio play error:', err));
-            
-            fallingNachos.forEach(nacho => {
-                if (nacho.element && nacho.element.parentNode) {
-                    nacho.element.parentNode.removeChild(nacho.element);
-                }
-            });
-            fallingNachos = [];
-        }
-
-        // Animation loop
-        function updatePhysics() {
-            fallingNachos.forEach(nacho => {
-                if (nacho.y < nacho.targetY) {
-                    nacho.y += nacho.speed;
-                    if (nacho.y > nacho.targetY) nacho.y = nacho.targetY;
-                    
-                    // Apply translation, rotation, and horizontal flip if shiny
-                    const flip = nacho.isShiny ? ' scaleX(-1)' : '';
-                    nacho.element.style.transform = `translateY(${nacho.y - (-180)}px) rotate(${nacho.rotation}deg)${flip}`;
-                }
-            });
-            requestAnimationFrame(updatePhysics);
-        }
-        updatePhysics();
-
-        function handleClick(e) {
-            // Ignore clicks on navigation links, clear button, or text elements that trigger sound
-            if (e.target.tagName === 'A' || 
-                e.target.id === 'clear-btn' || 
-                e.target.id === 'main-caption' || 
-                e.target.id === 'sub-caption') return;
-
-            if (hint) hint.style.display = 'none';
-
-            if (fallingNachos.length >= MAX_NACHOS) {
-                clearScreen();
-            } else {
-                playSpammableDropSound();
-                spawnNacho();
+    function clearScreen() {
+        soundClear.currentTime = 0;
+        soundClear.play().catch(err => console.log('Audio play error:', err));
+        
+        fallingNachos.forEach(nacho => {
+            if (nacho.element && nacho.element.parentNode) {
+                nacho.element.parentNode.removeChild(nacho.element);
             }
-        }
-
-        // Event listener for the clear button
-        clearBtn.addEventListener('pointerdown', (e) => {
-            e.stopPropagation();
-            clearScreen();
         });
+        fallingNachos = [];
+    }
 
-        // Audio trigger for Nacho link in header
+    // Animation loop
+    function updatePhysics() {
+        fallingNachos.forEach(nacho => {
+            if (nacho.y < nacho.targetY) {
+                nacho.y += nacho.speed;
+                if (nacho.y > nacho.targetY) nacho.y = nacho.targetY;
+                
+                // Apply translation, rotation, and horizontal flip if shiny
+                const flip = nacho.isShiny ? ' scaleX(-1)' : '';
+                nacho.element.style.transform = `translateY(${nacho.y - (-180)}px) rotate(${nacho.rotation}deg)${flip}`;
+            }
+        });
+        requestAnimationFrame(updatePhysics);
+    }
+    updatePhysics();
+
+    function handleClick(e) {
+        // Ignore clicks on navigation links, clear button, or text elements that trigger sound
+        if (e.target.tagName === 'A' || 
+            e.target.id === 'clear-btn' || 
+            e.target.id === 'main-caption' || 
+            e.target.id === 'sub-caption') return;
+
+        if (hint) hint.style.display = 'none';
+
+        if (fallingNachos.length >= MAX_NACHOS) {
+            clearScreen();
+        } else {
+            playSpammableDropSound();
+            spawnNacho();
+        }
+    }
+
+    // Event listener for the clear button
+    clearBtn.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        clearScreen();
+    });
+
+    // Audio trigger for Nacho link in header (if it exists in scope, or fallback)
+    if (nachoNavLink) {
         nachoNavLink.addEventListener('click', (e) => {
             e.preventDefault();
             playDogSound();
         });
+    }
 
-        // Audio triggers for caption and sub-caption text
-        mainCaption.addEventListener('pointerdown', (e) => {
-            e.stopPropagation();
-            playDogSound();
-        });
+    // Audio triggers for caption and sub-caption text
+    mainCaption.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        playDogSound();
+    });
 
-        subCaption.addEventListener('pointerdown', (e) => {
-            e.stopPropagation();
-            playDogSound();
-        });
+    subCaption.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        playDogSound();
+    });
 
-        document.body.addEventListener('pointerdown', handleClick);
-    </script>
-</body>
-</html>
+    document.body.addEventListener('pointerdown', handleClick);
+</script>
