@@ -71,37 +71,37 @@ title: Muffin
 
     @-webkit-keyframes springHoriz {
         0%   { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
-        20%  { -webkit-transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(-6deg); transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(-6deg); }
-        40%  { -webkit-transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); }
-        60%  { -webkit-transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); }
-        80%  { -webkit-transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); }
+        20%  { -webkit-transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(calc(-6deg * var(--intensity))); transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(calc(-6deg * var(--intensity))); }
+        40%  { -webkit-transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(calc(5deg * var(--intensity))); transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(calc(5deg * var(--intensity))); }
+        60%  { -webkit-transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(calc(-3deg * var(--intensity))); transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(calc(-3deg * var(--intensity))); }
+        80%  { -webkit-transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(calc(1deg * var(--intensity))); transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(calc(1deg * var(--intensity))); }
         100% { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
     }
 
     @keyframes springHoriz {
         0%   { transform: scale(1, 1) rotate(0deg); }
-        20%  { transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(-6deg); }
-        40%  { transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); }
-        60%  { transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); }
-        80%  { transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); }
+        20%  { transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(calc(-6deg * var(--intensity))); }
+        40%  { transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(calc(5deg * var(--intensity))); }
+        60%  { transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(calc(-3deg * var(--intensity))); }
+        80%  { transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(calc(1deg * var(--intensity))); }
         100% { transform: scale(1, 1) rotate(0deg); }
     }
 
     @-webkit-keyframes springVert {
         0%   { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
-        20%  { -webkit-transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(6deg); transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(6deg); }
-        40%  { -webkit-transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); }
-        60%  { -webkit-transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(3deg); transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(3deg); }
-        80%  { -webkit-transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); }
+        20%  { -webkit-transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(calc(6deg * var(--intensity))); transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(calc(6deg * var(--intensity))); }
+        40%  { -webkit-transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(calc(-5deg * var(--intensity))); transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(calc(-5deg * var(--intensity))); }
+        60%  { -webkit-transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(calc(3deg * var(--intensity))); transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(calc(3deg * var(--intensity))); }
+        80%  { -webkit-transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(calc(-1deg * var(--intensity))); transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(calc(-1deg * var(--intensity))); }
         100% { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
     }
 
     @keyframes springVert {
         0%   { transform: scale(1, 1) rotate(0deg); }
-        20%  { transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(6deg); }
-        40%  { transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); }
-        60%  { transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(3deg); }
-        80%  { transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); }
+        20%  { transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(calc(6deg * var(--intensity))); }
+        40%  { transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(calc(-5deg * var(--intensity))); }
+        60%  { transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(calc(3deg * var(--intensity))); }
+        80%  { transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(calc(-1deg * var(--intensity))); }
         100% { transform: scale(1, 1) rotate(0deg); }
     }
 </style>
@@ -111,12 +111,12 @@ title: Muffin
     <p id="subtext-container" class="title-subtext">Muffin so fat</p>
 </div>
 
-<!-- Hidden audio elements for the 5 squish sounds -->
-<audio id="squish-1" src="{{ '/sources/squish1.wav' | relative_url }}" preload="auto"></audio>
-<audio id="squish-2" src="{{ '/sources/squish2.wav' | relative_url }}" preload="auto"></audio>
-<audio id="squish-3" src="{{ '/sources/squish3.wav' | relative_url }}" preload="auto"></audio>
-<audio id="squish-4" src="{{ '/sources/squish4.wav' | relative_url }}" preload="auto"></audio>
-<audio id="squish-5" src="{{ '/sources/squish5.wav' | relative_url }}" preload="auto"></audio>
+<!-- Hidden audio elements for splat1.wav - splat5.wav -->
+<audio id="splat-1" src="{{ '/sources/splat1.wav' | relative_url }}" preload="auto"></audio>
+<audio id="splat-2" src="{{ '/sources/splat2.wav' | relative_url }}" preload="auto"></audio>
+<audio id="splat-3" src="{{ '/sources/splat3.wav' | relative_url }}" preload="auto"></audio>
+<audio id="splat-4" src="{{ '/sources/splat4.wav' | relative_url }}" preload="auto"></audio>
+<audio id="splat-5" src="{{ '/sources/splat5.wav' | relative_url }}" preload="auto"></audio>
 
 <script>
     const muffinImg = document.getElementById('muffin-img');
@@ -129,7 +129,7 @@ title: Muffin
     let lastClickTime = 0;
 
     for (let i = 1; i <= 5; i++) {
-        const audioEl = document.getElementById(`squish-${i}`);
+        const audioEl = document.getElementById(`splat-${i}`);
         if (audioEl) {
             htmlAudioElements.push(audioEl);
         }
@@ -157,7 +157,7 @@ title: Muffin
             span.textContent = char;
             if (char === ' ') {
                 span.style.display = 'inline-block';
-                span.style.width = '0.3em'; // Keeps space width consistent
+                span.style.width = '0.3em';
             } else {
                 span.className = 'wave-char';
             }
@@ -171,7 +171,6 @@ title: Muffin
     let waveSpeed = 0.035;
 
     function triggerTextWave() {
-        // Always add an 'a' right before the last 't' on click
         const currentSpans = subtextContainer.querySelectorAll('span');
         let currentText = Array.from(currentSpans).map(span => span.textContent).join('');
         
@@ -182,7 +181,6 @@ title: Muffin
             currentText += 'a';
         }
 
-        // Re-render spans with the updated text
         subtextContainer.innerHTML = '';
         for (let char of currentText) {
             const span = document.createElement('span');
@@ -196,7 +194,6 @@ title: Muffin
             subtextContainer.appendChild(span);
         }
 
-        // If a wave is already running, spam-clicking boosts its speed to finish faster
         if (isWaveRunning) {
             waveSpeed = Math.min(waveSpeed + 0.04, 0.18);
         } else {
@@ -233,45 +230,37 @@ title: Muffin
         }
     }
 
+    // Handles progressive scaling intensity on spam clicks
+    function handleInteraction() {
+        playRandomSplat();
+
+        const now = performance.now();
+        // If clicked rapidly within 400ms, increase intensity; otherwise reset to light poke
+        if (now - lastClickTime < 400) {
+            clickIntensity = Math.min(clickIntensity + 0.45, 4.0);
+        } else {
+            clickIntensity = 1.0;
+        }
+        lastClickTime = now;
+
+        const animClass = Math.random() < 0.5 ? 'anim-stretch-horizontal' : 'anim-stretch-vertical';
+        muffinImg.style.setProperty('--intensity', clickIntensity);
+        muffinImg.classList.remove('anim-stretch-horizontal', 'anim-stretch-vertical');
+        void muffinImg.offsetWidth;
+        muffinImg.classList.add(animClass);
+    }
+
     // Muffin Picture Click
     muffinImg.addEventListener('click', (e) => {
         e.stopPropagation();
-        playRandomSplat();
-
-        const now = performance.now();
-        if (now - lastClickTime < 400) {
-            clickIntensity = Math.min(clickIntensity + 0.35, 2.8);
-        } else {
-            clickIntensity = 1.0;
-        }
-        lastClickTime = now;
-
-        const animClass = Math.random() < 0.5 ? 'anim-stretch-horizontal' : 'anim-stretch-vertical';
-        muffinImg.style.setProperty('--intensity', clickIntensity);
-        muffinImg.classList.remove('anim-stretch-horizontal', 'anim-stretch-vertical');
-        void muffinImg.offsetWidth;
-        muffinImg.classList.add(animClass);
+        handleInteraction();
     });
 
-    // Text Click
+    // Text Click (Also triggers wave)
     subtextContainer.addEventListener('click', (e) => {
         e.stopPropagation();
-        playRandomSplat();
         triggerTextWave();
-
-        const now = performance.now();
-        if (now - lastClickTime < 400) {
-            clickIntensity = Math.min(clickIntensity + 0.35, 2.8);
-        } else {
-            clickIntensity = 1.0;
-        }
-        lastClickTime = now;
-
-        const animClass = Math.random() < 0.5 ? 'anim-stretch-horizontal' : 'anim-stretch-vertical';
-        muffinImg.style.setProperty('--intensity', clickIntensity);
-        muffinImg.classList.remove('anim-stretch-horizontal', 'anim-stretch-vertical');
-        void muffinImg.offsetWidth;
-        muffinImg.classList.add(animClass);
+        handleInteraction();
     });
 
     muffinImg.addEventListener('animationend', () => {
@@ -281,21 +270,7 @@ title: Muffin
     // Background Click
     document.body.addEventListener('click', (e) => {
         if (e.target.tagName !== 'A' && e.target !== muffinImg && e.target !== subtextContainer && !subtextContainer.contains(e.target)) {
-            playRandomSplat();
-
-            const now = performance.now();
-            if (now - lastClickTime < 400) {
-                clickIntensity = Math.min(clickIntensity + 0.35, 2.8);
-            } else {
-                clickIntensity = 1.0;
-            }
-            lastClickTime = now;
-
-            const animClass = Math.random() < 0.5 ? 'anim-stretch-horizontal' : 'anim-stretch-vertical';
-            muffinImg.style.setProperty('--intensity', clickIntensity);
-            muffinImg.classList.remove('anim-stretch-horizontal', 'anim-stretch-vertical');
-            void muffinImg.offsetWidth;
-            muffinImg.classList.add(animClass);
+            handleInteraction();
         }
     });
 </script>
