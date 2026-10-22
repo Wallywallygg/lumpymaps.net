@@ -171,20 +171,7 @@ title: Muffin
     let waveSpeed = 0.035;
 
     function triggerTextWave() {
-        if (isWaveRunning) return; // Wait for current wave cycle to finish before starting a new one
-
-        const now = performance.now();
-        const timeDiff = now - lastClickTime;
-        lastClickTime = now;
-
-        // Make the wave speed up when spam clicked
-        if (timeDiff < 300) {
-            waveSpeed = Math.min(waveSpeed + 0.015, 0.12);
-        } else {
-            waveSpeed = 0.035;
-        }
-
-        // Rebuild text string, inserting an 'a' right before the last 't'
+        // Always add an 'a' right before the last 't' on click
         const currentSpans = subtextContainer.querySelectorAll('span');
         let currentText = Array.from(currentSpans).map(span => span.textContent).join('');
         
@@ -195,7 +182,7 @@ title: Muffin
             currentText += 'a';
         }
 
-        // Re-render spans
+        // Re-render spans with the updated text
         subtextContainer.innerHTML = '';
         for (let char of currentText) {
             const span = document.createElement('span');
@@ -209,9 +196,15 @@ title: Muffin
             subtextContainer.appendChild(span);
         }
 
-        waveProgress = 0.0;
-        isWaveRunning = true;
-        requestAnimationFrame(animateWave);
+        // If a wave is already running, spam-clicking boosts its speed to finish faster
+        if (isWaveRunning) {
+            waveSpeed = Math.min(waveSpeed + 0.04, 0.18);
+        } else {
+            waveSpeed = 0.035;
+            waveProgress = 0.0;
+            isWaveRunning = true;
+            requestAnimationFrame(animateWave);
+        }
     }
 
     function animateWave() {
@@ -251,6 +244,7 @@ title: Muffin
         } else {
             clickIntensity = 1.0;
         }
+        lastClickTime = now;
 
         const animClass = Math.random() < 0.5 ? 'anim-stretch-horizontal' : 'anim-stretch-vertical';
         muffinImg.style.setProperty('--intensity', clickIntensity);
@@ -271,6 +265,7 @@ title: Muffin
         } else {
             clickIntensity = 1.0;
         }
+        lastClickTime = now;
 
         const animClass = Math.random() < 0.5 ? 'anim-stretch-horizontal' : 'anim-stretch-vertical';
         muffinImg.style.setProperty('--intensity', clickIntensity);
@@ -294,6 +289,7 @@ title: Muffin
             } else {
                 clickIntensity = 1.0;
             }
+            lastClickTime = now;
 
             const animClass = Math.random() < 0.5 ? 'anim-stretch-horizontal' : 'anim-stretch-vertical';
             muffinImg.style.setProperty('--intensity', clickIntensity);
