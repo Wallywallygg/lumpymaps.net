@@ -24,6 +24,7 @@ title: Muffin
         position: relative;
         z-index: 1;
         width: 100%;
+        padding: 0 15px; /* Adds a safety margin from browser edges */
     }
     .content img {
         max-width: 75vw;
@@ -44,6 +45,9 @@ title: Muffin
         display: inline-block;
         cursor: pointer;
         white-space: pre; /* Preserves spaces properly */
+        max-width: calc(100vw - 3ch); /* Caps text width ~1 character away from screen edge */
+        overflow: hidden;
+        text-overflow: clip;
     }
     .wave-char {
         display: inline-block;
@@ -100,177 +104,4 @@ title: Muffin
         0%   { transform: scale(1, 1) rotate(0deg); }
         20%  { transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(calc(6deg * var(--intensity))); }
         40%  { transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(calc(-5deg * var(--intensity))); }
-        60%  { transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(calc(3deg * var(--intensity))); }
-        80%  { transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(calc(-1deg * var(--intensity))); }
-        100% { transform: scale(1, 1) rotate(0deg); }
-    }
-</style>
-
-<div class="content">
-    <img id="muffin-img" src="{{ '/images/muffin.jpg' | relative_url }}" alt="Muffin">
-    <p id="subtext-container" class="title-subtext">Muffin so fat</p>
-</div>
-
-<!-- Hidden audio elements for splat1.wav - splat5.wav -->
-<audio id="splat-1" src="{{ '/sources/splat1.wav' | relative_url }}" preload="auto"></audio>
-<audio id="splat-2" src="{{ '/sources/splat2.wav' | relative_url }}" preload="auto"></audio>
-<audio id="splat-3" src="{{ '/sources/splat3.wav' | relative_url }}" preload="auto"></audio>
-<audio id="splat-4" src="{{ '/sources/splat4.wav' | relative_url }}" preload="auto"></audio>
-<audio id="splat-5" src="{{ '/sources/splat5.wav' | relative_url }}" preload="auto"></audio>
-
-<script>
-    const muffinImg = document.getElementById('muffin-img');
-    const subtextContainer = document.getElementById('subtext-container');
-
-    let htmlAudioElements = [];
-    let lastSplatIndex = -1;
-
-    let clickIntensity = 1.0;
-    let lastClickTime = 0;
-
-    for (let i = 1; i <= 5; i++) {
-        const audioEl = document.getElementById(`splat-${i}`);
-        if (audioEl) {
-            htmlAudioElements.push(audioEl);
-        }
-    }
-
-    function playRandomSplat() {
-        if (htmlAudioElements.length === 0) return;
-        let index;
-        do {
-            index = Math.floor(Math.random() * htmlAudioElements.length);
-        } while (index === lastSplatIndex && htmlAudioElements.length > 1);
-        lastSplatIndex = index;
-
-        const sound = htmlAudioElements[index];
-        sound.currentTime = 0;
-        sound.play().catch(err => console.log('Audio play error:', err));
-    }
-
-    // Wrap each character (including spaces) into a span
-    function initTextSpans() {
-        const text = subtextContainer.textContent;
-        subtextContainer.innerHTML = '';
-        for (let char of text) {
-            const span = document.createElement('span');
-            span.textContent = char;
-            if (char === ' ') {
-                span.style.display = 'inline-block';
-                span.style.width = '0.3em';
-            } else {
-                span.className = 'wave-char';
-            }
-            subtextContainer.appendChild(span);
-        }
-    }
-    initTextSpans();
-
-    let isWaveRunning = false;
-    let waveProgress = 1.0; 
-    let waveSpeed = 0.035;
-
-    function triggerTextWave() {
-        const currentSpans = subtextContainer.querySelectorAll('span');
-        let currentText = Array.from(currentSpans).map(span => span.textContent).join('');
-        
-        const tMatchIndex = currentText.lastIndexOf('t');
-        if (tMatchIndex !== -1) {
-            currentText = currentText.slice(0, tMatchIndex) + 'a' + currentText.slice(tMatchIndex);
-        } else {
-            currentText += 'a';
-        }
-
-        subtextContainer.innerHTML = '';
-        for (let char of currentText) {
-            const span = document.createElement('span');
-            span.textContent = char;
-            if (char === ' ') {
-                span.style.display = 'inline-block';
-                span.style.width = '0.3em';
-            } else {
-                span.className = 'wave-char';
-            }
-            subtextContainer.appendChild(span);
-        }
-
-        if (isWaveRunning) {
-            waveSpeed = Math.min(waveSpeed + 0.04, 0.18);
-        } else {
-            waveSpeed = 0.035;
-            waveProgress = 0.0;
-            isWaveRunning = true;
-            requestAnimationFrame(animateWave);
-        }
-    }
-
-    function animateWave() {
-        const chars = subtextContainer.querySelectorAll('.wave-char');
-        const waveWidth = 2.5; 
-
-        let allFinished = true;
-        chars.forEach((char, i) => {
-            const charProgress = waveProgress - (i * 0.18);
-            if (charProgress >= 0 && charProgress <= waveWidth) {
-                allFinished = false;
-                const translateY = -Math.sin((charProgress / waveWidth) * Math.PI) * 14;
-                char.style.transform = `translateY(${translateY}px)`;
-            } else {
-                char.style.transform = `translateY(0px)`;
-            }
-        });
-
-        waveProgress += waveSpeed;
-
-        if (!allFinished || waveProgress < 1.0) {
-            requestAnimationFrame(animateWave);
-        } else {
-            chars.forEach(char => char.style.transform = `translateY(0px)`);
-            isWaveRunning = false;
-        }
-    }
-
-    // Handles progressive scaling intensity on spam clicks
-    function handleInteraction() {
-        playRandomSplat();
-
-        const now = performance.now();
-        // If clicked rapidly within 400ms, increase intensity; otherwise reset to light poke
-        if (now - lastClickTime < 400) {
-            clickIntensity = Math.min(clickIntensity + 0.45, 4.0);
-        } else {
-            clickIntensity = 1.0;
-        }
-        lastClickTime = now;
-
-        const animClass = Math.random() < 0.5 ? 'anim-stretch-horizontal' : 'anim-stretch-vertical';
-        muffinImg.style.setProperty('--intensity', clickIntensity);
-        muffinImg.classList.remove('anim-stretch-horizontal', 'anim-stretch-vertical');
-        void muffinImg.offsetWidth;
-        muffinImg.classList.add(animClass);
-    }
-
-    // Muffin Picture Click
-    muffinImg.addEventListener('click', (e) => {
-        e.stopPropagation();
-        handleInteraction();
-    });
-
-    // Text Click (Also triggers wave)
-    subtextContainer.addEventListener('click', (e) => {
-        e.stopPropagation();
-        triggerTextWave();
-        handleInteraction();
-    });
-
-    muffinImg.addEventListener('animationend', () => {
-        muffinImg.classList.remove('anim-stretch-horizontal', 'anim-stretch-vertical');
-    });
-
-    // Background Click
-    document.body.addEventListener('click', (e) => {
-        if (e.target.tagName !== 'A' && e.target !== muffinImg && e.target !== subtextContainer && !subtextContainer.contains(e.target)) {
-            handleInteraction();
-        }
-    });
-</script>
+        60%  { transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(
