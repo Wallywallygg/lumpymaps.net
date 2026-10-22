@@ -19,7 +19,7 @@ title: Nacho
         text-align: center;
         margin: auto;
         position: relative;
-        z-index: 100; /* High z-index keeps main content and clear button above falling nachos */
+        z-index: 1; /* Main content stays low so falling nachos cover everything */
         pointer-events: none;
     }
     .content img {
@@ -58,30 +58,33 @@ title: Nacho
         font-style: italic;
         margin-bottom: 12px;
     }
-    /* Clear Button Container & Styles */
-    .clear-btn-container {
-        position: relative;
-        z-index: 1000;
+    
+    /* Absolute Top Priority Clear Button Wrapper (Fixed to screen so it never moves or gets covered) */
+    .clear-btn-wrapper {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999999; /* Higher than everything else on the page */
         pointer-events: auto;
-        margin-top: 10px;
-        display: inline-block;
     }
     .clear-btn {
         background-color: #000000;
         color: #ffffff;
         border: 2px solid #ffffff;
-        padding: 10px 20px;
+        padding: 12px 24px;
         font-size: 1rem;
-        border-radius: 4px;
+        font-weight: bold;
+        border-radius: 6px;
         cursor: pointer;
-        pointer-events: auto;
         font-family: Arial, sans-serif;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.9);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.9);
     }
     .clear-btn:hover {
         background-color: #ffffff;
         color: #000000;
     }
+
     /* Style for dynamically spawned falling images */
     .falling-nacho {
         position: fixed;
@@ -89,7 +92,7 @@ title: Nacho
         height: auto;
         border-radius: 6px;
         pointer-events: none;
-        z-index: 1; /* Kept low so they fall behind the content and clear button */
+        z-index: 9999; /* Falls over the main content, but stays strictly beneath the clear button */
         will-change: transform;
         -webkit-user-select: none;
         -webkit-user-drag: none;
@@ -107,9 +110,11 @@ title: Nacho
     <p id="main-caption">¿Qué está haciendo el perro?</p> <br>
     <div id="sub-caption" class="sub-caption">(what the dog doin?)</div>
     <div id="hint" class="tap-hint">(Tap anywhere to drop Nachos)</div>
-    <div class="clear-btn-container">
-        <button id="clear-btn" class="clear-btn">Clear Screen</button>
-    </div>
+</div>
+
+<!-- Clear Button placed outside .content in a fixed wrapper at the absolute top layer -->
+<div class="clear-btn-wrapper">
+    <button id="clear-btn" class="clear-btn">Clear Screen</button>
 </div>
 
 <!-- Audio Elements -->
