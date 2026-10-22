@@ -21,6 +21,7 @@ title: Nacho
         position: relative;
         z-index: 1; /* Main content stays low so falling nachos cover everything */
         pointer-events: none;
+        padding-bottom: 80px; /* Ensures text never gets hidden behind the fixed button on mobile */
     }
     .content img {
         max-width: 80vw;
@@ -62,7 +63,7 @@ title: Nacho
     /* Absolute Top Priority Clear Button Wrapper (Fixed to screen so it never moves or gets covered) */
     .clear-btn-wrapper {
         position: fixed;
-        bottom: 30px;
+        bottom: 20px;
         left: 50%;
         transform: translateX(-50%);
         z-index: 999999; /* Higher than everything else on the page */
