@@ -11,12 +11,15 @@ title: Nacho
         -webkit-user-drag: none;
         overflow: hidden; /* Prevents scrollbars as images fall */
         position: relative;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
     }
     .content {
         text-align: center;
         margin: auto;
         position: relative;
-        z-index: 1; /* Main Nacho stays low so falling Nachos cover him */
+        z-index: 100; /* High z-index keeps main content and clear button above falling nachos */
         pointer-events: none;
     }
     .content img {
@@ -55,7 +58,14 @@ title: Nacho
         font-style: italic;
         margin-bottom: 12px;
     }
-    /* Clear Button Styles - Forced to the absolute top of visual hierarchy */
+    /* Clear Button Container & Styles */
+    .clear-btn-container {
+        position: relative;
+        z-index: 1000;
+        pointer-events: auto;
+        margin-top: 10px;
+        display: inline-block;
+    }
     .clear-btn {
         background-color: #000000;
         color: #ffffff;
@@ -64,9 +74,7 @@ title: Nacho
         font-size: 1rem;
         border-radius: 4px;
         cursor: pointer;
-        pointer-events: auto; /* Re-enable pointer events for button click */
-        z-index: 999999 !important; /* Forces it above everything including falling nachos */
-        position: relative;
+        pointer-events: auto;
         font-family: Arial, sans-serif;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.9);
     }
@@ -81,7 +89,7 @@ title: Nacho
         height: auto;
         border-radius: 6px;
         pointer-events: none;
-        z-index: 5; /* Lower than the clear button */
+        z-index: 1; /* Kept low so they fall behind the content and clear button */
         will-change: transform;
         -webkit-user-select: none;
         -webkit-user-drag: none;
@@ -99,7 +107,7 @@ title: Nacho
     <p id="main-caption">¿Qué está haciendo el perro?</p> <br>
     <div id="sub-caption" class="sub-caption">(what the dog doin?)</div>
     <div id="hint" class="tap-hint">(Tap anywhere to drop Nachos)</div>
-    <div>
+    <div class="clear-btn-container">
         <button id="clear-btn" class="clear-btn">Clear Screen</button>
     </div>
 </div>
@@ -147,7 +155,8 @@ title: Nacho
         // Land randomly across the lower/middle section of the screen
         const targetY = window.innerHeight - 180 - (Math.random() * (window.innerHeight * 0.7));
         
-        img.style.left = `${startX}px`; img.style.top = `${startY}px`;
+        img.style.left = `${startX}px`;
+        img.style.top = `${startY}px`;
         
         document.body.appendChild(img);
 
@@ -185,4 +194,46 @@ title: Nacho
                 
                 // Apply translation, rotation, and horizontal flip if shiny
                 const flip = nacho.isShiny ? ' scaleX(-1)' : '';
-                nacho.element.style.transform = `translateY(${nacho.y - (-180)}px) rotate(${nacho.rotation}
+                nacho.element.style.transform = `translateY(${nacho.y - (-180)}px) rotate(${nacho.rotation}deg)${flip}`;
+            }
+        });
+        requestAnimationFrame(updatePhysics);
+    }
+    updatePhysics();
+
+    function handleClick(e) {
+        // Ignore clicks on navigation links, clear button, or text elements that trigger sound
+        if (e.target.tagName === 'A' || 
+            e.target.id === 'clear-btn' || 
+            e.target.id === 'main-caption' || 
+            e.target.id === 'sub-caption') return;
+
+        if (hint) hint.style.display = 'none';
+
+        if (fallingNachos.length >= MAX_NACHOS) {
+            clearScreen();
+        } else {
+            playSpammableDropSound();
+            spawnNacho();
+        }
+    }
+
+    // Event listener for the clear button
+    clearBtn.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        clearScreen();
+    });
+
+    // Audio triggers for caption and sub-caption text
+    mainCaption.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        playDogSound();
+    });
+
+    subCaption.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        playDogSound();
+    });
+
+    document.body.addEventListener('pointerdown', handleClick);
+</script>
