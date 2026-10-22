@@ -1,208 +1,162 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lumpy</title>
-    <style>
-        body {
-            background-color: #000000;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
-            position: relative;
-        }
-        header {
-            width: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-            text-align: left;
-            position: relative;
-            z-index: 10;
-        }
-        header nav, 
-        header nav a {
-            color: #ffffff;
-            text-decoration: none;
-        }
-        header nav a:hover {
-            text-decoration: underline;
-        }
-        .content {
-            text-align: center;
-            margin: auto;
-        }
-        .content img {
-            max-width: 80vw;
-            max-height: 60vh;
-            border-radius: 8px;
-            display: block;
-            margin: 0 auto 20px auto;
-            will-change: transform;
-        }
-        .title-subtext {
-            font-size: 1.6rem;
-            font-weight: bold;
-            margin: 5px 0;
-        }
-        .muted-subtext {
-            font-size: 0.9rem;
-            color: #888888;
-            margin: 5px 0;
-        }
-        .house-of-lumpy {
-            color: #0000FF !important;
-            text-decoration: none;
-        }
-        .house-of-lumpy:hover {
-            text-decoration: underline;
-        }
-        .mute-btn {
-            position: fixed;
-            bottom: 15px;
-            right: 15px;
-            background: transparent;
-            border: none;
-            color: #555555;
-            font-size: 0.75rem;
-            cursor: pointer;
-            z-index: 20;
-            opacity: 0.6;
-            transition: opacity 0.2s ease;
-        }
-        .mute-btn:hover {
-            opacity: 1;
-            color: #888888;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <nav style="font-size: 1.1rem;">
-            <a href="index.html">Homepage</a> |
-            <a href="blog.html">Blog</a> |
-            <a href="sources/GISPortfolio.pdf">GIS Portfolio</a> |
-            <a href="projects.html">Projects</a> |
-            <a href="lumpy.html">Lumpy</a> |
-            <a href="muffin.html">Muffin</a> |
-            <a href="NACHO.html" id="nacho-link">Nacho</a>
-        </nav>
-    </header>
+---
+layout: lumpycat
+title: Lumpy
+---
 
-    <div class="content">
-        <img id="lumpy-img" src="images/lumpy.jpg" alt="Lumpy the cat">
-        <p class="title-subtext">Post this cat!</p>
-        <p id="hint" class="muted-subtext">(click anywhere to <a href="lumpy.html" class="house-of-lumpy">lump</a> around!)</p>
-    </div>
+<style>
+    body {
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        position: relative;
+    }
+    .content {
+        text-align: center;
+        margin: auto;
+    }
+    .content img {
+        max-width: 80vw;
+        max-height: 60vh;
+        border-radius: 8px;
+        display: block;
+        margin: 0 auto 20px auto;
+        will-change: transform;
+    }
+    .title-subtext {
+        font-size: 1.6rem;
+        font-weight: bold;
+        margin: 5px 0;
+    }
+    .muted-subtext {
+        font-size: 0.9rem;
+        color: #888888;
+        margin: 5px 0;
+    }
+    .mute-btn {
+        position: fixed;
+        bottom: 15px;
+        right: 15px;
+        background: transparent;
+        border: none;
+        color: #555555;
+        font-size: 0.75rem;
+        cursor: pointer;
+        z-index: 20;
+        opacity: 0.6;
+        transition: opacity 0.2s ease;
+    }
+    .mute-btn:hover {
+        opacity: 1;
+        color: #888888;
+    }
+</style>
 
-    <!-- Discrete Music Mute Toggle -->
-    <button id="mute-toggle" class="mute-btn">mute music</button>
+<div class="content">
+    <img id="lumpy-img" src="{{ '/images/lumpy.jpg' | relative_url }}" alt="Lumpy the cat">
+    <p class="title-subtext">Post this cat!</p>
+    <p id="hint" class="muted-subtext">(click anywhere to <a href="{{ '/lumpy.html' | relative_url }}" class="house-of-lumpy">lump</a> around!)</p>
+</div>
 
-    <!-- Background Music -->
-    <audio id="bg-audio" src="sources/breakfastclub.mp3" loop></audio>
+<!-- Discrete Music Mute Toggle -->
+<button id="mute-toggle" class="mute-btn">mute music</button>
 
-    <script>
-        const audio = document.getElementById('bg-audio');
-        const hint = document.getElementById('hint');
-        const lumpyImg = document.getElementById('lumpy-img');
-        const muteBtn = document.getElementById('mute-toggle');
+<!-- Background Music -->
+<audio id="bg-audio" src="{{ '/sources/breakfastclub.mp3' | relative_url }}" loop></audio>
 
-        let currentRotation = 0;
-        let speed = 0;
-        const speedBoost = 12;
-        const friction = 0.96;
-        let isMusicMuted = false;
+<script>
+    const audio = document.getElementById('bg-audio');
+    const hint = document.getElementById('hint');
+    const lumpyImg = document.getElementById('lumpy-img');
+    const muteBtn = document.getElementById('mute-toggle');
 
-        // Web Audio API Setup for Meow SFX
-        let audioCtx = null;
-        let meowBuffer = null;
+    let currentRotation = 0;
+    let speed = 0;
+    const speedBoost = 12;
+    const friction = 0.96;
+    let isMusicMuted = false;
 
-        function initAudioContext() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-            if (!meowBuffer) {
-                fetch('sources/meow.wav')
-                    .then(response => response.arrayBuffer())
-                    .then(data => audioCtx.decodeAudioData(data))
-                    .then(buffer => {
-                        meowBuffer = buffer;
-                    })
-                    .catch(err => console.log('Error loading meow.wav:', err));
-            }
+    // Web Audio API Setup for Meow SFX
+    let audioCtx = null;
+    let meowBuffer = null;
+
+    function initAudioContext() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
-
-        function playPitchShiftedMeow() {
-            if (!meowBuffer || !audioCtx) return;
-            const source = audioCtx.createBufferSource();
-            source.buffer = meowBuffer;
-            // Random pitch multiplier between 0.6x (low) and 1.6x (high)
-            const randomPitch = 0.6 + Math.random() * 1.0;
-            source.playbackRate.value = randomPitch;
-            source.connect(audioCtx.destination);
-            source.start(0);
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
         }
-
-        function playAudio() {
-            if (!isMusicMuted) {
-                audio.play().catch(err => console.log(err));
-            }
+        if (!meowBuffer) {
+            fetch('{{ "/sources/meow.wav" | relative_url }}')
+                .then(response => response.arrayBuffer())
+                .then(data => audioCtx.decodeAudioData(data))
+                .then(buffer => {
+                    meowBuffer = buffer;
+                })
+                .catch(err => console.log('Error loading meow.wav:', err));
         }
+    }
 
-        // Mute button click handler (prevents event bubbling so it doesn't spin Lumpy)
-        muteBtn.addEventListener('pointerdown', (e) => {
-            e.stopPropagation();
-        });
+    function playPitchShiftedMeow() {
+        if (!meowBuffer || !audioCtx) return;
+        const source = audioCtx.createBufferSource();
+        source.buffer = meowBuffer;
+        // Random pitch multiplier between 0.6x (low) and 1.6x (high)
+        const randomPitch = 0.6 + Math.random() * 1.0;
+        source.playbackRate.value = randomPitch;
+        source.connect(audioCtx.destination);
+        source.start(0);
+    }
 
-        muteBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            isMusicMuted = !isMusicMuted;
-            muteBtn.textContent = isMusicMuted ? 'unmute music' : 'mute music';
-
-            if (isMusicMuted) {
-                audio.pause();
-            } else {
-                audio.play().catch(err => console.log(err));
-            }
-        });
-
-        // Physics animation loop
-        function animate() {
-            if (Math.abs(speed) > 0.01) {
-                currentRotation += speed;
-                speed *= friction;
-                lumpyImg.style.transform = `rotate(${currentRotation}deg)`;
-            } else {
-                speed = 0;
-            }
-            requestAnimationFrame(animate);
+    function playAudio() {
+        if (!isMusicMuted) {
+            audio.play().catch(err => console.log(err));
         }
+    }
 
-        animate();
+    // Mute button click handler (prevents event bubbling so it doesn't spin Lumpy)
+    muteBtn.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+    });
 
-        // Unified Click Handler
-        function handleClick(e) {
-            // Prevent navigation link and button clicks from triggering sound/spin
-            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+    muteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        isMusicMuted = !isMusicMuted;
+        muteBtn.textContent = isMusicMuted ? 'unmute music' : 'mute music';
 
-            // Initialize audio on first user click
-            initAudioContext();
-            playAudio();
-            playPitchShiftedMeow();
-            speed += speedBoost;
+        if (isMusicMuted) {
+            audio.pause();
+        } else {
+            audio.play().catch(err => console.log(err));
         }
+    });
 
-        // Using pointerdown handles touch and click consistently without double-firing
-        document.body.addEventListener('pointerdown', handleClick);
-    </script>
-</body>
-</html>
+    // Physics animation loop
+    function animate() {
+        if (Math.abs(speed) > 0.01) {
+            currentRotation += speed;
+            speed *= friction;
+            lumpyImg.style.transform = `rotate(${currentRotation}deg)`;
+        } else {
+            speed = 0;
+        }
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // Unified Click Handler
+    function handleClick(e) {
+        // Prevent navigation link and button clicks from triggering sound/spin
+        if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+
+        // Initialize audio on first user click
+        initAudioContext();
+        playAudio();
+        playPitchShiftedMeow();
+        speed += speedBoost;
+    }
+
+    // Using pointerdown handles touch and click consistently without double-firing
+    document.body.addEventListener('pointerdown', handleClick);
+</script>
