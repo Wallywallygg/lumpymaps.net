@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }} | Lumpymaps</title>
+    <link rel="stylesheet" href="{{ '/style.css' | relative_url }}">
+    <style>
+        /* Custom font setup for Overwave OTF */
+        @font-face {
+            font-family: 'OverwaveCustom';
+            src: url('{{ "/sources/overwave.otf" | relative_url }}') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        header {
+            text-align: left;
+            margin-bottom: 40px;
+        }
+        /* Giant title scaling for homepage */
+        header h1 {
+            font-family: 'OverwaveCustom', Arial, sans-serif;
+            font-size: clamp(3.5rem, 12vw, 7.5rem);
+            line-height: 0.9;
+            margin: 0 0 20px 0;
+            letter-spacing: -2px;
+        }
+        header h1 a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        header h1 a:hover {
+            text-decoration: underline;
+        }
+        /* House of Lumpy signature blue link */
+        .house-of-lumpy {
+            color: #0000FF !important;
+            text-decoration: none;
+        }
+        .house-of-lumpy:hover {
+            text-decoration: underline;
+        }
+        /* Divider line between title and nav */
+        .header-divider {
+            border: 0;
+            border-top: 2px solid #ffffff;
+            margin: 0 0 20px 0;
+        }
+        /* Navigation menu below header with stronger emphasis */
+        header nav {
+            font-family: Arial, sans-serif;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        header nav a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 0 2px;
+        }
+        header nav a:hover {
+            text-decoration: underline;
+        }
+        /* Secret cat pages sub-nav styling */
+        .lumpycat-nav {
+            margin-top: 8px;
+            font-size: 1rem;
+            font-weight: normal;
+        }
+        .lumpycat-nav a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .lumpycat-nav a:hover {
+            text-decoration: underline;
+        }
+        main section {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="{{ '/lumpy.html' | relative_url }}" class="house-of-lumpy">LUMPY</a><a href="{{ '/index.html' | relative_url }}">MAPS.NET</a></h1>
+        <hr class="header-divider">
+        <nav>
+            <a href="{{ '/index.html' | relative_url }}">Homepage</a> |
+            <a href="{{ '/blog.html' | relative_url }}">Blog</a> |
+            <a href="{{ '/sources/GISPortfolio.pdf' | relative_url }}">GIS Portfolio</a> |
+            <a href="{{ '/projects.html' | relative_url }}">Projects</a>
+            <div class="lumpycat-nav">
+                <a href="{{ '/lumpy.html' | relative_url }}">Lumpy</a> | 
+                <a href="{{ '/NACHO.html' | relative_url }}">Nacho</a> | 
+                <a href="{{ '/muffin.html' | relative_url }}">Muffin</a>
+            </div>
+        </nav>
+    </header>
+    
+    <main>
+        {{ content }}
+    </main>
+</body>
+</html>
