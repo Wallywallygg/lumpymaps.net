@@ -1,0 +1,7 @@
+# Jekyll Configuration
+
+defaults:
+  - scope:
+      path: "" # Applies to all files in your site
+    values:
+      layout: default
