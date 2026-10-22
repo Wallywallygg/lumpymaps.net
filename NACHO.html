@@ -1,235 +1,215 @@
----
-layout: lumpycat
-title: Nacho
----
-
-<style>
-    body {
-        overflow: hidden; /* Prevents scrollbars as images fall */
-        position: relative;
-    }
-    header nav, 
-    header nav a {
-        color: #ffffff;
-        text-decoration: none;
-    }
-    header nav a:hover {
-        text-decoration: underline;
-    }
-    .content {
-        text-align: center;
-        margin: auto;
-        position: relative;
-        z-index: 1; /* Main Nacho stays low so falling Nachos cover him */
-        pointer-events: none;
-    }
-    .content img {
-        max-width: 80vw;
-        max-height: 60vh;
-        border-radius: 8px;
-        display: block;
-        margin: 0 auto 20px auto;
-    }
-    .content p {
-        font-size: 1.5rem;
-        letter-spacing: 1px;
-        margin: 0 0 4px 0;
-        pointer-events: auto; /* Re-enable pointer events for click audio */
-        display: inline-block;
-    }
-    .content p:hover {
-        color: #cccccc;
-    }
-    .sub-caption {
-        font-size: 1rem;
-        color: #888888;
-        margin: 0 0 10px 0;
-        font-style: italic;
-        pointer-events: auto; /* Re-enable pointer events for click audio */
-    }
-    .sub-caption:hover {
-        color: #ffffff;
-    }
-    .tap-hint {
-        font-size: 0.9rem;
-        color: #888888;
-        font-style: italic;
-        margin-bottom: 12px;
-    }
-    /* Clear Button Styles */
-    .clear-btn {
-        background-color: transparent;
-        color: #ffffff;
-        border: 1px solid #ffffff;
-        padding: 8px 16px;
-        font-size: 1rem;
-        border-radius: 4px;
-        cursor: pointer;
-        pointer-events: auto; /* Re-enable pointer events for button click */
-        z-index: 10000; /* High z-index ensures it stays above falling Nachos (z-index 10) */
-        position: relative;
-        font-family: Arial, sans-serif;
-    }
-    .clear-btn:hover {
-        background-color: #ffffff;
-        color: #000000;
-    }
-    /* Style for dynamically spawned falling images */
-    .falling-nacho {
-        position: fixed;
-        width: 160px;
-        height: auto;
-        border-radius: 6px;
-        pointer-events: none;
-        z-index: 10;
-        will-change: transform;
-    }
-    /* Special 1 in 167 Rare Nacho Variant */
-    .falling-nacho.shiny-nacho {
-        width: 128px; /* 20% smaller (160px * 0.8) */
-        filter: hue-rotate(90deg) saturate(2); /* Green tint filter */
-    }
-</style>
-
-<div class="content">
-    <img id="nacho-img" src="{{ '/images/nacho.jpg' | relative_url }}" alt="Nacho the dog">
-    <p id="main-caption">¿Qué está haciendo el perro?</p> <br>
-    <div id="sub-caption" class="sub-caption">(what the dog doin?)</div>
-    <div id="hint" class="tap-hint">(Tap anywhere to drop Nachos)</div>
-    <button id="clear-btn" class="clear-btn">Clear Screen</button>
-</div>
-
-<!-- Audio Elements -->
-<audio id="sound-clear" src="{{ '/sources/tacobell2.mp3' | relative_url }}" preload="auto"></audio>
-<audio id="sound-dog-doin" src="{{ '/sources/whatthedogdoin.wav' | relative_url }}" preload="auto"></audio>
-
-<script>
-    const soundClear = document.getElementById('sound-clear');
-    const soundDogDoin = document.getElementById('sound-dog-doin');
-    const hint = document.getElementById('hint');
-    const clearBtn = document.getElementById('clear-btn');
-    const nachoNavLink = document.getElementById('nacho-nav-link');
-    const mainCaption = document.getElementById('main-caption');
-    const subCaption = document.getElementById('sub-caption');
-    
-    let fallingNachos = [];
-    const MAX_NACHOS = 100;
-
-    function playDogSound() {
-        soundDogDoin.currentTime = 0;
-        soundDogDoin.play().catch(err => console.log('Audio play error:', err));
-    }
-
-    // Play spammable audio without cutting off previous plays
-    function playSpammableDropSound() {
-        const sound = new Audio('{{ "/sources/tacobell1.mp3" | relative_url }}');
-        sound.play().catch(err => console.log('Audio play error:', err));
-    }
-
-    function spawnNacho() {
-        const img = document.createElement('img');
-        img.src = '{{ "/images/nacho2.jpg" | relative_url }}';
-        
-        // 1 in 167 chance for the rare shiny Nacho
-        const isShiny = Math.floor(Math.random() * 167) === 0;
-        
-        img.className = 'falling-nacho' + (isShiny ? ' shiny-nacho' : '');
-        
-        const currentWidth = isShiny ? 128 : 160;
-        
-        // Random horizontal start position
-        const startX = Math.random() * (window.innerWidth - currentWidth);
-        const startY = -180;
-        // Land randomly across the lower/middle section of the screen
-        const targetY = window.innerHeight - 180 - (Math.random() * (window.innerHeight * 0.7));
-        
-        img.style.left = `${startX}px`;
-        img.style.top = `${startY}px`;
-        
-        document.body.appendChild(img);
-
-        const nachoObj = {
-            element: img,
-            x: startX,
-            y: startY,
-            targetY: targetY,
-            speed: 12 + Math.random() * 10,
-            rotation: (Math.random() - 0.5) * 60,
-            isShiny: isShiny // Tracks if flipped horizontally (scaleX(-1))
-        };
-
-        fallingNachos.push(nachoObj);
-    }
-
-    function clearScreen() {
-        soundClear.currentTime = 0;
-        soundClear.play().catch(err => console.log('Audio play error:', err));
-        
-        fallingNachos.forEach(nacho => {
-            if (nacho.element && nacho.element.parentNode) {
-                nacho.element.parentNode.removeChild(nacho.element);
-            }
-        });
-        fallingNachos = [];
-    }
-
-    // Animation loop
-    function updatePhysics() {
-        fallingNachos.forEach(nacho => {
-            if (nacho.y < nacho.targetY) {
-                nacho.y += nacho.speed;
-                if (nacho.y > nacho.targetY) nacho.y = nacho.targetY;
-                
-                // Apply translation, rotation, and horizontal flip if shiny
-                const flip = nacho.isShiny ? ' scaleX(-1)' : '';
-                nacho.element.style.transform = `translateY(${nacho.y - (-180)}px) rotate(${nacho.rotation}deg)${flip}`;
-            }
-        });
-        requestAnimationFrame(updatePhysics);
-    }
-    updatePhysics();
-
-    function handleClick(e) {
-        // Ignore clicks on navigation links, clear button, or text elements that trigger sound
-        if (e.target.tagName === 'A' || 
-            e.target.id === 'clear-btn' || 
-            e.target.id === 'main-caption' || 
-            e.target.id === 'sub-caption') return;
-
-        if (hint) hint.style.display = 'none';
-
-        if (fallingNachos.length >= MAX_NACHOS) {
-            clearScreen();
-        } else {
-            playSpammableDropSound();
-            spawnNacho();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nacho | Lumpymaps</title>
+    <link rel="stylesheet" href="{{ '/style.css' | relative_url }}">
+    <style>
+        /* Custom font setup for Overwave OTF */
+        @font-face {
+            font-family: 'OverwaveCustom';
+            src: url('{{ "/sources/overwave.otf" | relative_url }}') format('opentype');
+            font-weight: normal;
+            font-style: normal;
         }
-    }
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;
+        }
+        header {
+            text-align: left;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 10000; /* Keeps header controls and links accessible */
+        }
+        /* Giant title scaling for homepage */
+        header h1 {
+            font-family: 'OverwaveCustom', Arial, sans-serif;
+            font-size: clamp(3.5rem, 12vw, 7.5rem);
+            line-height: 0.9;
+            margin: 0 0 20px 0;
+            letter-spacing: -2px;
+        }
+        header h1 a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        header h1 a:hover {
+            text-decoration: underline;
+        }
+        /* House of Lumpy signature blue link */
+        .house-of-lumpy {
+            color: #0000FF !important;
+            text-decoration: none;
+        }
+        .house-of-lumpy:hover {
+            text-decoration: underline;
+        }
+        /* Divider line between title and nav */
+        .header-divider {
+            border: 0;
+            border-top: 2px solid #ffffff;
+            margin: 0 0 20px 0;
+        }
+        /* Navigation menu below header with stronger emphasis */
+        header nav {
+            font-family: Arial, sans-serif;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        header nav a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 0 2px;
+        }
+        header nav a:hover {
+            text-decoration: underline;
+        }
+        /* Secret cat pages sub-nav styling - matches main nav style */
+        .lumpycat-nav {
+            margin-top: 8px;
+        }
+        .lumpycat-nav a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .lumpycat-nav a:hover {
+            text-decoration: underline;
+        }
 
-    // Event listener for the clear button
-    clearBtn.addEventListener('pointerdown', (e) => {
-        e.stopPropagation();
-        clearScreen();
-    });
+        /* Nacho Page Interactive Elements */
+        main {
+            text-align: center;
+            position: relative;
+        }
 
-    // Audio trigger for Nacho link in header (if it exists in scope, or fallback)
-    if (nachoNavLink) {
-        nachoNavLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            playDogSound();
-        });
-    }
+        /* Top visual hierarchy button for clear screen */
+        .clear-btn {
+            position: relative;
+            z-index: 9999;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
 
-    // Audio triggers for caption and sub-caption text
-    mainCaption.addEventListener('pointerdown', (e) => {
-        e.stopPropagation();
-        playDogSound();
-    });
+        .clear-btn:hover {
+            background-color: #dddddd;
+        }
 
-    subCaption.addEventListener('pointerdown', (e) => {
-        e.stopPropagation();
-        playDogSound();
-    });
+        /* Central main picture with click selection disabled */
+        .main-nacho-pic {
+            max-width: 400px;
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+            position: relative;
+            z-index: 5;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
 
-    document.body.addEventListener('pointerdown', handleClick);
-</script>
+        /* Container for spawned falling items */
+        #falling-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .falling-nacho {
+            position: absolute;
+            width: 80px;
+            height: auto;
+            pointer-events: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="{{ '/lumpy.html' | relative_url }}" class="house-of-lumpy">LUMPY</a><a href="{{ '/index.html' | relative_url }}">MAPS.NET</a></h1>
+        <hr class="header-divider">
+        <nav>
+            <a href="{{ '/index.html' | relative_url }}">Homepage</a> |
+            <a href="{{ '/blog.html' | relative_url }}">Blog</a> |
+            <a href="{{ '/sources/GISPortfolio.pdf' | relative_url }}">GIS Portfolio</a> |
+            <a href="{{ '/projects.html' | relative_url }}">Projects</a>
+            <div class="lumpycat-nav">
+                <a href="{{ '/lumpy.html' | relative_url }}">Lumpy</a> | 
+                <a href="{{ '/NACHO.html' | relative_url }}">Nacho</a> | 
+                <a href="{{ '/muffin.html' | relative_url }}">Muffin</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div>
+            <button class="clear-btn" onclick="clearFallingNachos()">Clear Screen</button>
+        </div>
+
+        <!-- Update image src to your specific Nacho image path if needed -->
+        <img src="{{ '/sources/nacho.jpg' | relative_url }}" alt="Nacho" class="main-nacho-pic" id="centralNacho" onclick="spawnNacho()">
+
+        <div id="falling-container"></div>
+    </main>
+
+    <script>
+        function spawnNacho() {
+            const container = document.getElementById('falling-container');
+            const nacho = document.createElement('img');
+            
+            // Set source to match main image
+            nacho.src = document.getElementById('centralNacho').src;
+            nacho.className = 'falling-nacho';
+            
+            // Random horizontal spawn position
+            const randomX = Math.random() * (window.innerWidth - 80);
+            nacho.style.left = randomX + 'px';
+            nacho.style.top = '-100px';
+            
+            container.appendChild(nacho);
+
+            // Animate fall
+            let topPos = -100;
+            const speed = 3 + Math.random() * 5;
+            const fallInterval = setInterval(() => {
+                if (topPos > window.innerHeight) {
+                    clearInterval(fallInterval);
+                    nacho.remove();
+                } else {
+                    topPos += speed;
+                    nacho.style.top = topPos + 'px';
+                }
+            }, 16);
+        }
+
+        function clearFallingNachos() {
+            const container = document.getElementById('falling-container');
+            container.innerHTML = '';
+        }
+    </script>
+</body>
+</html>
