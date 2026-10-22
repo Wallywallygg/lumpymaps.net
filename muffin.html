@@ -107,45 +107,36 @@ title: Muffin
 
 <div class="content">
     <img id="muffin-img" src="{{ '/images/muffin.jpg' | relative_url }}" alt="Muffin">
-    <p id="subtext-container" class="title-subtext">Muffin so faaaaatttttt</p>
+    <p id="subtext-container" class="title-subtext">Muffin so fat</p>
 </div>
+
+<!-- Hidden audio elements for the 5 squish sounds -->
+<audio id="squish-1" src="{{ '/sources/squish1.wav' | relative_url }}" preload="auto"></audio>
+<audio id="squish-2" src="{{ '/sources/squish2.wav' | relative_url }}" preload="auto"></audio>
+<audio id="squish-3" src="{{ '/sources/squish3.wav' | relative_url }}" preload="auto"></audio>
+<audio id="squish-4" src="{{ '/sources/squish4.wav' | relative_url }}" preload="auto"></audio>
+<audio id="squish-5" src="{{ '/sources/squish5.wav' | relative_url }}" preload="auto"></audio>
 
 <script>
     const muffinImg = document.getElementById('muffin-img');
     const subtextContainer = document.getElementById('subtext-container');
 
-    let audioCtx = null;
-    const splatBuffers = [];
-    const htmlAudioElements = [];
+    let htmlAudioElements = [];
     let lastSplatIndex = -1;
-    let isAudioUnlocked = false;
 
     let clickIntensity = 1.0;
     let lastClickTime = 0;
 
-    // Preload audio files (squish1.wav to squish5.wav)
+    // Load squish audio elements
     for (let i = 1; i <= 5; i++) {
-        const audioPath = '{{ "/sources/squish" | relative_url }}' + i + '.wav';
-        const htmlAudio = new Audio(audioPath);
-        htmlAudio.preload = 'auto';
-        htmlAudioElements.push(htmlAudio);
-    }
-
-    function unlockAudio() {
-        if (isAudioUnlocked) return;
-        try {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-            isAudioUnlocked = true;
-        } catch(e) {
-            console.log('Web Audio API not supported');
+        const audioEl = document.getElementById(`squish-${i}`);
+        if (audioEl) {
+            htmlAudioElements.push(audioEl);
         }
     }
 
     function playRandomSplat() {
-        unlockAudio();
+        if (htmlAudioElements.length === 0) return;
         let index;
         do {
             index = Math.floor(Math.random() * htmlAudioElements.length);
@@ -171,11 +162,10 @@ title: Muffin
     initTextSpans();
 
     let isWaveRunning = false;
-    let waveProgress = 1.0; // Starts completed so a fresh wave can trigger
-    let waveSpeed = 0.035;  // Base speed
+    let waveProgress = 1.0; 
+    let waveSpeed = 0.035;
 
     function triggerTextWave() {
-        // If clicked rapidly, boost wave speed and add an extra 'a' before the last 't'
         const now = performance.now();
         const timeDiff = now - lastClickTime;
         lastClickTime = now;
@@ -186,17 +176,24 @@ title: Muffin
             waveSpeed = 0.035;
         }
 
-        // Insert an 'a' right before the final sequence of 't's
-        let currentHTML = subtextContainer.innerHTML;
-        // Find position right before the trailing 't's
-        const tMatchIndex = currentHTML.lastIndexOf('t');
+        // Insert an 'a' right before the final 't' to spell faaat, faaaat, etc.
+        let currentText = Array.from(subtextContainer.querySelectorAll('.wave-char')).map(span => span.textContent).join('');
+        const tMatchIndex = currentText.lastIndexOf('t');
         if (tMatchIndex !== -1) {
-            subtextContainer.innerHTML = currentHTML.slice(0, tMatchIndex) + 'a' + currentHTML.slice(tMatchIndex);
+            currentText = currentText.slice(0, tMatchIndex) + 'a' + currentText.slice(tMatchIndex);
         } else {
-            subtextContainer.textContent += 'a';
+            currentText += 'a';
         }
 
-        // Restart wave animation cleanly
+        // Re-render spans with the newly updated longer string so the wave spans across all letters
+        subtextContainer.innerHTML = '';
+        for (let char of currentText) {
+            const span = document.createElement('span');
+            span.textContent = char;
+            span.className = 'wave-char';
+            subtextContainer.appendChild(span);
+        }
+
         waveProgress = 0.0;
         if (!isWaveRunning) {
             isWaveRunning = true;
@@ -206,18 +203,13 @@ title: Muffin
 
     function animateWave() {
         const chars = subtextContainer.querySelectorAll('.wave-char');
-        const totalChars = chars.length;
-        
-        // Narrow wave configuration
         const waveWidth = 2.5; 
 
         let allFinished = true;
         chars.forEach((char, i) => {
-            // Stagger each character's position along the wave
             const charProgress = waveProgress - (i * 0.18);
             if (charProgress >= 0 && charProgress <= waveWidth) {
                 allFinished = false;
-                // Narrow sine wave height hop (-14px peak)
                 const translateY = -Math.sin((charProgress / waveWidth) * Math.PI) * 14;
                 char.style.transform = `translateY(${translateY}px)`;
             } else {
@@ -235,11 +227,11 @@ title: Muffin
         }
     }
 
-    // Click handler for image and text
-    function handleContentClick(e) {
+    // Muffin Picture Click (Stretches image & plays sound, but does NOT grow text)
+    muffinImg.addEventListener('click', (e) => {
+        e.stopPropagation();
         playRandomSplat();
 
-        // Intensity scaling for image bounce
         const now = performance.now();
         if (now - lastClickTime < 400) {
             clickIntensity = Math.min(clickIntensity + 0.35, 2.8);
@@ -247,34 +239,54 @@ title: Muffin
             clickIntensity = 1.0;
         }
 
-        // Trigger text wave & add 'a'
-        triggerTextWave();
-
-        // Animate image stretch
         const animClass = Math.random() < 0.5 ? 'anim-stretch-horizontal' : 'anim-stretch-vertical';
         muffinImg.style.setProperty('--intensity', clickIntensity);
         muffinImg.classList.remove('anim-stretch-horizontal', 'anim-stretch-vertical');
-        void muffinImg.offsetWidth; // Trigger reflow
+        void muffinImg.offsetWidth;
         muffinImg.classList.add(animClass);
-    }
-
-    muffinImg.addEventListener('click', (e) => {
-        e.stopPropagation();
-        handleContentClick(e);
     });
 
+    // Text Click (Plays sound, stretches image, AND grows/waves text)
     subtextContainer.addEventListener('click', (e) => {
         e.stopPropagation();
-        handleContentClick(e);
+        playRandomSplat();
+        triggerTextWave();
+
+        const now = performance.now();
+        if (now - lastClickTime < 400) {
+            clickIntensity = Math.min(clickIntensity + 0.35, 2.8);
+        } else {
+            clickIntensity = 1.0;
+        }
+
+        const animClass = Math.random() < 0.5 ? 'anim-stretch-horizontal' : 'anim-stretch-vertical';
+        muffinImg.style.setProperty('--intensity', clickIntensity);
+        muffinImg.classList.remove('anim-stretch-horizontal', 'anim-stretch-vertical');
+        void muffinImg.offsetWidth;
+        muffinImg.classList.add(animClass);
     });
 
     muffinImg.addEventListener('animationend', () => {
         muffinImg.classList.remove('anim-stretch-horizontal', 'anim-stretch-vertical');
     });
 
+    // Background click (Stretches image & plays sound, but does not trigger text wave/growth)
     document.body.addEventListener('click', (e) => {
-        if (e.target.tagName !== 'A') {
-            handleContentClick(e);
+        if (e.target.tagName !== 'A' && e.target !== muffinImg && e.target !== subtextContainer && !subtextContainer.contains(e.target)) {
+            playRandomSplat();
+
+            const now = performance.now();
+            if (now - lastClickTime < 400) {
+                clickIntensity = Math.min(clickIntensity + 0.35, 2.8);
+            } else {
+                clickIntensity = 1.0;
+            }
+
+            const animClass = Math.random() < 0.5 ? 'anim-stretch-horizontal' : 'anim-stretch-vertical';
+            muffinImg.style.setProperty('--intensity', clickIntensity);
+            muffinImg.classList.remove('anim-stretch-horizontal', 'anim-stretch-vertical');
+            void muffinImg.offsetWidth;
+            muffinImg.classList.add(animClass);
         }
     });
 </script>
