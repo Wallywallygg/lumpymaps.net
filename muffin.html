@@ -20,7 +20,6 @@ title: Muffin
         margin: auto;
         position: relative;
         z-index: 100;
-        pointer-events: none;
     }
     .content img {
         max-width: 80vw;
@@ -31,98 +30,128 @@ title: Muffin
         -webkit-user-select: none;
         -webkit-user-drag: none;
         user-select: none;
-        pointer-events: auto;
+        cursor: pointer;
+        transition: transform 0.15s ease;
     }
-    .content p {
-        font-size: 1.5rem;
-        letter-spacing: 1px;
-        margin: 0 0 4px 0;
-        display: inline-block;
+    /* Stretch effect when middle picture is clicked */
+    .content img.stretched {
+        transform: scaleX(1.3) scaleY(0.85);
     }
-    
+
     /* Muffin Fat Text Wave Styling */
     .fat-text-container {
         font-size: 1.8rem;
         font-weight: bold;
         color: #ffffff;
         margin: 10px 0;
-        pointer-events: auto;
         cursor: pointer;
         display: inline-block;
     }
     .wave-letter {
         display: inline-block;
-        transition: transform 0.05s ease;
-    }
-
-    .sub-caption {
-        font-size: 1rem;
-        color: #888888;
-        margin: 0 0 10px 0;
-        font-style: italic;
+        transition: transform 0.05s linear;
     }
 </style>
 
 <div class="content">
     <img id="muffin-img" src="{{ 'images/muffin.jpg' | relative_url }}" alt="Muffin the cat">
-    <p>muffin so <span id="faaat-text" class="fat-text-container" title="Click me!">faaat</span></p> <br>
+    <p>muffin so <span id="faaat-text" class="fat-text-container">fat</span></p> <br>
 </div>
 
-<script>
-    const fatTextContainer = document.getElementById('faaat-text');
-    let isAnimating = false;
+<!-- 5 Random Squish Sound Elements -->
+<audio id="squish-1" src="{{ 'sources/squish1.wav' | relative_url }}" preload="auto"></audio>
+<audio id="squish-2" src="{{ 'sources/squish2.wav' | relative_url }}" preload="auto"></audio>
+<audio id="squish-3" src="{{ 'sources/squish3.wav' | relative_url }}" preload="auto"></audio>
+<audio id="squish-4" src="{{ 'sources/squish4.wav' | relative_url }}" preload="auto"></audio>
+<audio id="squish-5" src="{{ 'sources/squish5.wav' | relative_url }}" preload="auto"></audio>
 
-    // Split text into individual span elements so they can hop independently
-    function renderLetters(text) {
+<script>
+    const muffinImg = document.getElementById('muffin-img');
+    const fatTextContainer = document.getElementById('faaat-text');
+    
+    let aCount = 1; // Tracks how many 'a's are currently in f[a...]t
+    let currentAnimSpeedMultiplier = 1; // Speeds up when clicked faster
+    let animationId = null;
+    let startTime = null;
+
+    // Picture click stretch effect
+    muffinImg.addEventListener('click', (e) => {
+        e.stopPropagation();
+        muffinImg.classList.add('stretched');
+        setTimeout(() => {
+            muffinImg.classList.remove('stretched');
+        }, 150);
+    });
+
+    // Rebuild text structure dynamically: "f" + "a" repeated aCount times + "t"
+    function updateTextString() {
         fatTextContainer.innerHTML = '';
-        for (let char of text) {
+        let currentWord = 'f' + 'a'.repeat(aCount) + 't';
+        
+        for (let char of currentWord) {
             const span = document.createElement('span');
             span.textContent = char;
             span.className = 'wave-letter';
             fatTextContainer.appendChild(span);
         }
     }
+    updateTextString();
 
-    // Initialize text
-    renderLetters(fatTextContainer.textContent);
+    // Play one of 5 random squish sounds
+    function playRandomSquishSound() {
+        const randomIndex = Math.floor(Math.random() * 5) + 1;
+        const sound = document.getElementById(`squish-${randomIndex}`);
+        if (sound) {
+            sound.currentTime = 0;
+            sound.play().catch(err => console.log('Audio play error:', err));
+        }
+    }
 
+    // Interactive wave animation that adapts its speed dynamically
     function triggerWave() {
-        if (isAnimating) return;
-        isAnimating = true;
+        playRandomSquishSound();
+
+        // If clicked while animating, speed up the multiplier (capped at 3x speed max)
+        if (animationId) {
+            currentAnimSpeedMultiplier = Math.min(currentAnimSpeedMultiplier + 0.6, 3.0);
+            cancelAnimationFrame(animationId);
+        } else {
+            currentAnimSpeedMultiplier = 1.0;
+            // Add an extra 'a' right before the final 't' on click
+            aCount++;
+            updateTextString();
+        }
 
         const letters = fatTextContainer.querySelectorAll('.wave-letter');
-        const totalLetters = letters.length;
-        const durationPerLetter = 80; // ms delay between each letter starting its hop
-        const hopDuration = 350; // duration of a single letter's up-and-down hop
+        const totalDuration = 600; // Base duration of the full wave in ms
+        startTime = performance.now();
 
-        letters.forEach((letter, index) => {
-            setTimeout(() => {
-                let startTime = performance.now();
-                
-                function hop(currentTime) {
-                    let elapsed = currentTime - startTime;
-                    let progress = elapsed / hopDuration;
+        function animateWave(currentTime) {
+            let elapsed = (currentTime - startTime) * currentAnimSpeedMultiplier;
+            let progress = elapsed / totalDuration;
 
-                    if (progress < 1) {
-                        // Sine wave arc for smooth jump up and down (-20px peak)
-                        let translateY = -Math.sin(progress * Math.PI) * 20;
+            if (progress < 1) {
+                letters.forEach((letter, index) => {
+                    // Stagger each letter's sine wave phase
+                    let phaseOffset = index * 0.4;
+                    let translateY = -Math.sin((progress * Math.PI * 2) - phaseOffset) * 18;
+                    // Only wave if the wave cycle is active for this phase
+                    if (progress * Math.PI * 2 - phaseOffset >= 0 && progress * Math.PI * 2 - phaseOffset <= Math.PI * 2) {
                         letter.style.transform = `translateY(${translateY}px)`;
-                        requestAnimationFrame(hop);
                     } else {
                         letter.style.transform = `translateY(0px)`;
-                        
-                        // When the very last letter finishes its hop, grow the text and unlock
-                        if (index === totalLetters - 1) {
-                            const extraLetter = Math.random() < 0.5 ? 'a' : 't';
-                            fatTextContainer.textContent += extraLetter;
-                            renderLetters(fatTextContainer.textContent);
-                            isAnimating = false;
-                        }
                     }
-                }
-                requestAnimationFrame(hop);
-            }, index * durationPerLetter);
-        });
+                });
+                animationId = requestAnimationFrame(animateWave);
+            } else {
+                // Reset positions and reset speed multiplier cooldown
+                letters.forEach(letter => letter.style.transform = `translateY(0px)`);
+                animationId = null;
+                currentAnimSpeedMultiplier = 1.0;
+            }
+        }
+
+        animationId = requestAnimationFrame(animateWave);
     }
 
     fatTextContainer.addEventListener('click', (e) => {
