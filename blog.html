@@ -1,28 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog - Lumpymaps</title>
-</head>
-<body>
-
-    <nav>
-        <a href="index.html">Homepage</a> |
-        <a href="blog.html">Blog</a> |
-        <a href="sources/GISPortfolio.pdf">GIS Portfolio</a> |
-        <a href="projects.html">Projects</a> |
-    </nav>
-
-    <hr>
-
-    <main>
-        <h2>Blog</h2>
-        <ul>
-            <li>09/03/2026 x2 — <a href="posts/post2.html">All Units of Measure are FAKE!</a></li>
-            <li>09/03/2026 — <a href="posts/post1.html">Website??? Guh???</a></li>
-        </ul>
-    </main>
-
-</body>
-</html>
+---
+title: Blog
+---
+<h2>Blog</h2>
+<ul>
+    <li>09/03/2026 x2 — <a href="{{ '/posts/post2.html' | relative_url }}">All Units of Measure are FAKE!</a></li>
+    <li>09/03/2026 — <a href="{{ '/posts/post1.html' | relative_url }}">Website??? Guh???</a></li>
+</ul>
