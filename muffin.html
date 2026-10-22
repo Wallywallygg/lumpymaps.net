@@ -43,6 +43,7 @@ title: Muffin
         margin: 5px 0;
         display: inline-block;
         cursor: pointer;
+        white-space: pre; /* Preserves spaces properly */
     }
     .wave-char {
         display: inline-block;
@@ -127,7 +128,6 @@ title: Muffin
     let clickIntensity = 1.0;
     let lastClickTime = 0;
 
-    // Load squish audio elements
     for (let i = 1; i <= 5; i++) {
         const audioEl = document.getElementById(`squish-${i}`);
         if (audioEl) {
@@ -148,14 +148,19 @@ title: Muffin
         sound.play().catch(err => console.log('Audio play error:', err));
     }
 
-    // Wrap each character of the text in a span for wave manipulation
+    // Wrap each character (including spaces) into a span
     function initTextSpans() {
         const text = subtextContainer.textContent;
         subtextContainer.innerHTML = '';
         for (let char of text) {
             const span = document.createElement('span');
             span.textContent = char;
-            span.className = 'wave-char';
+            if (char === ' ') {
+                span.style.display = 'inline-block';
+                span.style.width = '0.3em'; // Keeps space width consistent
+            } else {
+                span.className = 'wave-char';
+            }
             subtextContainer.appendChild(span);
         }
     }
@@ -166,18 +171,23 @@ title: Muffin
     let waveSpeed = 0.035;
 
     function triggerTextWave() {
+        if (isWaveRunning) return; // Wait for current wave cycle to finish before starting a new one
+
         const now = performance.now();
         const timeDiff = now - lastClickTime;
         lastClickTime = now;
 
+        // Make the wave speed up when spam clicked
         if (timeDiff < 300) {
             waveSpeed = Math.min(waveSpeed + 0.015, 0.12);
         } else {
             waveSpeed = 0.035;
         }
 
-        // Insert an 'a' right before the final 't' to spell faaat, faaaat, etc.
-        let currentText = Array.from(subtextContainer.querySelectorAll('.wave-char')).map(span => span.textContent).join('');
+        // Rebuild text string, inserting an 'a' right before the last 't'
+        const currentSpans = subtextContainer.querySelectorAll('span');
+        let currentText = Array.from(currentSpans).map(span => span.textContent).join('');
+        
         const tMatchIndex = currentText.lastIndexOf('t');
         if (tMatchIndex !== -1) {
             currentText = currentText.slice(0, tMatchIndex) + 'a' + currentText.slice(tMatchIndex);
@@ -185,20 +195,23 @@ title: Muffin
             currentText += 'a';
         }
 
-        // Re-render spans with the newly updated longer string so the wave spans across all letters
+        // Re-render spans
         subtextContainer.innerHTML = '';
         for (let char of currentText) {
             const span = document.createElement('span');
             span.textContent = char;
-            span.className = 'wave-char';
+            if (char === ' ') {
+                span.style.display = 'inline-block';
+                span.style.width = '0.3em';
+            } else {
+                span.className = 'wave-char';
+            }
             subtextContainer.appendChild(span);
         }
 
         waveProgress = 0.0;
-        if (!isWaveRunning) {
-            isWaveRunning = true;
-            requestAnimationFrame(animateWave);
-        }
+        isWaveRunning = true;
+        requestAnimationFrame(animateWave);
     }
 
     function animateWave() {
@@ -227,7 +240,7 @@ title: Muffin
         }
     }
 
-    // Muffin Picture Click (Stretches image & plays sound, but does NOT grow text)
+    // Muffin Picture Click
     muffinImg.addEventListener('click', (e) => {
         e.stopPropagation();
         playRandomSplat();
@@ -246,7 +259,7 @@ title: Muffin
         muffinImg.classList.add(animClass);
     });
 
-    // Text Click (Plays sound, stretches image, AND grows/waves text)
+    // Text Click
     subtextContainer.addEventListener('click', (e) => {
         e.stopPropagation();
         playRandomSplat();
@@ -270,7 +283,7 @@ title: Muffin
         muffinImg.classList.remove('anim-stretch-horizontal', 'anim-stretch-vertical');
     });
 
-    // Background click (Stretches image & plays sound, but does not trigger text wave/growth)
+    // Background Click
     document.body.addEventListener('click', (e) => {
         if (e.target.tagName !== 'A' && e.target !== muffinImg && e.target !== subtextContainer && !subtextContainer.contains(e.target)) {
             playRandomSplat();
