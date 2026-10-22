@@ -1,284 +1,114 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Muffin - LUMPYMAPS</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: #000000;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            touch-action: manipulation;
-        }
-        header {
-            width: 100%;
-            padding: 20px;
-            text-align: left;
-            position: relative;
-            z-index: 10;
-        }
-        header nav, 
-        header nav a {
-            color: #ffffff;
-            text-decoration: none;
-        }
-        header nav a:hover {
-            text-decoration: underline;
-        }
-        .content {
-            text-align: center;
-            margin: auto;
-            position: relative;
-            z-index: 1;
-            width: 100%;
-        }
-        .content img {
-            max-width: 75vw;
-            max-height: 55vh;
-            border-radius: 8px;
-            display: block;
-            margin: 0 auto 20px auto;
-            will-change: transform;
-            transform-origin: center center;
-            -webkit-transform-origin: center center;
-        }
-        .title-subtext {
-            font-size: 1.6rem;
-            font-weight: bold;
-            margin: 5px 0;
-        }
-        .house-of-lumpy {
-            color: #0000FF !important;
-            text-decoration: none;
-        }
-        .house-of-lumpy:hover {
-            text-decoration: underline;
-        }
+---
+layout: lumpycat
+title: Muffin
+---
 
-        /* Controlled Spring Stretch & Wiggle Keyframes */
-        .anim-stretch-horizontal {
-            -webkit-animation: springHoriz 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            animation: springHoriz 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+<style>
+    * {
+        box-sizing: border-box;
+    }
+    html, body {
+        overflow: hidden;
+    }
+    body {
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        touch-action: manipulation;
+    }
+    .content {
+        text-align: center;
+        margin: auto;
+        position: relative;
+        z-index: 1;
+        width: 100%;
+    }
+    .content img {
+        max-width: 75vw;
+        max-height: 55vh;
+        border-radius: 8px;
+        display: block;
+        margin: 0 auto 20px auto;
+        will-change: transform;
+        transform-origin: center center;
+        -webkit-transform-origin: center center;
+    }
+    .title-subtext {
+        font-size: 1.6rem;
+        font-weight: bold;
+        margin: 5px 0;
+    }
+    .house-of-lumpy {
+        color: #0000FF !important;
+        text-decoration: none;
+    }
+    .house-of-lumpy:hover {
+        text-decoration: underline;
+    }
 
-        .anim-stretch-vertical {
-            -webkit-animation: springVert 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            animation: springVert 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+    /* Controlled Spring Stretch & Wiggle Keyframes */
+    .anim-stretch-horizontal {
+        -webkit-animation: springHoriz 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        animation: springHoriz 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
 
-        @-webkit-keyframes springHoriz {
-            0%   { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
-            20%  { -webkit-transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(-6deg); transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(-6deg); }
-            40%  { -webkit-transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); }
-            60%  { -webkit-transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); }
-            80%  { -webkit-transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); }
-            100% { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
-        }
+    .anim-stretch-vertical {
+        -webkit-animation: springVert 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        animation: springVert 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
 
-        @keyframes springHoriz {
-            0%   { transform: scale(1, 1) rotate(0deg); }
-            20%  { transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(-6deg); }
-            40%  { transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); }
-            60%  { transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); }
-            80%  { transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); }
-            100% { transform: scale(1, 1) rotate(0deg); }
-        }
+    @-webkit-keyframes springHoriz {
+        0%   { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
+        20%  { -webkit-transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(-6deg); transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(-6deg); }
+        40%  { -webkit-transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); }
+        60%  { -webkit-transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); }
+        80%  { -webkit-transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); }
+        100% { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
+    }
 
-        @-webkit-keyframes springVert {
-            0%   { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
-            20%  { -webkit-transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(6deg); transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(6deg); }
-            40%  { -webkit-transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); }
-            60%  { -webkit-transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(3deg); transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(3deg); }
-            80%  { -webkit-transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); }
-            100% { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
-        }
+    @keyframes springHoriz {
+        0%   { transform: scale(1, 1) rotate(0deg); }
+        20%  { transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(-6deg); }
+        40%  { transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); }
+        60%  { transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); }
+        80%  { transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); }
+        100% { transform: scale(1, 1) rotate(0deg); }
+    }
 
-        @keyframes springVert {
-            0%   { transform: scale(1, 1) rotate(0deg); }
-            20%  { transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(6deg); }
-            40%  { transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); }
-            60%  { transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(3deg); }
-            80%  { transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); }
-            100% { transform: scale(1, 1) rotate(0deg); }
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <nav style="font-size: 1.1rem;">
-            <a href="index.html">Homepage</a> |
-            <a href="blog.html">Blog</a> |
-            <a href="sources/GISPortfolio.pdf">GIS Portfolio</a> |
-            <a href="projects.html">Projects</a> |
-            <a href="lumpy.html">Lumpy</a> |
-            <a href="muffin.html">Muffin</a> |
-            <a href="NACHO.html" id="nacho-link">Nacho</a>
-        </nav>
-    </header>
+    @-webkit-keyframes springVert {
+        0%   { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
+        20%  { -webkit-transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(6deg); transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(6deg); }
+        40%  { -webkit-transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); }
+        60%  { -webkit-transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(3deg); transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(3deg); }
+        80%  { -webkit-transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); }
+        100% { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
+    }
 
-    <div class="content">
-        <img id="muffin-img" src="images/muffin.jpg" alt="Muffin">
-        <p class="title-subtext">Muffin so faaaaatttttt</p>
-    </div>
+    @keyframes springVert {
+        0%   { transform: scale(1, 1) rotate(0deg); }
+        20%  { transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(6deg); }
+        40%  { transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); }
+        60%  { transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(3deg); }
+        80%  { transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); }
+        100% { transform: scale(1, 1) rotate(0deg); }
+    }
+</style>
 
-    <script>
-        const muffinImg = document.getElementById('muffin-img');
+<div class="content">
+    <img id="muffin-img" src="{{ '/images/muffin.jpg' | relative_url }}" alt="Muffin">
+    <p class="title-subtext">Muffin so faaaaatttttt</p>
+</div>
 
-        let audioCtx = null;
-        const splatBuffers = [];
-        const htmlAudioElements = [];
-        let lastSplatIndex = -1;
-        let isAudioUnlocked = false;
+<script>
+    const muffinImg = document.getElementById('muffin-img');
 
-        // Click intensity tracking with sane limits
-        let clickIntensity = 1.0;
-        let lastClickTime = null; // Set to null to handle first tap correctly
-        const maxIntensity = 2.8;
+    let audioCtx = null;
+    const splatBuffers = [];
+    const htmlAudioElements = [];
+    let lastSplatIndex = -1;
+    let isAudioUnlocked = false;
 
-        for (let i = 1; i <= 5; i++) {
-            const audio = new Audio(`sources/splat${i}.wav`);
-            audio.preload = 'auto';
-            htmlAudioElements.push(audio);
-        }
-
-        function unlockAudio() {
-            if (isAudioUnlocked) return;
-
-            if (!audioCtx) {
-                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-                if (AudioContextClass) {
-                    audioCtx = new AudioContextClass();
-                }
-            }
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-
-            if (audioCtx) {
-                try {
-                    const buffer = audioCtx.createBuffer(1, 1, 22050);
-                    const source = audioCtx.createBufferSource();
-                    source.buffer = buffer;
-                    source.connect(audioCtx.destination);
-                    source.start(0);
-                } catch (e) {}
-            }
-
-            htmlAudioElements.forEach(audio => {
-                const promise = audio.play();
-                if (promise !== undefined) {
-                    promise.then(() => {
-                        audio.pause();
-                        audio.currentTime = 0;
-                    }).catch(() => {});
-                }
-            });
-
-            if (audioCtx && splatBuffers.length === 0) {
-                for (let i = 1; i <= 5; i++) {
-                    fetch(`sources/splat${i}.wav`)
-                        .then(response => response.arrayBuffer())
-                        .then(data => audioCtx.decodeAudioData(data))
-                        .then(buffer => {
-                            splatBuffers[i - 1] = buffer;
-                        })
-                        .catch(() => {});
-                }
-            }
-
-            isAudioUnlocked = true;
-        }
-
-        function playRandomSplat() {
-            const availableIndices = [];
-            for (let i = 0; i < 5; i++) {
-                if (i !== lastSplatIndex) {
-                    availableIndices.push(i);
-                }
-            }
-
-            const selectedIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
-            lastSplatIndex = selectedIndex;
-
-            if (audioCtx && splatBuffers[selectedIndex]) {
-                try {
-                    const source = audioCtx.createBufferSource();
-                    source.buffer = splatBuffers[selectedIndex];
-                    source.connect(audioCtx.destination);
-                    source.start(0);
-                    return;
-                } catch (err) {}
-            }
-
-            try {
-                const audio = htmlAudioElements[selectedIndex];
-                audio.currentTime = 0;
-                audio.play().catch(() => {});
-            } catch (err) {}
-        }
-
-        function updateClickIntensity() {
-            const now = Date.now();
-
-            if (lastClickTime === null) {
-                // First tap baseline
-                clickIntensity = 1.0;
-            } else {
-                const timeDelta = now - lastClickTime;
-                if (timeDelta < 350) {
-                    const boost = (350 - timeDelta) / 250;
-                    clickIntensity = Math.min(maxIntensity, clickIntensity + boost);
-                } else {
-                    clickIntensity = 1.0;
-                }
-            }
-
-            lastClickTime = now;
-            muffinImg.style.setProperty('--intensity', clickIntensity.toFixed(2));
-        }
-
-        function triggerStretchAnimation() {
-            muffinImg.classList.remove('anim-stretch-horizontal', 'anim-stretch-vertical');
-            void muffinImg.offsetWidth; // Force CSS reflow restart
-
-            const animClass = Math.random() < 0.5 ? 'anim-stretch-horizontal' : 'anim-stretch-vertical';
-            muffinImg.classList.add(animClass);
-        }
-
-        let isProcessingAction = false;
-
-        function handleAction(e) {
-            if (e.target && e.target.tagName === 'A') return;
-
-            unlockAudio();
-
-            if (isProcessingAction) return;
-            isProcessingAction = true;
-            setTimeout(() => { isProcessingAction = false; }, 25);
-
-            updateClickIntensity();
-            playRandomSplat();
-            triggerStretchAnimation();
-        }
-
-        document.body.addEventListener('touchstart', handleAction, { passive: true });
-        document.body.addEventListener('mousedown', handleAction, { passive: true });
-    </script>
-</body>
-</html>
+    // Click intensity tracking with sane limits
+    let clickIntensity = 1.0
