@@ -1,215 +1,112 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nacho | Lumpymaps</title>
-    <link rel="stylesheet" href="{{ '/style.css' | relative_url }}">
-    <style>
-        /* Custom font setup for Overwave OTF */
-        @font-face {
-            font-family: 'OverwaveCustom';
-            src: url('{{ "/sources/overwave.otf" | relative_url }}') format('opentype');
-            font-weight: normal;
-            font-style: normal;
-        }
-        body {
-            background-color: #000000;
-            color: #ffffff;
-            margin: 0;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-            overflow-x: hidden;
-        }
-        header {
-            text-align: left;
-            margin-bottom: 40px;
-            position: relative;
-            z-index: 10000; /* Keeps header controls and links accessible */
-        }
-        /* Giant title scaling for homepage */
-        header h1 {
-            font-family: 'OverwaveCustom', Arial, sans-serif;
-            font-size: clamp(3.5rem, 12vw, 7.5rem);
-            line-height: 0.9;
-            margin: 0 0 20px 0;
-            letter-spacing: -2px;
-        }
-        header h1 a {
-            color: #ffffff;
-            text-decoration: none;
-        }
-        header h1 a:hover {
-            text-decoration: underline;
-        }
-        /* House of Lumpy signature blue link */
-        .house-of-lumpy {
-            color: #0000FF !important;
-            text-decoration: none;
-        }
-        .house-of-lumpy:hover {
-            text-decoration: underline;
-        }
-        /* Divider line between title and nav */
-        .header-divider {
-            border: 0;
-            border-top: 2px solid #ffffff;
-            margin: 0 0 20px 0;
-        }
-        /* Navigation menu below header with stronger emphasis */
-        header nav {
-            font-family: Arial, sans-serif;
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #ffffff;
-        }
-        header nav a {
-            color: #ffffff;
-            text-decoration: none;
-            padding: 0 2px;
-        }
-        header nav a:hover {
-            text-decoration: underline;
-        }
-        /* Secret cat pages sub-nav styling - matches main nav style */
-        .lumpycat-nav {
-            margin-top: 8px;
-        }
-        .lumpycat-nav a {
-            color: #ffffff;
-            text-decoration: none;
-        }
-        .lumpycat-nav a:hover {
-            text-decoration: underline;
-        }
+---
+layout: default
+title: Nacho
+---
 
-        /* Nacho Page Interactive Elements */
-        main {
-            text-align: center;
-            position: relative;
-        }
+<style>
+    .nacho-page-container {
+        text-align: center;
+        position: relative;
+    }
 
-        /* Top visual hierarchy button for clear screen */
-        .clear-btn {
-            position: relative;
-            z-index: 9999;
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: bold;
-            background-color: #ffffff;
-            color: #000000;
-            border: none;
-            cursor: pointer;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
+    /* Top visual hierarchy button for clear screen */
+    .clear-btn {
+        position: relative;
+        z-index: 9999;
+        padding: 10px 20px;
+        font-size: 1rem;
+        font-weight: bold;
+        background-color: #ffffff;
+        color: #000000;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
 
-        .clear-btn:hover {
-            background-color: #dddddd;
-        }
+    .clear-btn:hover {
+        background-color: #dddddd;
+    }
 
-        /* Central main picture with click selection disabled */
-        .main-nacho-pic {
-            max-width: 400px;
-            width: 100%;
-            height: auto;
-            cursor: pointer;
-            position: relative;
-            z-index: 5;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            -webkit-user-drag: none;
-        }
+    /* Central main picture with click selection disabled */
+    .main-nacho-pic {
+        max-width: 400px;
+        width: 100%;
+        height: auto;
+        cursor: pointer;
+        position: relative;
+        z-index: 5;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-user-drag: none;
+    }
 
-        /* Container for spawned falling items */
-        #falling-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 100;
-            overflow: hidden;
-        }
+    /* Container for spawned falling items */
+    #falling-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 100;
+        overflow: hidden;
+    }
 
-        .falling-nacho {
-            position: absolute;
-            width: 80px;
-            height: auto;
-            pointer-events: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            -webkit-user-drag: none;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1><a href="{{ '/lumpy.html' | relative_url }}" class="house-of-lumpy">LUMPY</a><a href="{{ '/index.html' | relative_url }}">MAPS.NET</a></h1>
-        <hr class="header-divider">
-        <nav>
-            <a href="{{ '/index.html' | relative_url }}">Homepage</a> |
-            <a href="{{ '/blog.html' | relative_url }}">Blog</a> |
-            <a href="{{ '/sources/GISPortfolio.pdf' | relative_url }}">GIS Portfolio</a> |
-            <a href="{{ '/projects.html' | relative_url }}">Projects</a>
-            <div class="lumpycat-nav">
-                <a href="{{ '/lumpy.html' | relative_url }}">Lumpy</a> | 
-                <a href="{{ '/NACHO.html' | relative_url }}">Nacho</a> | 
-                <a href="{{ '/muffin.html' | relative_url }}">Muffin</a>
-            </div>
-        </nav>
-    </header>
+    .falling-nacho {
+        position: absolute;
+        width: 80px;
+        height: auto;
+        pointer-events: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-user-drag: none;
+    }
+</style>
 
-    <main>
-        <div>
-            <button class="clear-btn" onclick="clearFallingNachos()">Clear Screen</button>
-        </div>
+<div class="nacho-page-container">
+    <div>
+        <button class="clear-btn" onclick="clearFallingNachos()">Clear Screen</button>
+    </div>
 
-        <!-- Update image src to your specific Nacho image path if needed -->
-        <img src="{{ '/sources/nacho.jpg' | relative_url }}" alt="Nacho" class="main-nacho-pic" id="centralNacho" onclick="spawnNacho()">
+    <img src="{{ '/sources/nacho.jpg' | relative_url }}" alt="Nacho" class="main-nacho-pic" id="centralNacho" onclick="spawnNacho()">
 
-        <div id="falling-container"></div>
-    </main>
+    <div id="falling-container"></div>
+</div>
 
-    <script>
-        function spawnNacho() {
-            const container = document.getElementById('falling-container');
-            const nacho = document.createElement('img');
-            
-            // Set source to match main image
-            nacho.src = document.getElementById('centralNacho').src;
-            nacho.className = 'falling-nacho';
-            
-            // Random horizontal spawn position
-            const randomX = Math.random() * (window.innerWidth - 80);
-            nacho.style.left = randomX + 'px';
-            nacho.style.top = '-100px';
-            
-            container.appendChild(nacho);
+<script>
+    function spawnNacho() {
+        const container = document.getElementById('falling-container');
+        const nacho = document.createElement('img');
+        
+        nacho.src = document.getElementById('centralNacho').src;
+        nacho.className = 'falling-nacho';
+        
+        const randomX = Math.random() * (window.innerWidth - 80);
+        nacho.style.left = randomX + 'px';
+        nacho.style.top = '-100px';
+        
+        container.appendChild(nacho);
 
-            // Animate fall
-            let topPos = -100;
-            const speed = 3 + Math.random() * 5;
-            const fallInterval = setInterval(() => {
-                if (topPos > window.innerHeight) {
-                    clearInterval(fallInterval);
-                    nacho.remove();
-                } else {
-                    topPos += speed;
-                    nacho.style.top = topPos + 'px';
-                }
-            }, 16);
-        }
+        let topPos = -100;
+        const speed = 3 + Math.random() * 5;
+        const fallInterval = setInterval(() => {
+            if (topPos > window.innerHeight) {
+                clearInterval(fallInterval);
+                nacho.remove();
+            } else {
+                topPos += speed;
+                nacho.style.top = topPos + 'px';
+            }
+        }, 16);
+    }
 
-        function clearFallingNachos() {
-            const container = document.getElementById('falling-container');
-            container.innerHTML = '';
-        }
-    </script>
-</body>
-</html>
+    function clearFallingNachos() {
+        const container = document.getElementById('falling-container');
+        container.innerHTML = '';
+    }
+</script>
