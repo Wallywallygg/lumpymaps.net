@@ -60,50 +60,27 @@ title: Muffin
         text-decoration: underline;
     }
 
-    /* Subtle, Smoother Spring Stretch & Wiggle Keyframes */
-    .anim-stretch-horizontal {
-        -webkit-animation: springHoriz 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        animation: springHoriz 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Combined Multi-Directional Spring Stretch & Wiggle Animation */
+    .anim-stretch {
+        -webkit-animation: springBoth 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        animation: springBoth 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .anim-stretch-vertical {
-        -webkit-animation: springVert 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        animation: springVert 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @-webkit-keyframes springHoriz {
+    @-webkit-keyframes springBoth {
         0%   { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
-        20%  { -webkit-transform: scale(calc(1 + 0.15 * var(--intensity)), calc(1 - 0.12 * var(--intensity))) rotate(calc(-2.5deg * var(--intensity))); transform: scale(calc(1 + 0.15 * var(--intensity)), calc(1 - 0.12 * var(--intensity))) rotate(calc(-2.5deg * var(--intensity))); }
-        40%  { -webkit-transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(calc(2deg * var(--intensity))); transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(calc(2deg * var(--intensity))); }
-        60%  { -webkit-transform: scale(calc(1 + 0.06 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(calc(-1deg * var(--intensity))); transform: scale(calc(1 + 0.06 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(calc(-1deg * var(--intensity))); }
-        80%  { -webkit-transform: scale(calc(1 - 0.02 * var(--intensity)), calc(1 + 0.02 * var(--intensity))) rotate(calc(0.5deg * var(--intensity))); transform: scale(calc(1 - 0.02 * var(--intensity)), calc(1 + 0.02 * var(--intensity))) rotate(calc(0.5deg * var(--intensity))); }
+        20%  { -webkit-transform: scale(calc(1 + 0.18 * var(--intensity)), calc(1 + 0.18 * var(--intensity))) rotate(calc(3deg * var(--intensity))); transform: scale(calc(1 + 0.18 * var(--intensity)), calc(1 + 0.18 * var(--intensity))) rotate(calc(3deg * var(--intensity))); }
+        40%  { -webkit-transform: scale(calc(1 - 0.12 * var(--intensity)), calc(1 - 0.12 * var(--intensity))) rotate(calc(-2.5deg * var(--intensity))); transform: scale(calc(1 - 0.12 * var(--intensity)), calc(1 - 0.12 * var(--intensity))) rotate(calc(-2.5deg * var(--intensity))); }
+        60%  { -webkit-transform: scale(calc(1 + 0.08 * var(--intensity)), calc(1 + 0.08 * var(--intensity))) rotate(calc(1.5deg * var(--intensity))); transform: scale(calc(1 + 0.08 * var(--intensity)), calc(1 + 0.08 * var(--intensity))) rotate(calc(1.5deg * var(--intensity))); }
+        80%  { -webkit-transform: scale(calc(1 - 0.03 * var(--intensity)), calc(1 - 0.03 * var(--intensity))) rotate(calc(-0.5deg * var(--intensity))); transform: scale(calc(1 - 0.03 * var(--intensity)), calc(1 - 0.03 * var(--intensity))) rotate(calc(-0.5deg * var(--intensity))); }
         100% { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
     }
 
-    @keyframes springHoriz {
+    @keyframes springBoth {
         0%   { transform: scale(1, 1) rotate(0deg); }
-        20%  { transform: scale(calc(1 + 0.15 * var(--intensity)), calc(1 - 0.12 * var(--intensity))) rotate(calc(-2.5deg * var(--intensity))); }
-        40%  { transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(calc(2deg * var(--intensity))); }
-        60%  { transform: scale(calc(1 + 0.06 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(calc(-1deg * var(--intensity))); }
-        80%  { transform: scale(calc(1 - 0.02 * var(--intensity)), calc(1 + 0.02 * var(--intensity))) rotate(calc(0.5deg * var(--intensity))); }
-        100% { transform: scale(1, 1) rotate(0deg); }
-    }
-
-    @-webkit-keyframes springVert {
-        0%   { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
-        20%  { -webkit-transform: scale(calc(1 - 0.12 * var(--intensity)), calc(1 + 0.15 * var(--intensity))) rotate(calc(2.5deg * var(--intensity))); transform: scale(calc(1 - 0.12 * var(--intensity)), calc(1 + 0.15 * var(--intensity))) rotate(calc(2.5deg * var(--intensity))); }
-        40%  { -webkit-transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(calc(-2deg * var(--intensity))); transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(calc(-2deg * var(--intensity))); }
-        60%  { -webkit-transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.06 * var(--intensity))) rotate(calc(1deg * var(--intensity))); transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.06 * var(--intensity))) rotate(calc(1deg * var(--intensity))); }
-        80%  { -webkit-transform: scale(calc(1 + 0.02 * var(--intensity)), calc(1 - 0.02 * var(--intensity))) rotate(calc(-0.5deg * var(--intensity))); transform: scale(calc(1 + 0.02 * var(--intensity)), calc(1 - 0.02 * var(--intensity))) rotate(calc(-0.5deg * var(--intensity))); }
-        100% { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
-    }
-
-    @keyframes springVert {
-        0%   { transform: scale(1, 1) rotate(0deg); }
-        20%  { transform: scale(calc(1 - 0.12 * var(--intensity)), calc(1 + 0.15 * var(--intensity))) rotate(calc(2.5deg * var(--intensity))); }
-        40%  { transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(calc(-2deg * var(--intensity))); }
-        60%  { transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.06 * var(--intensity))) rotate(calc(1deg * var(--intensity))); }
-        80%  { transform: scale(calc(1 + 0.02 * var(--intensity)), calc(1 - 0.02 * var(--intensity))) rotate(calc(-0.5deg * var(--intensity))); }
+        20%  { transform: scale(calc(1 + 0.18 * var(--intensity)), calc(1 + 0.18 * var(--intensity))) rotate(calc(3deg * var(--intensity))); }
+        40%  { transform: scale(calc(1 - 0.12 * var(--intensity)), calc(1 - 0.12 * var(--intensity))) rotate(calc(-2.5deg * var(--intensity))); }
+        60%  { transform: scale(calc(1 + 0.08 * var(--intensity)), calc(1 + 0.08 * var(--intensity))) rotate(calc(1.5deg * var(--intensity))); }
+        80%  { transform: scale(calc(1 - 0.03 * var(--intensity)), calc(1 - 0.03 * var(--intensity))) rotate(calc(-0.5deg * var(--intensity))); }
         100% { transform: scale(1, 1) rotate(0deg); }
     }
 </style>
@@ -261,11 +238,10 @@ title: Muffin
         }
         lastClickTime = now;
 
-        const animClass = Math.random() < 0.5 ? 'anim-stretch-horizontal' : 'anim-stretch-vertical';
         muffinImg.style.setProperty('--intensity', clickIntensity);
-        muffinImg.classList.remove('anim-stretch-horizontal', 'anim-stretch-vertical');
+        muffinImg.classList.remove('anim-stretch');
         void muffinImg.offsetWidth;
-        muffinImg.classList.add(animClass);
+        muffinImg.classList.add('anim-stretch');
     }
 
     // Muffin Picture Click (Stretches picture only)
@@ -281,7 +257,7 @@ title: Muffin
     });
 
     muffinImg.addEventListener('animationend', () => {
-        muffinImg.classList.remove('anim-stretch-horizontal', 'anim-stretch-vertical');
+        muffinImg.classList.remove('anim-stretch');
     });
 
     // Background Click
