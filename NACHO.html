@@ -55,19 +55,20 @@ title: Nacho
         font-style: italic;
         margin-bottom: 12px;
     }
-    /* Clear Button Styles */
+    /* Clear Button Styles - Forced to the absolute top of visual hierarchy */
     .clear-btn {
-        background-color: transparent;
+        background-color: #000000;
         color: #ffffff;
-        border: 1px solid #ffffff;
-        padding: 8px 16px;
+        border: 2px solid #ffffff;
+        padding: 10px 20px;
         font-size: 1rem;
         border-radius: 4px;
         cursor: pointer;
         pointer-events: auto; /* Re-enable pointer events for button click */
-        z-index: 10000; /* High z-index ensures it stays above falling Nachos (z-index 10) */
+        z-index: 999999 !important; /* Forces it above everything including falling nachos */
         position: relative;
         font-family: Arial, sans-serif;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.9);
     }
     .clear-btn:hover {
         background-color: #ffffff;
@@ -80,7 +81,7 @@ title: Nacho
         height: auto;
         border-radius: 6px;
         pointer-events: none;
-        z-index: 10;
+        z-index: 5; /* Lower than the clear button */
         will-change: transform;
         -webkit-user-select: none;
         -webkit-user-drag: none;
@@ -98,7 +99,9 @@ title: Nacho
     <p id="main-caption">¿Qué está haciendo el perro?</p> <br>
     <div id="sub-caption" class="sub-caption">(what the dog doin?)</div>
     <div id="hint" class="tap-hint">(Tap anywhere to drop Nachos)</div>
-    <button id="clear-btn" class="clear-btn">Clear Screen</button>
+    <div>
+        <button id="clear-btn" class="clear-btn">Clear Screen</button>
+    </div>
 </div>
 
 <!-- Audio Elements -->
@@ -144,8 +147,7 @@ title: Nacho
         // Land randomly across the lower/middle section of the screen
         const targetY = window.innerHeight - 180 - (Math.random() * (window.innerHeight * 0.7));
         
-        img.style.left = `${startX}px`;
-        img.style.top = `${startY}px`;
+        img.style.left = `${startX}px`; img.style.top = `${startY}px`;
         
         document.body.appendChild(img);
 
@@ -183,46 +185,4 @@ title: Nacho
                 
                 // Apply translation, rotation, and horizontal flip if shiny
                 const flip = nacho.isShiny ? ' scaleX(-1)' : '';
-                nacho.element.style.transform = `translateY(${nacho.y - (-180)}px) rotate(${nacho.rotation}deg)${flip}`;
-            }
-        });
-        requestAnimationFrame(updatePhysics);
-    }
-    updatePhysics();
-
-    function handleClick(e) {
-        // Ignore clicks on navigation links, clear button, or text elements that trigger sound
-        if (e.target.tagName === 'A' || 
-            e.target.id === 'clear-btn' || 
-            e.target.id === 'main-caption' || 
-            e.target.id === 'sub-caption') return;
-
-        if (hint) hint.style.display = 'none';
-
-        if (fallingNachos.length >= MAX_NACHOS) {
-            clearScreen();
-        } else {
-            playSpammableDropSound();
-            spawnNacho();
-        }
-    }
-
-    // Event listener for the clear button
-    clearBtn.addEventListener('pointerdown', (e) => {
-        e.stopPropagation();
-        clearScreen();
-    });
-
-    // Audio triggers for caption and sub-caption text
-    mainCaption.addEventListener('pointerdown', (e) => {
-        e.stopPropagation();
-        playDogSound();
-    });
-
-    subCaption.addEventListener('pointerdown', (e) => {
-        e.stopPropagation();
-        playDogSound();
-    });
-
-    document.body.addEventListener('pointerdown', handleClick);
-</script>
+                nacho.element.style.transform = `translateY(${nacho.y - (-180)}px) rotate(${nacho.rotation}
