@@ -4,158 +4,277 @@ title: Muffin
 ---
 
 <style>
+    * {
+        box-sizing: border-box;
+    }
+    html, body {
+        overflow: hidden;
+    }
     body {
         cursor: pointer;
         user-select: none;
         -webkit-user-select: none;
-        -webkit-user-drag: none;
-        overflow: hidden;
-        position: relative;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        touch-action: manipulation;
     }
     .content {
         text-align: center;
         margin: auto;
         position: relative;
-        z-index: 100;
+        z-index: 1;
+        width: 100%;
     }
     .content img {
-        max-width: 80vw;
-        max-height: 60vh;
+        max-width: 75vw;
+        max-height: 55vh;
         border-radius: 8px;
         display: block;
         margin: 0 auto 20px auto;
-        -webkit-user-select: none;
-        -webkit-user-drag: none;
-        user-select: none;
-        cursor: pointer;
-        transition: transform 0.15s ease;
+        will-change: transform;
+        transform-origin: center center;
+        -webkit-transform-origin: center center;
     }
-    /* Stretch effect when middle picture is clicked */
-    .content img.stretched {
-        transform: scaleX(1.3) scaleY(0.85);
+    
+    /* Muffin Fat Text Wave Container */
+    .title-subtext {
+        font-size: 1.6rem;
+        font-weight: bold;
+        margin: 5px 0;
+        display: inline-block;
+        cursor: pointer;
+    }
+    .wave-char {
+        display: inline-block;
+        will-change: transform;
     }
 
-    /* Muffin Fat Text Wave Styling */
-    .fat-text-container {
-        font-size: 1.8rem;
-        font-weight: bold;
-        color: #ffffff;
-        margin: 10px 0;
-        cursor: pointer;
-        display: inline-block;
+    .house-of-lumpy {
+        color: #0000FF !important;
+        text-decoration: none;
     }
-    .wave-letter {
-        display: inline-block;
-        transition: transform 0.05s linear;
+    .house-of-lumpy:hover {
+        text-decoration: underline;
+    }
+
+    /* Controlled Spring Stretch & Wiggle Keyframes */
+    .anim-stretch-horizontal {
+        -webkit-animation: springHoriz 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        animation: springHoriz 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .anim-stretch-vertical {
+        -webkit-animation: springVert 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        animation: springVert 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @-webkit-keyframes springHoriz {
+        0%   { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
+        20%  { -webkit-transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(-6deg); transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(-6deg); }
+        40%  { -webkit-transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); }
+        60%  { -webkit-transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); }
+        80%  { -webkit-transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); }
+        100% { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
+    }
+
+    @keyframes springHoriz {
+        0%   { transform: scale(1, 1) rotate(0deg); }
+        20%  { transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(-6deg); }
+        40%  { transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); }
+        60%  { transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); }
+        80%  { transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); }
+        100% { transform: scale(1, 1) rotate(0deg); }
+    }
+
+    @-webkit-keyframes springVert {
+        0%   { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
+        20%  { -webkit-transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(6deg); transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(6deg); }
+        40%  { -webkit-transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); }
+        60%  { -webkit-transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(3deg); transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(3deg); }
+        80%  { -webkit-transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); }
+        100% { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
+    }
+
+    @keyframes springVert {
+        0%   { transform: scale(1, 1) rotate(0deg); }
+        20%  { transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(6deg); }
+        40%  { transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); }
+        60%  { transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(3deg); }
+        80%  { transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); }
+        100% { transform: scale(1, 1) rotate(0deg); }
     }
 </style>
 
 <div class="content">
-    <img id="muffin-img" src="{{ 'images/muffin.jpg' | relative_url }}" alt="Muffin the cat">
-    <p>muffin so <span id="faaat-text" class="fat-text-container">fat</span></p> <br>
+    <img id="muffin-img" src="{{ '/images/muffin.jpg' | relative_url }}" alt="Muffin">
+    <p id="subtext-container" class="title-subtext">Muffin so faaaaatttttt</p>
 </div>
-
-<!-- 5 Random Squish Sound Elements -->
-<audio id="squish-1" src="{{ 'sources/squish1.wav' | relative_url }}" preload="auto"></audio>
-<audio id="squish-2" src="{{ 'sources/squish2.wav' | relative_url }}" preload="auto"></audio>
-<audio id="squish-3" src="{{ 'sources/squish3.wav' | relative_url }}" preload="auto"></audio>
-<audio id="squish-4" src="{{ 'sources/squish4.wav' | relative_url }}" preload="auto"></audio>
-<audio id="squish-5" src="{{ 'sources/squish5.wav' | relative_url }}" preload="auto"></audio>
 
 <script>
     const muffinImg = document.getElementById('muffin-img');
-    const fatTextContainer = document.getElementById('faaat-text');
-    
-    let aCount = 1; // Tracks how many 'a's are currently in f[a...]t
-    let currentAnimSpeedMultiplier = 1; // Speeds up when clicked faster
-    let animationId = null;
-    let startTime = null;
+    const subtextContainer = document.getElementById('subtext-container');
 
-    // Picture click stretch effect
-    muffinImg.addEventListener('click', (e) => {
-        e.stopPropagation();
-        muffinImg.classList.add('stretched');
-        setTimeout(() => {
-            muffinImg.classList.remove('stretched');
-        }, 150);
-    });
+    let audioCtx = null;
+    const splatBuffers = [];
+    const htmlAudioElements = [];
+    let lastSplatIndex = -1;
+    let isAudioUnlocked = false;
 
-    // Rebuild text structure dynamically: "f" + "a" repeated aCount times + "t"
-    function updateTextString() {
-        fatTextContainer.innerHTML = '';
-        let currentWord = 'f' + 'a'.repeat(aCount) + 't';
-        
-        for (let char of currentWord) {
+    let clickIntensity = 1.0;
+    let lastClickTime = 0;
+
+    // Preload audio files (squish1.wav to squish5.wav)
+    for (let i = 1; i <= 5; i++) {
+        const audioPath = '{{ "/sources/squish" | relative_url }}' + i + '.wav';
+        const htmlAudio = new Audio(audioPath);
+        htmlAudio.preload = 'auto';
+        htmlAudioElements.push(htmlAudio);
+    }
+
+    function unlockAudio() {
+        if (isAudioUnlocked) return;
+        try {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            isAudioUnlocked = true;
+        } catch(e) {
+            console.log('Web Audio API not supported');
+        }
+    }
+
+    function playRandomSplat() {
+        unlockAudio();
+        let index;
+        do {
+            index = Math.floor(Math.random() * htmlAudioElements.length);
+        } while (index === lastSplatIndex && htmlAudioElements.length > 1);
+        lastSplatIndex = index;
+
+        const sound = htmlAudioElements[index];
+        sound.currentTime = 0;
+        sound.play().catch(err => console.log('Audio play error:', err));
+    }
+
+    // Wrap each character of the text in a span for wave manipulation
+    function initTextSpans() {
+        const text = subtextContainer.textContent;
+        subtextContainer.innerHTML = '';
+        for (let char of text) {
             const span = document.createElement('span');
             span.textContent = char;
-            span.className = 'wave-letter';
-            fatTextContainer.appendChild(span);
+            span.className = 'wave-char';
+            subtextContainer.appendChild(span);
         }
     }
-    updateTextString();
+    initTextSpans();
 
-    // Play one of 5 random squish sounds
-    function playRandomSquishSound() {
-        const randomIndex = Math.floor(Math.random() * 5) + 1;
-        const sound = document.getElementById(`squish-${randomIndex}`);
-        if (sound) {
-            sound.currentTime = 0;
-            sound.play().catch(err => console.log('Audio play error:', err));
-        }
-    }
+    let isWaveRunning = false;
+    let waveProgress = 1.0; // Starts completed so a fresh wave can trigger
+    let waveSpeed = 0.035;  // Base speed
 
-    // Interactive wave animation that adapts its speed dynamically
-    function triggerWave() {
-        playRandomSquishSound();
+    function triggerTextWave() {
+        // If clicked rapidly, boost wave speed and add an extra 'a' before the last 't'
+        const now = performance.now();
+        const timeDiff = now - lastClickTime;
+        lastClickTime = now;
 
-        // If clicked while animating, speed up the multiplier (capped at 3x speed max)
-        if (animationId) {
-            currentAnimSpeedMultiplier = Math.min(currentAnimSpeedMultiplier + 0.6, 3.0);
-            cancelAnimationFrame(animationId);
+        if (timeDiff < 300) {
+            waveSpeed = Math.min(waveSpeed + 0.015, 0.12);
         } else {
-            currentAnimSpeedMultiplier = 1.0;
-            // Add an extra 'a' right before the final 't' on click
-            aCount++;
-            updateTextString();
+            waveSpeed = 0.035;
         }
 
-        const letters = fatTextContainer.querySelectorAll('.wave-letter');
-        const totalDuration = 600; // Base duration of the full wave in ms
-        startTime = performance.now();
-
-        function animateWave(currentTime) {
-            let elapsed = (currentTime - startTime) * currentAnimSpeedMultiplier;
-            let progress = elapsed / totalDuration;
-
-            if (progress < 1) {
-                letters.forEach((letter, index) => {
-                    // Stagger each letter's sine wave phase
-                    let phaseOffset = index * 0.4;
-                    let translateY = -Math.sin((progress * Math.PI * 2) - phaseOffset) * 18;
-                    // Only wave if the wave cycle is active for this phase
-                    if (progress * Math.PI * 2 - phaseOffset >= 0 && progress * Math.PI * 2 - phaseOffset <= Math.PI * 2) {
-                        letter.style.transform = `translateY(${translateY}px)`;
-                    } else {
-                        letter.style.transform = `translateY(0px)`;
-                    }
-                });
-                animationId = requestAnimationFrame(animateWave);
-            } else {
-                // Reset positions and reset speed multiplier cooldown
-                letters.forEach(letter => letter.style.transform = `translateY(0px)`);
-                animationId = null;
-                currentAnimSpeedMultiplier = 1.0;
-            }
+        // Insert an 'a' right before the final sequence of 't's
+        let currentHTML = subtextContainer.innerHTML;
+        // Find position right before the trailing 't's
+        const tMatchIndex = currentHTML.lastIndexOf('t');
+        if (tMatchIndex !== -1) {
+            subtextContainer.innerHTML = currentHTML.slice(0, tMatchIndex) + 'a' + currentHTML.slice(tMatchIndex);
+        } else {
+            subtextContainer.textContent += 'a';
         }
 
-        animationId = requestAnimationFrame(animateWave);
+        // Restart wave animation cleanly
+        waveProgress = 0.0;
+        if (!isWaveRunning) {
+            isWaveRunning = true;
+            requestAnimationFrame(animateWave);
+        }
     }
 
-    fatTextContainer.addEventListener('click', (e) => {
+    function animateWave() {
+        const chars = subtextContainer.querySelectorAll('.wave-char');
+        const totalChars = chars.length;
+        
+        // Narrow wave configuration
+        const waveWidth = 2.5; 
+
+        let allFinished = true;
+        chars.forEach((char, i) => {
+            // Stagger each character's position along the wave
+            const charProgress = waveProgress - (i * 0.18);
+            if (charProgress >= 0 && charProgress <= waveWidth) {
+                allFinished = false;
+                // Narrow sine wave height hop (-14px peak)
+                const translateY = -Math.sin((charProgress / waveWidth) * Math.PI) * 14;
+                char.style.transform = `translateY(${translateY}px)`;
+            } else {
+                char.style.transform = `translateY(0px)`;
+            }
+        });
+
+        waveProgress += waveSpeed;
+
+        if (!allFinished || waveProgress < 1.0) {
+            requestAnimationFrame(animateWave);
+        } else {
+            chars.forEach(char => char.style.transform = `translateY(0px)`);
+            isWaveRunning = false;
+        }
+    }
+
+    // Click handler for image and text
+    function handleContentClick(e) {
+        playRandomSplat();
+
+        // Intensity scaling for image bounce
+        const now = performance.now();
+        if (now - lastClickTime < 400) {
+            clickIntensity = Math.min(clickIntensity + 0.35, 2.8);
+        } else {
+            clickIntensity = 1.0;
+        }
+
+        // Trigger text wave & add 'a'
+        triggerTextWave();
+
+        // Animate image stretch
+        const animClass = Math.random() < 0.5 ? 'anim-stretch-horizontal' : 'anim-stretch-vertical';
+        muffinImg.style.setProperty('--intensity', clickIntensity);
+        muffinImg.classList.remove('anim-stretch-horizontal', 'anim-stretch-vertical');
+        void muffinImg.offsetWidth; // Trigger reflow
+        muffinImg.classList.add(animClass);
+    }
+
+    muffinImg.addEventListener('click', (e) => {
         e.stopPropagation();
-        triggerWave();
+        handleContentClick(e);
+    });
+
+    subtextContainer.addEventListener('click', (e) => {
+        e.stopPropagation();
+        handleContentClick(e);
+    });
+
+    muffinImg.addEventListener('animationend', () => {
+        muffinImg.classList.remove('anim-stretch-horizontal', 'anim-stretch-vertical');
+    });
+
+    document.body.addEventListener('click', (e) => {
+        if (e.target.tagName !== 'A') {
+            handleContentClick(e);
+        }
     });
 </script>
