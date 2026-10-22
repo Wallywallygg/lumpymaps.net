@@ -118,4 +118,177 @@ title: Muffin
 <audio id="splat-2" src="{{ '/sources/splat2.wav' | relative_url }}" preload="auto"></audio>
 <audio id="splat-3" src="{{ '/sources/splat3.wav' | relative_url }}" preload="auto"></audio>
 <audio id="splat-4" src="{{ '/sources/splat4.wav' | relative_url }}" preload="auto"></audio>
-<audio id="splat-5" src="{{ '/sources/splat5
+<audio id="splat-5" src="{{ '/sources/splat5.wav' | relative_url }}" preload="auto"></audio>
+<audio id="doink-sound" src="{{ '/sources/doink.mp3' | relative_url }}" preload="auto"></audio>
+
+<script>
+    const muffinImg = document.getElementById('muffin-img');
+    const subtextContainer = document.getElementById('subtext-container');
+    const doinkSound = document.getElementById('doink-sound');
+
+    let htmlAudioElements = [];
+    let lastSplatIndex = -1;
+
+    let clickIntensity = 1.0;
+    let lastClickTime = 0;
+
+    for (let i = 1; i <= 5; i++) {
+        const audioEl = document.getElementById(`splat-${i}`);
+        if (audioEl) {
+            htmlAudioElements.push(audioEl);
+        }
+    }
+
+    // Strictly ensures the same splat sound never plays twice in a row
+    function playRandomSplat() {
+        if (htmlAudioElements.length === 0) return;
+        let index;
+        do {
+            index = Math.floor(Math.random() * htmlAudioElements.length);
+        } while (index === lastSplatIndex);
+        lastSplatIndex = index;
+
+        const sound = htmlAudioElements[index];
+        sound.currentTime = 0;
+        sound.play().catch(err => console.log('Audio play error:', err));
+    }
+
+    // Dedicated function to play doink.mp3 for text clicks
+    function playDoinkSound() {
+        if (doinkSound) {
+            doinkSound.currentTime = 0;
+            doinkSound.play().catch(err => console.log('Audio play error:', err));
+        }
+    }
+
+    // Wrap each character (including spaces) into a span
+    function initTextSpans() {
+        const text = subtextContainer.textContent;
+        subtextContainer.innerHTML = '';
+        for (let char of text) {
+            const span = document.createElement('span');
+            span.textContent = char;
+            if (char === ' ') {
+                span.style.display = 'inline-block';
+                span.style.width = '0.3em';
+            } else {
+                span.className = 'wave-char';
+            }
+            subtextContainer.appendChild(span);
+        }
+    }
+    initTextSpans();
+
+    let isWaveRunning = false;
+    let waveProgress = 1.0; 
+    let waveSpeed = 0.055;
+
+    function triggerTextWave() {
+        playDoinkSound(); // Play doink when text is clicked
+
+        const currentSpans = subtextContainer.querySelectorAll('span');
+        let currentText = Array.from(currentSpans).map(span => span.textContent).join('');
+        
+        // Safety boundary check: stop adding 'a' when within 60px of screen boundary
+        const safetyMargin = 60;
+        if (subtextContainer.getBoundingClientRect().width < window.innerWidth - safetyMargin) {
+            const tMatchIndex = currentText.lastIndexOf('t');
+            if (tMatchIndex !== -1) {
+                currentText = currentText.slice(0, tMatchIndex) + 'a' + currentText.slice(tMatchIndex);
+            } else {
+                currentText += 'a';
+            }
+        }
+
+        subtextContainer.innerHTML = '';
+        for (let char of currentText) {
+            const span = document.createElement('span');
+            span.textContent = char;
+            if (char === ' ') {
+                span.style.display = 'inline-block';
+                span.style.width = '0.3em';
+            } else {
+                span.className = 'wave-char';
+            }
+            subtextContainer.appendChild(span);
+        }
+
+        if (isWaveRunning) {
+            waveSpeed = Math.min(waveSpeed + 0.05, 0.22);
+        } else {
+            waveSpeed = 0.055;
+            waveProgress = 0.0;
+            isWaveRunning = true;
+            requestAnimationFrame(animateWave);
+        }
+    }
+
+    function animateWave() {
+        const chars = subtextContainer.querySelectorAll('.wave-char');
+        const waveWidth = 1.6; 
+
+        let allFinished = true;
+        chars.forEach((char, i) => {
+            const charProgress = waveProgress - (i * 0.12);
+            if (charProgress >= 0 && charProgress <= waveWidth) {
+                allFinished = false;
+                const translateY = -Math.sin((charProgress / waveWidth) * Math.PI) * 14;
+                char.style.transform = `translateY(${translateY}px)`;
+            } else {
+                char.style.transform = `translateY(0px)`;
+            }
+        });
+
+        waveProgress += waveSpeed;
+
+        if (!allFinished || waveProgress < 1.0) {
+            requestAnimationFrame(animateWave);
+        } else {
+            chars.forEach(char => char.style.transform = `translateY(0px)`);
+            isWaveRunning = false;
+        }
+    }
+
+    // Handles progressive scaling intensity on spam clicks with randomized jello direction
+    function handlePictureInteraction() {
+        playRandomSplat();
+
+        const now = performance.now();
+        if (now - lastClickTime < 400) {
+            clickIntensity = Math.min(clickIntensity + 0.2, 1.8);
+        } else {
+            clickIntensity = 1.0;
+        }
+        lastClickTime = now;
+
+        // Randomly pick horizontal squish or vertical stretch like jello
+        const animClass = Math.random() < 0.5 ? 'anim-jello-horiz' : 'anim-jello-vert';
+        muffinImg.style.setProperty('--intensity', clickIntensity);
+        muffinImg.classList.remove('anim-jello-horiz', 'anim-jello-vert');
+        void muffinImg.offsetWidth;
+        muffinImg.classList.add(animClass);
+    }
+
+    // Muffin Picture Click (Stretches picture only)
+    muffinImg.addEventListener('click', (e) => {
+        e.stopPropagation();
+        handlePictureInteraction();
+    });
+
+    // Text Click (Triggers wave and doink sound only, does not jiggle picture)
+    subtextContainer.addEventListener('click', (e) => {
+        e.stopPropagation();
+        triggerTextWave();
+    });
+
+    muffinImg.addEventListener('animationend', () => {
+        muffinImg.classList.remove('anim-jello-horiz', 'anim-jello-vert');
+    });
+
+    // Background Click
+    document.body.addEventListener('click', (e) => {
+        if (e.target.tagName !== 'A' && e.target !== muffinImg && e.target !== subtextContainer && !subtextContainer.contains(e.target)) {
+            handlePictureInteraction();
+        }
+    });
+</script>
