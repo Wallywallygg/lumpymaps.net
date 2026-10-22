@@ -4,20 +4,14 @@ title: Muffin
 ---
 
 <style>
-    html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-    }
     body {
         cursor: pointer;
         user-select: none;
         -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        touch-action: manipulation;
+        -webkit-user-drag: none;
+        overflow: hidden;
+        position: relative;
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
     }
@@ -25,224 +19,114 @@ title: Muffin
         text-align: center;
         margin: auto;
         position: relative;
-        z-index: 1;
-        width: 100%;
+        z-index: 100;
+        pointer-events: none;
     }
     .content img {
-        max-width: 75vw;
-        max-height: 55vh;
+        max-width: 80vw;
+        max-height: 60vh;
         border-radius: 8px;
         display: block;
         margin: 0 auto 20px auto;
-        will-change: transform;
-        transform-origin: center center;
-        -webkit-transform-origin: center center;
+        -webkit-user-select: none;
+        -webkit-user-drag: none;
+        user-select: none;
+        pointer-events: auto;
     }
-    .title-subtext {
-        font-size: 1.6rem;
+    .content p {
+        font-size: 1.5rem;
+        letter-spacing: 1px;
+        margin: 0 0 4px 0;
+        display: inline-block;
+    }
+    
+    /* Muffin Fat Text Wave Styling */
+    .fat-text-container {
+        font-size: 1.8rem;
         font-weight: bold;
-        margin: 5px 0;
+        color: #ffffff;
+        margin: 10px 0;
+        pointer-events: auto;
+        cursor: pointer;
+        display: inline-block;
     }
-    .house-of-lumpy {
-        color: #0000FF !important;
-        text-decoration: none;
-    }
-    .house-of-lumpy:hover {
-        text-decoration: underline;
-    }
-
-    /* Controlled Spring Stretch & Wiggle Keyframes */
-    .anim-stretch-horizontal {
-        -webkit-animation: springHoriz 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        animation: springHoriz 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    .wave-letter {
+        display: inline-block;
+        transition: transform 0.05s ease;
     }
 
-    .anim-stretch-vertical {
-        -webkit-animation: springVert 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        animation: springVert 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @-webkit-keyframes springHoriz {
-        0%   { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
-        20%  { -webkit-transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(-6deg); transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(-6deg); }
-        40%  { -webkit-transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); }
-        60%  { -webkit-transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); }
-        80%  { -webkit-transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); }
-        100% { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
-    }
-
-    @keyframes springHoriz {
-        0%   { transform: scale(1, 1) rotate(0deg); }
-        20%  { transform: scale(calc(1 + 0.35 * var(--intensity)), calc(1 - 0.25 * var(--intensity))) rotate(-6deg); }
-        40%  { transform: scale(calc(1 - 0.2 * var(--intensity)), calc(1 + 0.25 * var(--intensity))) rotate(5deg); }
-        60%  { transform: scale(calc(1 + 0.12 * var(--intensity)), calc(1 - 0.1 * var(--intensity))) rotate(-3deg); }
-        80%  { transform: scale(calc(1 - 0.05 * var(--intensity)), calc(1 + 0.05 * var(--intensity))) rotate(1deg); }
-        100% { transform: scale(1, 1) rotate(0deg); }
-    }
-
-    @-webkit-keyframes springVert {
-        0%   { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
-        20%  { -webkit-transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(6deg); transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(6deg); }
-        40%  { -webkit-transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); }
-        60%  { -webkit-transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(3deg); transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(3deg); }
-        80%  { -webkit-transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); }
-        100% { -webkit-transform: scale(1, 1) rotate(0deg); transform: scale(1, 1) rotate(0deg); }
-    }
-
-    @keyframes springVert {
-        0%   { transform: scale(1, 1) rotate(0deg); }
-        20%  { transform: scale(calc(1 - 0.25 * var(--intensity)), calc(1 + 0.35 * var(--intensity))) rotate(6deg); }
-        40%  { transform: scale(calc(1 + 0.25 * var(--intensity)), calc(1 - 0.2 * var(--intensity))) rotate(-5deg); }
-        60%  { transform: scale(calc(1 - 0.1 * var(--intensity)), calc(1 + 0.12 * var(--intensity))) rotate(3deg); }
-        80%  { transform: scale(calc(1 + 0.05 * var(--intensity)), calc(1 - 0.05 * var(--intensity))) rotate(-1deg); }
-        100% { transform: scale(1, 1) rotate(0deg); }
+    .sub-caption {
+        font-size: 1rem;
+        color: #888888;
+        margin: 0 0 10px 0;
+        font-style: italic;
     }
 </style>
 
 <div class="content">
-    <img id="muffin-img" src="{{ '/images/muffin.jpg' | relative_url }}" alt="Muffin">
-    <p class="title-subtext">Muffin so faaaaatttttt</p>
+    <img id="muffin-img" src="{{ 'images/muffin.jpg' | relative_url }}" alt="Muffin the cat">
+    <p>muffin so <span id="faaat-text" class="fat-text-container" title="Click me!">faaat</span></p> <br>
 </div>
 
 <script>
-    const muffinImg = document.getElementById('muffin-img');
+    const fatTextContainer = document.getElementById('faaat-text');
+    let isAnimating = false;
 
-    let audioCtx = null;
-    const splatBuffers = [];
-    const htmlAudioElements = [];
-    let lastSplatIndex = -1;
-    let isAudioUnlocked = false;
-
-    // Click intensity tracking with sane limits
-    let clickIntensity = 1.0;
-    let lastClickTime = null;
-    const maxIntensity = 2.8;
-
-    for (let i = 1; i <= 5; i++) {
-        const audio = new Audio(`{{ '/sources/splat' | relative_url }}${i}.wav`);
-        audio.preload = 'auto';
-        htmlAudioElements.push(audio);
+    // Split text into individual span elements so they can hop independently
+    function renderLetters(text) {
+        fatTextContainer.innerHTML = '';
+        for (let char of text) {
+            const span = document.createElement('span');
+            span.textContent = char;
+            span.className = 'wave-letter';
+            fatTextContainer.appendChild(span);
+        }
     }
 
-    function unlockAudio() {
-        if (isAudioUnlocked) return;
+    // Initialize text
+    renderLetters(fatTextContainer.textContent);
 
-        if (!audioCtx) {
-            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-            if (AudioContextClass) {
-                audioCtx = new AudioContextClass();
-            }
-        }
-        if (audioCtx && audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
+    function triggerWave() {
+        if (isAnimating) return;
+        isAnimating = true;
 
-        if (audioCtx) {
-            try {
-                const buffer = audioCtx.createBuffer(1, 1, 22050);
-                const source = audioCtx.createBufferSource();
-                source.buffer = buffer;
-                source.connect(audioCtx.destination);
-                source.start(0);
-            } catch (e) {}
-        }
+        const letters = fatTextContainer.querySelectorAll('.wave-letter');
+        const totalLetters = letters.length;
+        const durationPerLetter = 80; // ms delay between each letter starting its hop
+        const hopDuration = 350; // duration of a single letter's up-and-down hop
 
-        htmlAudioElements.forEach(audio => {
-            const promise = audio.play();
-            if (promise !== undefined) {
-                promise.then(() => {
-                    audio.pause();
-                    audio.currentTime = 0;
-                }).catch(() => {});
-            }
+        letters.forEach((letter, index) => {
+            setTimeout(() => {
+                let startTime = performance.now();
+                
+                function hop(currentTime) {
+                    let elapsed = currentTime - startTime;
+                    let progress = elapsed / hopDuration;
+
+                    if (progress < 1) {
+                        // Sine wave arc for smooth jump up and down (-20px peak)
+                        let translateY = -Math.sin(progress * Math.PI) * 20;
+                        letter.style.transform = `translateY(${translateY}px)`;
+                        requestAnimationFrame(hop);
+                    } else {
+                        letter.style.transform = `translateY(0px)`;
+                        
+                        // When the very last letter finishes its hop, grow the text and unlock
+                        if (index === totalLetters - 1) {
+                            const extraLetter = Math.random() < 0.5 ? 'a' : 't';
+                            fatTextContainer.textContent += extraLetter;
+                            renderLetters(fatTextContainer.textContent);
+                            isAnimating = false;
+                        }
+                    }
+                }
+                requestAnimationFrame(hop);
+            }, index * durationPerLetter);
         });
-
-        if (audioCtx && splatBuffers.length === 0) {
-            for (let i = 1; i <= 5; i++) {
-                fetch(`{{ '/sources/splat' | relative_url }}${i}.wav`)
-                    .then(response => response.arrayBuffer())
-                    .then(data => audioCtx.decodeAudioData(data))
-                    .then(buffer => {
-                        splatBuffers[i - 1] = buffer;
-                    })
-                    .catch(() => {});
-            }
-        }
-
-        isAudioUnlocked = true;
     }
 
-    function playRandomSplat() {
-        const availableIndices = [];
-        for (let i = 0; i < 5; i++) {
-            if (i !== lastSplatIndex) {
-                availableIndices.push(i);
-            }
-        }
-
-        const selectedIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
-        lastSplatIndex = selectedIndex;
-
-        if (audioCtx && splatBuffers[selectedIndex]) {
-            try {
-                const source = audioCtx.createBufferSource();
-                source.buffer = splatBuffers[selectedIndex];
-                source.connect(audioCtx.destination);
-                source.start(0);
-                return;
-            } catch (err) {}
-        }
-
-        try {
-            const audio = htmlAudioElements[selectedIndex];
-            audio.currentTime = 0;
-            audio.play().catch(() => {});
-        } catch (err) {}
-    }
-
-    function updateClickIntensity() {
-        const now = Date.now();
-
-        if (lastClickTime === null) {
-            clickIntensity = 1.0;
-        } else {
-            const timeDelta = now - lastClickTime;
-            if (timeDelta < 350) {
-                const boost = (350 - timeDelta) / 250;
-                clickIntensity = Math.min(maxIntensity, clickIntensity + boost);
-            } else {
-                clickIntensity = 1.0;
-            }
-        }
-
-        lastClickTime = now;
-        muffinImg.style.setProperty('--intensity', clickIntensity.toFixed(2));
-    }
-
-    function triggerStretchAnimation() {
-        muffinImg.classList.remove('anim-stretch-horizontal', 'anim-stretch-vertical');
-        void muffinImg.offsetWidth; // Force CSS reflow restart
-
-        const animClass = Math.random() < 0.5 ? 'anim-stretch-horizontal' : 'anim-stretch-vertical';
-        muffinImg.classList.add(animClass);
-    }
-
-    let isProcessingAction = false;
-
-    function handleAction(e) {
-        if (e.target && e.target.tagName === 'A') return;
-
-        unlockAudio();
-
-        if (isProcessingAction) return;
-        isProcessingAction = true;
-        setTimeout(() => { isProcessingAction = false; }, 25);
-
-        updateClickIntensity();
-        playRandomSplat();
-        triggerStretchAnimation();
-    }
-
-    document.body.addEventListener('touchstart', handleAction, { passive: true });
-    document.body.addEventListener('mousedown', handleAction, { passive: true });
+    fatTextContainer.addEventListener('click', (e) => {
+        e.stopPropagation();
+        triggerWave();
+    });
 </script>
