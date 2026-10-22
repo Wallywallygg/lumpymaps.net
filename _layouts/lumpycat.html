@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ page.title }} | Lumpymaps</title>
-    <link rel="stylesheet" href="{{ '/style.css' | relative_url }}">
-    <style>
+<style>
         /* Custom font setup for Overwave OTF */
         @font-face {
             font-family: 'OverwaveCustom';
@@ -68,11 +61,10 @@
         header nav a:hover {
             text-decoration: underline;
         }
-        /* Secret cat pages sub-nav styling */
+        /* Secret cat pages sub-nav styling - matches main nav now */
         .lumpycat-nav {
             margin-top: 8px;
-            font-size: 1rem;
-            font-weight: normal;
+            /* font-size and font-weight removed so they inherit from header nav */
         }
         .lumpycat-nav a {
             color: #ffffff;
@@ -84,27 +76,4 @@
         main section {
             margin-bottom: 30px;
         }
-    </style>
-</head>
-<body>
-    <header>
-        <h1><a href="{{ '/lumpy.html' | relative_url }}" class="house-of-lumpy">LUMPY</a><a href="{{ '/index.html' | relative_url }}">MAPS.NET</a></h1>
-        <hr class="header-divider">
-        <nav>
-            <a href="{{ '/index.html' | relative_url }}">Homepage</a> |
-            <a href="{{ '/blog.html' | relative_url }}">Blog</a> |
-            <a href="{{ '/sources/GISPortfolio.pdf' | relative_url }}">GIS Portfolio</a> |
-            <a href="{{ '/projects.html' | relative_url }}">Projects</a>
-            <div class="lumpycat-nav">
-                <a href="{{ '/lumpy.html' | relative_url }}">Lumpy</a> | 
-                <a href="{{ '/NACHO.html' | relative_url }}">Nacho</a> | 
-                <a href="{{ '/muffin.html' | relative_url }}">Muffin</a>
-            </div>
-        </nav>
-    </header>
-    
-    <main>
-        {{ content }}
-    </main>
-</body>
-</html>
+</style>
