@@ -27,9 +27,15 @@
             box-sizing: inherit;
         }
 
-        /* Crusty Tiled Background Modifier */
+        /* Crusty Tiled Background Modifier (Randomized from /images/background/) */
         body.crusty-home {
-            background-image: url('{{ "/images/background/IMG_3942.JPG" | relative_url }}');
+            {% assign bg_images = site.static_files | where_exp: "item", "item.path contains '/images/background/'" %}
+            {% if bg_images.size > 0 %}
+                {% assign random_bg = bg_images | sample %}
+                background-image: url('{{ random_bg.path | relative_url }}');
+            {% else %}
+                background-image: url('{{ "/images/background/IMG_3942.JPG" | relative_url }}');
+            {% endif %}
             background-repeat: repeat;
         }
 
@@ -63,7 +69,6 @@
         /* Giant title scaling optimized for mobile/Apple viewports */
         header h1 {
             font-family: 'OverwaveCustom', Arial, sans-serif;
-            /* Adjusted max scale and vw so it scales down smoothly on mobile screens */
             font-size: clamp(2.5rem, 9vw, 5.5rem);
             line-height: 0.9;
             margin: 0 0 20px 0;
