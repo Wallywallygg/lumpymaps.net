@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Projects + Blog
+body_class: crusty-home
 ---
 
 <style>
@@ -21,24 +22,13 @@ title: Projects + Blog
   .projects-grid ul {
     margin: 0;
     padding-left: 20px;
-    line-height: 1.6;
+    line-height: 1.0;
   }
 
   .projects-grid li {
     margin-bottom: 10px;
   }
 </style>
-
-<div class="projects-grid">
-  <!-- Blog Column -->
-  <section class="content-box">
-    <h2>Blog</h2>
-    <ul>
-        <li>09/03/2026 x2 — <a href="{{ '/posts/post2.html' | relative_url }}">All Units of Measure are FAKE!</a></li>
-        <li>09/03/2026 — <a href="{{ '/posts/post1.html' | relative_url }}">Website??? Guh???</a></li>
-    </ul>
-  </section>
-
   <!-- Projects Column -->
   <section class="content-box">
     <h2>Projects</h2>
@@ -49,6 +39,15 @@ title: Projects + Blog
         <li>Project 3 — <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Alien Sighting Near Kittitas, WA</a></li>
         <li>Project 2 — <a href="{{ '/projects/project2.html' | relative_url }}">Lexus Rear Wiper Blade Mod</a></li>
         <li>Project 1 — <a href="{{ '/projects/project1.html' | relative_url }}">Washington State Cell Tower Service Mapping</a></li>
+    </ul>
+  </section>
+<div class="projects-grid">
+  <!-- Blog Column -->
+  <section class="content-box">
+    <h2>Blog</h2>
+    <ul>
+        <li>09/03/2026 x2 — <a href="{{ '/posts/post2.html' | relative_url }}">All Units of Measure are FAKE!</a></li>
+        <li>09/03/2026 — <a href="{{ '/posts/post1.html' | relative_url }}">Website??? Guh???</a></li>
     </ul>
   </section>
 </div>
