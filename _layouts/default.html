@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }} | Lumpymaps</title>
     <link rel="stylesheet" href="{{ '/style.css' | relative_url }}">
+
+    {% comment %}
+      Liquid Random Background Selector:
+      1. Filter static files inside /images/background/
+      2. Sample a random file path
+      3. Fallback to default IMG_3942.JPG if folder list is empty
+    {% endcomment %}
+    {% assign bg_files = site.static_files | where_exp: "file", "file.path contains '/images/background/'" %}
+    {% assign random_bg = bg_files | sample %}
+    {% if random_bg %}
+      {% assign bg_path = random_bg.path %}
+    {% else %}
+      {% assign bg_path = "/images/background/IMG_3942.JPG" %}
+    {% endif %}
+
     <style>
         /* Custom font setup for Overwave OTF */
         @font-face {
@@ -29,7 +44,7 @@
 
         /* Crusty Tiled Background Modifier */
         body.crusty-home {
-            background-image: url('{{ "/images/background/IMG_3942.JPG" | relative_url }}');
+            background-image: url('{{ bg_path | relative_url }}');
             background-repeat: repeat;
         }
 
@@ -61,7 +76,7 @@
         }
 
         /* Giant title scaling optimized for mobile/Apple viewports */
-         header h1 {
+        header h1 {
             font-family: 'OverwaveCustom', Arial, sans-serif;
             font-size: clamp(2.5rem, 9vw, 5.5rem);
             line-height: 0.9;
@@ -70,8 +85,7 @@
             max-width: 100%;
             word-break: break-word;
             overflow-wrap: break-word;
-    
-         }
+        }
 
         header h1 a {
             color: #000000;
