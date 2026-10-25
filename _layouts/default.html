@@ -57,4 +57,60 @@
         header h1 {
             font-family: 'OverwaveCustom', Arial, sans-serif;
             font-size: clamp(3.5rem, 12vw, 7.5rem);
-            line-height:
+            line-height: 0.9;
+            margin: 0 0 20px 0;
+            letter-spacing: -2px;
+        }
+        header h1 a {
+            color: #000000;
+            text-decoration: none;
+        }
+        header h1 a:hover {
+            text-decoration: underline;
+        }
+
+        /* House of Lumpy signature blue link */
+        .house-of-lumpy {
+            color: #0000FF !important;
+            text-decoration: none;
+        }
+        .house-of-lumpy:hover {
+            text-decoration: underline;
+        }
+
+        /* Divider line between title and nav */
+        .header-divider {
+            border: 0;
+            border-top: 2px solid #000000;
+            margin: 0 0 20px 0;
+        }
+
+        /* Navigation menu below header with stronger emphasis */
+        header nav {
+            font-family: Arial, sans-serif;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #000000;
+        }
+        header nav a {
+            color: #000000;
+            text-decoration: none;
+            padding: 0 2px;
+        }
+        header nav a:hover {
+            text-decoration: underline;
+        }
+
+        main section {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body class="{{ page.body_class }}">
+    {% include header.html %}
+    
+    <main>
+        {{ content }}
+    </main>
+</body>
+</html>
