@@ -1,12 +1,54 @@
 ---
-title: Projects
+layout: default
+title: Projects + Blog
 ---
-<h2>Projects</h2>
-<ul>
-    <li>Project 6 — <a href="{{ '/projects/project6.html' | relative_url }}">IS300 Sportcross Keyfob Range Project</a></li>
-    <li>Project 5 — <a href="{{ '/projects/project5.html' | relative_url }}">Harbor Freight Census Mapping Project</a></li>
-    <li>Project 4 — <a href="{{ '/projects/project4.html' | relative_url }}">Honda Accord Fan Project</a></li>
-    <li>Project 3 — <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Alien Sighting Near Kittitas, WA</a></li>
-    <li>Project 2 — <a href="{{ '/projects/project2.html' | relative_url }}">Lexus Rear Wiper Blade Mod</a></li>
-    <li>Project 1 — <a href="{{ '/projects/project1.html' | relative_url }}">Washington State Cell Tower Service Mapping</a></li>
-</ul>
+
+<style>
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 equal columns on desktop */
+    gap: 25px;
+  }
+
+  /* Responsive switch: stacks into 1 column on mobile screens */
+  @media (max-width: 768px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Clean up list spacing inside the boxes */
+  .projects-grid ul {
+    margin: 0;
+    padding-left: 20px;
+    line-height: 1.6;
+  }
+
+  .projects-grid li {
+    margin-bottom: 10px;
+  }
+</style>
+
+<div class="projects-grid">
+  <!-- Blog Column -->
+  <section class="content-box">
+    <h2>Blog</h2>
+    <ul>
+        <li>09/03/2026 x2 — <a href="{{ '/posts/post2.html' | relative_url }}">All Units of Measure are FAKE!</a></li>
+        <li>09/03/2026 — <a href="{{ '/posts/post1.html' | relative_url }}">Website??? Guh???</a></li>
+    </ul>
+  </section>
+
+  <!-- Projects Column -->
+  <section class="content-box">
+    <h2>Projects</h2>
+    <ul>
+        <li>Project 6 — <a href="{{ '/projects/project6.html' | relative_url }}">IS300 Sportcross Keyfob Range Project</a></li>
+        <li>Project 5 — <a href="{{ '/projects/project5.html' | relative_url }}">Harbor Freight Census Mapping Project</a></li>
+        <li>Project 4 — <a href="{{ '/projects/project4.html' | relative_url }}">Honda Accord Fan Project</a></li>
+        <li>Project 3 — <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Alien Sighting Near Kittitas, WA</a></li>
+        <li>Project 2 — <a href="{{ '/projects/project2.html' | relative_url }}">Lexus Rear Wiper Blade Mod</a></li>
+        <li>Project 1 — <a href="{{ '/projects/project1.html' | relative_url }}">Washington State Cell Tower Service Mapping</a></li>
+    </ul>
+  </section>
+</div>
