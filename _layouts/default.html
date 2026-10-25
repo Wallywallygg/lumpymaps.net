@@ -20,22 +20,27 @@
             margin: 0;
             padding: 20px;
             font-family: Arial, sans-serif;
+            box-sizing: border-box;
+        }
+
+        *, *:before, *:after {
+            box-sizing: inherit;
         }
 
         /* Crusty Tiled Background Modifier */
         body.crusty-home {
-            background-image: url('{{ "/images/background/IMG_3942.JPG" | relative_url }}');
+            background-image: url('{{ "/images/backgrounds/IMG_3942.JPG" | relative_url }}');
             background-repeat: repeat;
-            /* Adjust size if the image is too huge/small (e.g., 200px) */
-            /* background-size: 200px; */
         }
 
-        /* White container boxes for header & content readability over tiled backgrounds */
+        /* White container boxes for header & content readability */
         body.crusty-home header {
             background-color: #ffffff;
             padding: 20px;
             border: 2px solid #000000;
             box-shadow: 4px 4px 0px #000000;
+            width: 100%;
+            overflow: hidden; /* Keeps overflowing glyphs clipped inside */
         }
 
         main section,
@@ -46,6 +51,8 @@
             margin-bottom: 25px;
             border: 2px solid #000000;
             box-shadow: 4px 4px 0px #000000;
+            width: 100%;
+            overflow-wrap: break-word;
         }
 
         header {
@@ -53,17 +60,24 @@
             margin-bottom: 40px;
         }
 
-        /* Giant title scaling for homepage */
+        /* Giant title scaling optimized for mobile/Apple viewports */
         header h1 {
             font-family: 'OverwaveCustom', Arial, sans-serif;
-            font-size: clamp(3.5rem, 12vw, 7.5rem);
+            /* Adjusted max scale and vw so it scales down smoothly on mobile screens */
+            font-size: clamp(2.5rem, 9vw, 5.5rem);
             line-height: 0.9;
             margin: 0 0 20px 0;
             letter-spacing: -2px;
+            max-width: 100%;
+            word-break: break-word;
+            overflow-wrap: break-word;
         }
+
         header h1 a {
             color: #000000;
             text-decoration: none;
+            display: inline-block;
+            max-width: 100%;
         }
         header h1 a:hover {
             text-decoration: underline;
@@ -91,6 +105,7 @@
             font-size: 1.3rem;
             font-weight: bold;
             color: #000000;
+            word-break: break-word;
         }
         header nav a {
             color: #000000;
