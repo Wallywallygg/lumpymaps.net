@@ -27,9 +27,9 @@
             box-sizing: inherit;
         }
 
-        /* Crusty Tiled Background Modifier (Randomized from /images/background/) */
+        /* Crusty Tiled Background Modifier (Robust path match for GitHub Pages / Jekyll) */
         body.crusty-home {
-            {% assign bg_images = site.static_files | where_exp: "item", "item.path contains '/images/background/'" %}
+            {% assign bg_images = site.static_files | where_exp: "item", "item.path contains 'images/background'" %}
             {% if bg_images.size > 0 %}
                 {% assign random_bg = bg_images | sample %}
                 background-image: url('{{ random_bg.path | relative_url }}');
