@@ -20,6 +20,16 @@
             padding: 20px;
             font-family: Arial, sans-serif;
         }
+
+        /* Crusty Tiled Background Modifier */
+        body.crusty-home {
+            background-image: url('{{ "/images/backgrounds/IMG_3942.JPG" | relative_url }}');
+            background-repeat: repeat;
+            /* If the image feels too massive or too small by default, 
+               you can uncomment the line below and tweak the size: */
+            /* background-size: 200px; */
+        }
+
         header {
             text-align: left;
             margin-bottom: 40px;
@@ -73,7 +83,7 @@
         }
     </style>
 </head>
-<body>
+<body class="{{ page.body_class }}">
     {% include header.html %}
     
     <main>
