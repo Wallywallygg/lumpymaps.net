@@ -8,3 +8,9 @@ defaults:
       
 plugins:
   - jekyll-feed
+
+  # RSS Feed Settings
+feed:
+  categories:
+    - project
+    - post
