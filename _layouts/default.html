@@ -114,6 +114,34 @@
         main section {
             margin-bottom: 30px;
         }
+
+        /* Retro 88x31 Footer Badges */
+        .site-footer {
+            margin-top: 40px;
+            border-top: 2px solid #000000;
+            padding-top: 15px;
+            background-color: #ffffff;
+            padding: 15px;
+            border: 2px solid #000000;
+            box-shadow: 4px 4px 0px #000000;
+        }
+        .site-footer p {
+            font-size: 0.85rem;
+            font-family: monospace;
+            margin: 0 0 10px 0;
+        }
+        .web-badges {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .web-badges img {
+            width: 88px;
+            height: 31px;
+            image-rendering: pixelated;
+            border: 1px solid #000000;
+        }
     </style>
 </head>
 <body class="{{ page.body_class }}">
@@ -122,6 +150,16 @@
     <main>
         {{ content }}
     </main>
+
+  <!-- Retro Footer with RSS Badge -->
+    <footer class="site-footer">
+        <p>If u dont know where u came from, how are u gonna know where u are?</p>
+        <div class="web-badges">
+            <a href="{{ '/feed.xml' | relative_url }}" target="_blank">
+                <img src="{{ '/images/rssicon.png' | relative_url }}" alt="Blog RSS">
+            </a>
+        </div>
+    </footer>
 
     {% if page.body_class == 'crusty-home' %}
     <script>
