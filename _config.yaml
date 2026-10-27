@@ -5,3 +5,6 @@ defaults:
       path: "" # Applies to all files in your site
     values:
       layout: default
+      
+plugins:
+  - jekyll-feed
