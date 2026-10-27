@@ -6,20 +6,6 @@
     <title>{{ page.title }} | Lumpymaps</title>
     <link rel="stylesheet" href="{{ '/style.css' | relative_url }}">
 
-    {% comment %}
-      Liquid Random Background Selector:
-      1. Filter static files inside /images/background/
-      2. Sample a random file path
-      3. Fallback to default IMG_3942.JPG if folder list is empty
-    {% endcomment %}
-    {% assign bg_files = site.static_files | where_exp: "file", "file.path contains '/images/background/'" %}
-    {% assign random_bg = bg_files | sample %}
-    {% if random_bg %}
-      {% assign bg_path = random_bg.path %}
-    {% else %}
-      {% assign bg_path = "/images/background/IMG_3942.JPG" %}
-    {% endif %}
-
     <style>
         /* Custom font setup for Overwave OTF */
         @font-face {
@@ -44,7 +30,6 @@
 
         /* Crusty Tiled Background Modifier */
         body.crusty-home {
-            background-image: url('{{ bg_path | relative_url }}');
             background-repeat: repeat;
         }
 
@@ -55,7 +40,7 @@
             border: 2px solid #000000;
             box-shadow: 4px 4px 0px #000000;
             width: 100%;
-            overflow: hidden; /* Keeps overflowing glyphs clipped inside */
+            overflow: hidden;
         }
 
         main section,
@@ -75,7 +60,6 @@
             margin-bottom: 40px;
         }
 
-        /* Giant title scaling optimized for mobile/Apple viewports */
         header h1 {
             font-family: 'OverwaveCustom', Arial, sans-serif;
             font-size: clamp(2.5rem, 9vw, 5.5rem);
@@ -97,7 +81,6 @@
             text-decoration: underline;
         }
 
-        /* House of Lumpy signature blue link */
         .house-of-lumpy {
             color: #0000FF !important;
             text-decoration: none;
@@ -106,14 +89,12 @@
             text-decoration: underline;
         }
 
-        /* Divider line between title and nav */
         .header-divider {
             border: 0;
             border-top: 2px solid #000000;
             margin: 0 0 20px 0;
         }
 
-        /* Navigation menu below header with stronger emphasis */
         header nav {
             font-family: Arial, sans-serif;
             font-size: 1.3rem;
@@ -141,5 +122,28 @@
     <main>
         {{ content }}
     </main>
+
+    {% if page.body_class == 'crusty-home' %}
+    <script>
+      (function() {
+        // Collect all background filenames present in your /images/background/ folder
+        var bgImages = [
+          {% assign bg_files = site.static_files | where_exp: "file", "file.path contains '/images/background/'" %}
+          {% for file in bg_files %}
+            "{{ file.path | relative_url }}"{% unless forloop.last %},{% endunless %}
+          {% endfor %}
+        ];
+
+        // Fallback array in case Jekyll static file listing is empty
+        if (!bgImages || bgImages.length === 0) {
+          bgImages = ["{{ '/images/background/IMG_3942.JPG' | relative_url }}"];
+        }
+
+        // Pick a random image on each page load
+        var chosenBg = bgImages[Math.floor(Math.random() * bgImages.length)];
+        document.body.style.backgroundImage = 'url("' + chosenBg + '")';
+      })();
+    </script>
+    {% endif %}
 </body>
 </html>
