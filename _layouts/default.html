@@ -28,9 +28,12 @@
             box-sizing: inherit;
         }
 
-        /* Crusty Tiled Background Modifier */
+        /* Tiled Background Modifier */
         body.crusty-home {
+            background-image: url("{{ '/images/backgrounds/baker-mint1.png' | relative_url }}");
             background-repeat: repeat;
+            background-attachment: fixed;
+            background-position: center;
         }
 
         /* White container boxes for header & content readability */
@@ -78,14 +81,6 @@
             max-width: 100%;
         }
         header h1 a:hover {
-            text-decoration: underline;
-        }
-
-        .house-of-lumpy {
-            color: #0000FF !important;
-            text-decoration: none;
-        }
-        .house-of-lumpy:hover {
             text-decoration: underline;
         }
 
@@ -151,7 +146,7 @@
         {{ content }}
     </main>
 
-<!-- Retro Footer with RSS & Loadsamoney Badges -->
+    <!-- Retro Footer with Badges -->
     <footer class="site-footer">
         <p>If u dont know where u came from, how are u gonna know where u are?</p>
         <div class="web-badges">
@@ -159,38 +154,15 @@
                 <img src="{{ '/images/rssicon.png' | relative_url }}" alt="Blog RSS">
             </a>
             <a href="https://www.youtube.com/watch?v=ULeDlxa3gyc" target="_blank">
-                <img src="{{ '/images/loadsamoney.png' | relative_url }}" alt="Loadsamoney">
+                <img src="{{ '/images/loadsemoney.png' | relative_url }}" alt="Loadsamoney">
             </a>
-             <a href="https://qgis.org/" target="_blank">
+            <a href="https://qgis.org/" target="_blank">
                 <img src="{{ '/images/qgis88x31.png' | relative_url }}" alt="QGIS">
             </a>
             <a href="https://boards.4chan.org/out/catalog" target="_blank">
-            <img src="{{ '/images/leave_no_trace_v3.png' | relative_url }}" alt="QGIS">
+                <img src="{{ '/images/leave_no_trace_v3.png' | relative_url }}" alt="Leave No Trace">
             </a>
         </div>
     </footer>
-
-    {% if page.body_class == 'crusty-home' %}
-    <script>
-      (function() {
-        // Collect all background filenames present in your /images/background/ folder
-        var bgImages = [
-          {% assign bg_files = site.static_files | where_exp: "file", "file.path contains '/images/background/'" %}
-          {% for file in bg_files %}
-            "{{ file.path | relative_url }}"{% unless forloop.last %},{% endunless %}
-          {% endfor %}
-        ];
-
-        // Fallback array in case Jekyll static file listing is empty
-        if (!bgImages || bgImages.length === 0) {
-          bgImages = ["{{ '/images/background/IMG_3942.JPG' | relative_url }}"];
-        }
-
-        // Pick a random image on each page load
-        var chosenBg = bgImages[Math.floor(Math.random() * bgImages.length)];
-        document.body.style.backgroundImage = 'url("' + chosenBg + '")';
-      })();
-    </script>
-    {% endif %}
 </body>
 </html>
