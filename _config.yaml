@@ -2,14 +2,15 @@
 
 defaults:
   - scope:
-      path: "" # Applies to all files in your site
+      path: ""
     values:
       layout: default
       
 plugins:
   - jekyll-feed
+  
+future: true
 
-  # RSS Feed Settings
 feed:
   categories:
     - project
